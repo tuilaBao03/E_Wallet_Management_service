@@ -1,0 +1,52 @@
+[
+  {
+    "username": "john_doe",
+    "password": "password123",
+    "phoneNumber": "0123456789",
+    "homeAddress": "123 Street, City",
+    "companyAddress": "XYZ Corp, Business Park",
+    "lastName": "Doe",
+    "firstName": "John",
+    "avatar": "assets/avatars/john.png"
+  },
+  {
+    "username": "jane_smith",
+    "password": "securePass",
+    "phoneNumber": "0987654321",
+    "homeAddress": "456 Avenue, Town",
+    "companyAddress": "ABC Ltd, Office Plaza",
+    "lastName": "Smith",
+    "firstName": "Jane",
+    "avatar": "assets/avatars/jane.png"
+  },
+  {
+    "username": "mike_williams",
+    "password": "mikePass2024",
+    "phoneNumber": "0112233445",
+    "homeAddress": "789 Road, Metropolis",
+    "companyAddress": "Tech Solutions, IT Hub",
+    "lastName": "Williams",
+    "firstName": "Mike",
+    "avatar": "assets/avatars/mike.png"
+  },
+  {
+    "username": "lisa_brown",
+    "password": "lisaSecret",
+    "phoneNumber": "0223344556",
+    "homeAddress": "567 Lane, Suburb",
+    "companyAddress": "Design Studio, Creative District",
+    "lastName": "Brown",
+    "firstName": "Lisa",
+    "avatar": "assets/avatars/lisa.png"
+  },
+  {
+    "username": "david_johnson",
+    "password": "davidPass321",
+    "phoneNumber": "0334455667",
+    "homeAddress": "101 Blvd, Downtown",
+    "companyAddress": "Financial Corp, Business Center",
+    "lastName": "Johnson",
+    "firstName": "David",
+    "avatar": "assets/avatars/david.png"
+  }
+]
