@@ -67,7 +67,7 @@ class _MyAppState extends State<MyApp> {
         Locale('en', ''), // English
         Locale('vi', ''), // Vietnamese
       ],
-      home: LoginScreen(isAuth: false)
+      home: MainScreen(isAuth: true)
     );
   }
 }

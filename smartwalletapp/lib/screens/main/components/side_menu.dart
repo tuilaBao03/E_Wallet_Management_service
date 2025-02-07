@@ -4,9 +4,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../app/locallization/app_localizations.dart';
 
 class SideMenu extends StatelessWidget {
-  const SideMenu({
-    super.key,
-  });
+  final Function(int) onMenuTap;
+
+  const SideMenu({super.key, required this.onMenuTap});
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -19,53 +19,53 @@ class SideMenu extends StatelessWidget {
           DrawerListTile(
             title: "Dashboard",
             svgSrc: "assets/icons/menu_dashboard.svg",
-            press: () {},
+            press: () => onMenuTap(1),
           ),
           DrawerListTile(
             title: AppLocalizations.of(context).translate("Transaction"),
             svgSrc: "assets/icons/menu_tran.svg",
-            press: () {},
+            press: () => onMenuTap(2),
           ),
 
           DrawerListTile(
             title: AppLocalizations.of(context).translate("MyCard"),
             svgSrc: "assets/icons/menu_doc.svg",
-            press: () {},
+            press: () => onMenuTap(3),
           ),
           DrawerListTile(
             title: AppLocalizations.of(context).translate("Store"),
             svgSrc: "assets/icons/menu_store.svg",
-            press: () {},
+            press: () => onMenuTap(4),
           ),
           DrawerListTile(
             title: AppLocalizations.of(context).translate("Notifications"),
             svgSrc: "assets/icons/menu_notification.svg",
-            press: () {},
+            press: () => onMenuTap(5),
           ),
           DrawerListTile(
             title: AppLocalizations.of(context).translate("My Profile"),
             svgSrc: "assets/icons/menu_profile.svg",
-            press: () {},
+            press: () => onMenuTap(6),
           ),
           DrawerListTile(
             title: AppLocalizations.of(context).translate("Setting"),
             svgSrc: "assets/icons/menu_setting.svg",
-            press: () {},
+            press: () => onMenuTap(7),
           ),
           DrawerListTile(
             title: AppLocalizations.of(context).translate("Wallet"),
             svgSrc: "assets/icons/menu_task.svg",
-            press: () {},
+            press: () => onMenuTap(8),
           ),
           DrawerListTile(
             title: AppLocalizations.of(context).translate("ParkingSpotManagement"),
             svgSrc: "assets/icons/menu_task.svg",
-            press: () {},
+            press: () => onMenuTap(9),
           ),
           DrawerListTile(
             title: AppLocalizations.of(context).translate("SpotOwnerManagement"),
             svgSrc: "assets/icons/menu_task.svg",
-            press: () {},
+            press: () => onMenuTap(10),
           ),
 
 

@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, unused_field
+// ignore_for_file: avoid_print, unused_field, non_constant_identifier_names
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -9,7 +9,6 @@ import 'package:smartwalletapp/screens/authentication/login_screen.dart';
 import '../../bloc/Register/RegistedBloc.dart';
 import '../../bloc/Register/RegistedEvent.dart';
 import '../../constants.dart';
-import '../../controllers/menu_app_controller.dart';
 import '../dashboard/components/header.dart';
 import '../../responsive.dart';
 import '../main/components/side_menu.dart';
@@ -22,6 +21,8 @@ class RegisterScreen extends StatefulWidget {
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
 class _RegisterScreenState extends State<RegisterScreen> {
+  int _currentTab = 1;
+  final GlobalKey<ScaffoldState> _registerscaffoldKey = GlobalKey<ScaffoldState>();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _repassController = TextEditingController();
@@ -53,8 +54,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: context.read<MenuAppController>().scaffoldKey,
-      drawer: SideMenu(),
+      key: _registerscaffoldKey,
+      drawer: SideMenu(onMenuTap: (int index) {
+        setState(() {
+          _currentTab = index;
+        });
+      }),
       body: BlocConsumer<RegisterBloc,RegisterState>(
         builder: (context,state){
           if(state is RegisterSuccess){
@@ -76,7 +81,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   flex: 2,
                   // default flex = 1
                   // and it takes 1/6 part of the screen
-                  child: SideMenu(),
+                  child: SideMenu(onMenuTap: (int index) {
+                    setState(() {
+                      _currentTab = index;
+                    });
+                  }),
                 ),
               Expanded(
                 // It takes 5/6 part of the screen

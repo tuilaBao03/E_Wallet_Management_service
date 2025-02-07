@@ -10,7 +10,6 @@ class User {
   final String avatar;
   final String email;
 
-
   User( {
     required this.username,
     required this.password,
@@ -21,7 +20,6 @@ class User {
     required this.firstName,
     required this.avatar,
     required this.email,
-
   });
 
   /// **Chuyển từ JSON sang `User` object**
@@ -36,11 +34,8 @@ class User {
       firstName: json['firstName'],
       avatar: json['avatar'],
       email: json['email'],
-
-
     );
   }
-
   /// **Chuyển từ `User` object sang JSON**
   Map<String, dynamic> toJson() {
     return {
@@ -55,5 +50,4 @@ class User {
       'email': email
     };
   }
-
 }

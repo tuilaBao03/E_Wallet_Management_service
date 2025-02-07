@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, non_constant_identifier_names
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -9,7 +9,6 @@ import 'package:smartwalletapp/models/user.dart';
 import 'package:smartwalletapp/screens/authentication/register_screen.dart';
 import '../../bloc/Auth/AuthBloc.dart';
 import '../../constants.dart';
-import '../../controllers/menu_app_controller.dart';
 import '../dashboard/components/header.dart';
 import '../../responsive.dart';
 import '../main/components/side_menu.dart';
@@ -22,6 +21,8 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 class _LoginScreenState extends State<LoginScreen> {
+  int _currentTab = 1;
+  final GlobalKey<ScaffoldState> _LoginscaffoldKey = GlobalKey<ScaffoldState>();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   late User user = User(
@@ -41,8 +42,12 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: context.read<MenuAppController>().scaffoldKey,
-      drawer: SideMenu(),
+      key: _LoginscaffoldKey,
+      drawer: SideMenu(onMenuTap: (int index) {
+        setState(() {
+          _currentTab = index;
+        });
+      }),
       body: BlocConsumer<AuthBloc,AuthState>(
         builder: (context,state){
           if(state is AuthSuccess){
@@ -59,7 +64,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       flex: 2,
                       // default flex = 1
                       // and it takes 1/6 part of the screen
-                      child: SideMenu(),
+                      child: SideMenu(onMenuTap: (int index) {
+                        setState(() {
+                          _currentTab = index;
+                        });
+                      }),
                     ),
                   Expanded(
                     // It takes 5/6 part of the screen
