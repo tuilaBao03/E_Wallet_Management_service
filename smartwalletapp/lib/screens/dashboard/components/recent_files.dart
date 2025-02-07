@@ -65,7 +65,7 @@ DataRow recentFileDataRow(RecentFile fileInfo) {
               width: 30,
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
+              padding: EdgeInsets.symmetric(horizontal: defaultPadding),
               child: Text(fileInfo.title!),
             ),
           ],

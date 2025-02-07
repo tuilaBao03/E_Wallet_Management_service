@@ -20,7 +20,19 @@
   "Phone": "Số điện thoại",
   "Avatar": "Ảnh đại diện",
   "Address": "Địa chỉ",
+  "HomeAddress": "Địa chỉ nhà riêng",
+  "CompanyAddress": "Địa chỉ công ty",
   "Login":"Đăng nhập",
+  "RePassword":"Nhập lại mật khẩu",
   "Password":"Mật khẩu",
-  "Register":"Đăng ký"
+  "Register":"Đăng ký",
+  "Forget Password":"Quên mật khẩu",
+  "Transaction": "Giao dịch",
+  "Wallet":"Ví",
+  "MyCard":"Thẻ",
+  "Store":"Lưu trữ",
+  "ParkingSpotManagement": "Quản lý bãi đỗ",
+  "SpotOwnerManagement": "Quản lý chủ bãi đỗ",
+  "Account?":"Bạn đã có tài khoản ?"
+
 }

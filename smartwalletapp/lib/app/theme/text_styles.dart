@@ -5,7 +5,7 @@ class AppTextStyles {
   static const TextStyle appBarTitleLight = TextStyle(
     fontSize: 20.0,
     fontWeight: FontWeight.bold,
-    color: Colors.white,
+    color: Colors.black,
   );
 
   static const TextStyle bodyTextLight = TextStyle(
@@ -30,7 +30,7 @@ class AppTextStyles {
   static const TextStyle bodyTextDark = TextStyle(
     fontSize: 16.0,
     fontWeight: FontWeight.normal,
-    color: Colors.white70,
+    color: Colors.white,
   );
 
   static const TextStyle headlineDark = TextStyle(

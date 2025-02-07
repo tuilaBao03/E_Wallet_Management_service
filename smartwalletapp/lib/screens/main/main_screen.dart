@@ -1,16 +1,18 @@
 
+// ignore_for_file: unused_import
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../controllers/menu_app_controller.dart';
 import '../../responsive.dart';
 import '../authentication/login_screen.dart';
+import '../authentication/register_screen.dart';
 import '../dashboard/dashboard_screen.dart';
 import 'components/side_menu.dart';
 
 class MainScreen extends StatelessWidget {
   final bool isAuth;
-
   const MainScreen({super.key,
     required this.isAuth
 });

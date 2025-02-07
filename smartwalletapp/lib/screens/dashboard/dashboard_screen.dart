@@ -17,7 +17,16 @@ class DashboardScreen extends StatelessWidget {
 
 });
 
-  final User user = User(username: "", password: "", phoneNumber: "", homeAddress: "", companyAddress: "", lastName: "", firstName: "", avatar: "");
+  final User user = User(
+    username: "",
+    password: "",
+    phoneNumber: "",
+    homeAddress: "",
+    companyAddress: "",
+    lastName: "",
+    firstName: "",
+    avatar: "",
+    email: '', );
   @override
   Widget build(BuildContext context) {
     return SafeArea(

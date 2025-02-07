@@ -8,8 +8,10 @@ class User {
   final String lastName;
   final String firstName;
   final String avatar;
+  final String email;
 
-  User({
+
+  User( {
     required this.username,
     required this.password,
     required this.phoneNumber,
@@ -18,6 +20,8 @@ class User {
     required this.lastName,
     required this.firstName,
     required this.avatar,
+    required this.email,
+
   });
 
   /// **Chuyển từ JSON sang `User` object**
@@ -31,6 +35,9 @@ class User {
       lastName: json['lastName'],
       firstName: json['firstName'],
       avatar: json['avatar'],
+      email: json['email'],
+
+
     );
   }
 
@@ -45,11 +52,8 @@ class User {
       'lastName': lastName,
       'firstName': firstName,
       'avatar': avatar,
+      'email': email
     };
   }
 
-  @override
-  String toString() {
-    return 'User(username: $username, firstName: $firstName, lastName: $lastName)';
-  }
 }

@@ -1,9 +1,12 @@
 
-// ignore_for_file: depend_on_referenced_packages
+// ignore_for_file: depend_on_referenced_packages, unused_element
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
+import 'package:smartwalletapp/bloc/Register/RegistedBloc.dart';
+import 'package:smartwalletapp/screens/authentication/login_screen.dart';
 import 'package:smartwalletapp/screens/main/main_screen.dart';
 import 'app/locallization/app_localizations.dart';
 import 'app/theme/app_theme.dart';
@@ -13,7 +16,21 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        MultiProvider( providers: [
+          ChangeNotifierProvider(
+              create: (context) => MenuAppController(),
+            ),
+          BlocProvider(create: (context)=>AuthBloc()),
+          BlocProvider(create: (context)=>RegisterBloc())
+            ]
+          )
+        ],
+      child:MyApp()
+      ),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -50,18 +67,7 @@ class _MyAppState extends State<MyApp> {
         Locale('en', ''), // English
         Locale('vi', ''), // Vietnamese
       ],
-      home: MultiProvider(
-        providers: [
-          MultiProvider( providers: [
-            ChangeNotifierProvider(
-              create: (context) => MenuAppController(),
-            ),
-            Provider(create: (context)=>AuthBloc())
-          ]
-          )
-        ],
-        child: MainScreen(isAuth: false,),
-      ),
+      home: LoginScreen(isAuth: false)
     );
   }
 }

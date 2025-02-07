@@ -20,8 +20,19 @@
   "Phone":"Phone",
   "Avatar":"Avatar",
   "Address":"Address",
+  "HomeAddress": "HomeAddress",
+  "CompanyAddress": "CompanyAddress",
   "Login":"Login",
   "Password":"Password",
-  "Register":"Register"
-  
+  "RePassword":"Re-Password",
+  "Register":"Register",
+  "Forget Password":"Forget Password",
+  "Transaction": "Transaction",
+  "Wallet":"Wallet",
+  "MyCard":"MyCard",
+  "Store":"Store",
+  "ParkingSpotManagement": "ParkingSpot Management",
+  "SpotOwnerManagement": "SpotOwner Management",
+  "Account?":"Do you have an account ?"
+
 }

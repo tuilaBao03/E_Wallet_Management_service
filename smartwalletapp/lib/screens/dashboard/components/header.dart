@@ -67,7 +67,7 @@ class ProfileCard extends StatelessWidget {
           if (!Responsive.isMobile(context))
             Padding(
               padding:
-                  const EdgeInsets.symmetric(horizontal: defaultPadding / 2),
+                  EdgeInsets.symmetric(horizontal: defaultPadding / 2),
               child: Text("Angelina Jolie"),
             ),
           Icon(Icons.keyboard_arrow_down),
@@ -76,12 +76,10 @@ class ProfileCard extends StatelessWidget {
     );
   }
 }
-
 class SearchField extends StatelessWidget {
   const SearchField({
     super.key,
   });
-
   @override
   Widget build(BuildContext context) {
     return TextField(
