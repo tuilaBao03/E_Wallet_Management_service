@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
 import 'package:smartwalletapp/bloc/Register/RegistedBloc.dart';
-import 'package:smartwalletapp/screens/authentication/login_screen.dart';
+import 'package:smartwalletapp/models/user.dart';
 import 'package:smartwalletapp/screens/main/main_screen.dart';
 import 'app/locallization/app_localizations.dart';
 import 'app/theme/app_theme.dart';
@@ -41,13 +41,28 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Locale _locale = const Locale('vi'); // Ngôn ngữ mặc định là tiếng Anh
+  Locale _locale = const Locale('en'); // Ngôn ngữ mặc định là tiếng Anh
   void _changeLanguage(Locale locale) {
     setState(() {
       _locale = locale;
     });
   }
   // This widget is the root of your application.
+  User u = User(
+    userId: '1',
+    username: 'john_doe',
+    password: 'password123',
+    phoneNumber: '123-456-7890',
+    homeAddress: '123 Main St',
+    companyAddress: '456 Business Blvd',
+    lastName: 'Doe',
+    firstName: 'John',
+    avatar: 'assets/images/profile_pic.png',
+    email: 'john.doe@example.com',
+    createdDate: DateTime(2023, 5, 1),
+    updateDate: DateTime(2024, 1, 1),
+    status: true,
+  );
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
@@ -67,7 +82,7 @@ class _MyAppState extends State<MyApp> {
         Locale('en', ''), // English
         Locale('vi', ''), // Vietnamese
       ],
-      home: MainScreen(isAuth: true)
+      home: MainScreen(isAuth: true, user: u)
     );
   }
 }

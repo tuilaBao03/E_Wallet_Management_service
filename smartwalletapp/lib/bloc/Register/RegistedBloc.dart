@@ -26,7 +26,10 @@ class RegisterBloc extends Bloc<RegisterEvent,RegisterState>{
               companyAddress: event.companyAddress,
               lastName: event.lastname,
               firstName: event.firstname,
-              avatar: "", email: '',
+              avatar: "", email: '', userId: '',
+              createdDate: DateTime.now(),
+              updateDate: DateTime.now(),
+              status: true,
           );
           String mess = await userRepository.Register_MPA(user);
           if(mess == "200"){

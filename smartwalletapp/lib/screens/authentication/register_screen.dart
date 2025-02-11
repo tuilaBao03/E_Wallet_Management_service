@@ -9,9 +9,10 @@ import 'package:smartwalletapp/screens/authentication/login_screen.dart';
 import '../../bloc/Register/RegistedBloc.dart';
 import '../../bloc/Register/RegistedEvent.dart';
 import '../../constants.dart';
-import '../dashboard/components/header.dart';
+import '../general/header.dart';
 import '../../responsive.dart';
 import '../main/components/side_menu.dart';
+import 'components/textfile.dart';
 class RegisterScreen extends StatefulWidget {
   final bool isAuth;
   const RegisterScreen({super.key,
@@ -49,7 +50,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
     companyAddress: "",
     lastName: "",
     firstName: "",
-    avatar: "", email: '',
+    avatar: "", email: '', userId: '',
+        createdDate: DateTime.now(),
+    updateDate: DateTime.now(),
+    status: true,
   );
   @override
   Widget build(BuildContext context) {
@@ -59,7 +63,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         setState(() {
           _currentTab = index;
         });
-      }),
+      }, isAuth: widget.isAuth,),
       body: BlocConsumer<RegisterBloc,RegisterState>(
         builder: (context,state){
           if(state is RegisterSuccess){
@@ -85,7 +89,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     setState(() {
                       _currentTab = index;
                     });
-                  }),
+                  }, isAuth: widget.isAuth,),
                 ),
               Expanded(
                 // It takes 5/6 part of the screen
@@ -94,6 +98,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   primary: false,
                   padding: EdgeInsets.all(defaultPadding),
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Header(title: AppLocalizations.of(context).translate("Register"),user: user, isAuth: widget.isAuth,),
                       SizedBox(height: defaultPadding),
@@ -124,30 +130,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                             // password
                                             SizedBox(height: defaultPadding),
                                             TestFiles(editController: _repassController, title: 'RePassword',),
-                                            // re password
-                                            SizedBox(height: defaultPadding),
-                                            TestFiles(editController: _lastnameController, title: 'LastName',),
-                                            // last name
-                                            SizedBox(height: defaultPadding),
-                                            TestFiles(editController: _firstnameController, title: 'FirstName',),
-                                            // first name
-                                            SizedBox(height: defaultPadding),
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(width: Get.width/30,),
-                                      Expanded( // Bọc cột thứ 2 để tránh lỗi
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            // home add
-                                            TestFiles(editController: _homeAddressController, title: 'HomeAddress',),
-                                            SizedBox(height: defaultPadding),
-                                            // company add
-                                            TestFiles(editController: _companyAddressController, title: 'CompanyAddress',),
-                                            SizedBox(height: defaultPadding),
                                             // email
+                                            SizedBox(height: defaultPadding),
                                             TestFiles(editController: _emailController, title: 'Email',),
                                             SizedBox(height: defaultPadding),
                                             // dia chi cong ty
@@ -156,7 +140,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                           ],
                                         ),
                                       ),
-                                    ],
+                                      SizedBox(width: Get.width/30,),
+                                      ],
                                   ),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
@@ -191,7 +176,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                                   _homeAddressController.text,
                                                   _companyAddressController.text,
                                                   _numberPhoneController.text)
-
                                           );
                                         },
                                         child: Text(AppLocalizations.of(context).translate("Register")),
@@ -247,38 +231,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   }
 }
-class TestFiles extends StatelessWidget {
-  final TextEditingController editController;
-  final String title;
-  final FocusNode focusNode = FocusNode(); // Thêm FocusNode
 
-  TestFiles({super.key, required this.editController, required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: TextField(
-        controller: editController,
-        focusNode: focusNode, // Gán FocusNode vào đây
-        obscureText: title.toLowerCase().contains("Password"), // Ẩn nếu là mật khẩu
-        onTap: () {
-          if (!focusNode.hasFocus) {
-            focusNode.requestFocus(); // Đảm bảo được focus
-          }
-        },
-        decoration: InputDecoration(
-          labelText: AppLocalizations.of(context).translate(title),
-          labelStyle: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-          border: OutlineInputBorder(),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Theme.of(context).colorScheme.onPrimary),
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 
 

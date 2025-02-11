@@ -1,5 +1,6 @@
 [
   {
+    "userId": "1",
     "username": "john_doe",
     "password": "password123",
     "phoneNumber": "0123456789",
@@ -7,9 +8,14 @@
     "companyAddress": "XYZ Corp, Business Park",
     "lastName": "Doe",
     "firstName": "John",
-    "avatar": "assets/avatars/john.png"
+    "avatar": "assets/avatars/john.png",
+    "email": "john.doe@example.com",
+    "createdDate": "2023-06-10T00:00:00.000Z",
+    "updateDate": "2024-01-15T00:00:00.000Z",
+    "status": true
   },
   {
+    "userId": "2",
     "username": "jane_smith",
     "password": "securePass",
     "phoneNumber": "0987654321",
@@ -17,9 +23,14 @@
     "companyAddress": "ABC Ltd, Office Plaza",
     "lastName": "Smith",
     "firstName": "Jane",
-    "avatar": "assets/avatars/jane.png"
+    "avatar": "assets/avatars/jane.png",
+    "email": "jane.smith@example.com",
+    "createdDate": "2022-09-05T00:00:00.000Z",
+    "updateDate": "2024-02-01T00:00:00.000Z",
+    "status": true
   },
   {
+    "userId": "3",
     "username": "mike_williams",
     "password": "mikePass2024",
     "phoneNumber": "0112233445",
@@ -27,9 +38,14 @@
     "companyAddress": "Tech Solutions, IT Hub",
     "lastName": "Williams",
     "firstName": "Mike",
-    "avatar": "assets/avatars/mike.png"
+    "avatar": "assets/avatars/mike.png",
+    "email": "mike.williams@example.com",
+    "createdDate": "2023-03-20T00:00:00.000Z",
+    "updateDate": "2024-01-10T00:00:00.000Z",
+    "status": false
   },
   {
+    "userId": "4",
     "username": "lisa_brown",
     "password": "lisaSecret",
     "phoneNumber": "0223344556",
@@ -37,9 +53,14 @@
     "companyAddress": "Design Studio, Creative District",
     "lastName": "Brown",
     "firstName": "Lisa",
-    "avatar": "assets/avatars/lisa.png"
+    "avatar": "assets/avatars/lisa.png",
+    "email": "lisa.brown@example.com",
+    "createdDate": "2021-11-15T00:00:00.000Z",
+    "updateDate": "2023-12-05T00:00:00.000Z",
+    "status": true
   },
   {
+    "userId": "5",
     "username": "david_johnson",
     "password": "davidPass321",
     "phoneNumber": "0334455667",
@@ -47,6 +68,10 @@
     "companyAddress": "Financial Corp, Business Center",
     "lastName": "Johnson",
     "firstName": "David",
-    "avatar": "assets/avatars/david.png"
+    "avatar": "assets/avatars/david.png",
+    "email": "david.johnson@example.com",
+    "createdDate": "2022-05-30T00:00:00.000Z",
+    "updateDate": "2024-02-03T00:00:00.000Z",
+    "status": true
   }
 ]

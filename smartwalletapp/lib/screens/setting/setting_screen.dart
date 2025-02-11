@@ -4,19 +4,16 @@ import 'package:flutter/material.dart';
 import '../../constants.dart';
 import '../../models/user.dart';
 import '../../responsive.dart';
-import '../dashboard/components/header.dart';
-import '../dashboard/components/my_fields.dart';
-import '../dashboard/components/recent_files.dart';
-import '../dashboard/components/storage_details.dart';
+import '../general/header.dart';
+import '../card/components/my_card.dart';
+import '../dashboard/components/assets_details.dart';
 
 
 class SettingScreen extends StatelessWidget {
   final bool isAuth;
   SettingScreen({super.key,
     required this.isAuth,
-
   });
-
   final User user = User(
     username: "",
     password: "",
@@ -26,7 +23,10 @@ class SettingScreen extends StatelessWidget {
     lastName: "",
     firstName: "",
     avatar: "",
-    email: '', );
+    email: '', userId: '',
+    createdDate: DateTime.now(),
+    updateDate: DateTime.now(),
+    status: true, );
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -46,10 +46,10 @@ class SettingScreen extends StatelessWidget {
                     children: [
                       MyCard(),
                       SizedBox(height: defaultPadding),
-                      RecentFiles(),
+                      // RecentObject(),
                       if (Responsive.isMobile(context))
                         SizedBox(height: defaultPadding),
-                      if (Responsive.isMobile(context)) StorageDetails(),
+                      if (Responsive.isMobile(context)) AssetsDetails(),
                     ],
                   ),
                 ),
@@ -59,7 +59,7 @@ class SettingScreen extends StatelessWidget {
                 if (!Responsive.isMobile(context))
                   Expanded(
                     flex: 2,
-                    child: StorageDetails(),
+                    child: AssetsDetails(),
                   ),
               ],
             )

@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, non_constant_identifier_names
+// ignore_for_file: avoid_print, non_constant_identifier_names, unused_field
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -7,9 +7,10 @@ import 'package:smartwalletapp/bloc/Auth/AuthEvent.dart';
 import 'package:smartwalletapp/bloc/Auth/AuthState.dart';
 import 'package:smartwalletapp/models/user.dart';
 import 'package:smartwalletapp/screens/authentication/register_screen.dart';
+import 'package:smartwalletapp/screens/main/main_screen.dart';
 import '../../bloc/Auth/AuthBloc.dart';
 import '../../constants.dart';
-import '../dashboard/components/header.dart';
+import '../general/header.dart';
 import '../../responsive.dart';
 import '../main/components/side_menu.dart';
 class LoginScreen extends StatefulWidget {
@@ -21,7 +22,7 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 class _LoginScreenState extends State<LoginScreen> {
-  int _currentTab = 1;
+  int _currentTab = 0;
   final GlobalKey<ScaffoldState> _LoginscaffoldKey = GlobalKey<ScaffoldState>();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -33,7 +34,10 @@ class _LoginScreenState extends State<LoginScreen> {
       companyAddress: "",
       lastName: "",
       firstName: "",
-      avatar: "", email: '',
+      avatar: "", email: '', userId: '',
+      createdDate: DateTime.now(),
+      updateDate: DateTime.now(),
+      status: true,
   );
   @override
   void initState() {
@@ -47,12 +51,9 @@ class _LoginScreenState extends State<LoginScreen> {
         setState(() {
           _currentTab = index;
         });
-      }),
+      }, isAuth: widget.isAuth,),
       body: BlocConsumer<AuthBloc,AuthState>(
         builder: (context,state){
-          if(state is AuthSuccess){
-            user = state.user;
-          }
           return
             SafeArea(
               child: Row(
@@ -68,7 +69,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         setState(() {
                           _currentTab = index;
                         });
-                      }),
+                      }, isAuth: widget.isAuth,
+                      ),
                     ),
                   Expanded(
                     // It takes 5/6 part of the screen
@@ -199,6 +201,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                                                       backgroundColor: Theme.of(context).colorScheme.onPrimary, // Màu chữ trên nền chính
                                                                     ),
                                                                     onPressed: () {
+                                                                      print(_usernameController.text);
+                                                                      print(_passwordController.text);
                                                                       context.read<AuthBloc>().add(AuthenticateEvent(_usernameController.text, _passwordController.text));
                                                                     },
                                                                     child: Text(AppLocalizations.of(context).translate("Login")),
@@ -229,7 +233,13 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
           );
         },       listener: (context, state) {
-        if (state is AuthError) {
+        if(state is AuthSuccess){
+            user = state.user;
+            Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => MainScreen(isAuth: true, user: user,)),
+            );
+          }
+        else if (state is AuthError) {
           // Hiển thị AlertDialog khi có lỗi
           showDialog(
             context: context,

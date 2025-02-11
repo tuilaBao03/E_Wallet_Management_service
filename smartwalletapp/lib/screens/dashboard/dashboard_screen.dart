@@ -1,32 +1,32 @@
 
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
+import 'package:smartwalletapp/app/locallization/app_localizations.dart';
+import 'package:smartwalletapp/models/transaction.dart';
 
 import '../../constants.dart';
 import '../../models/user.dart';
 import '../../responsive.dart';
-import 'components/header.dart';
+import '../general/header.dart';
 
-import 'components/my_fields.dart';
-import 'components/recent_files.dart';
-import 'components/storage_details.dart';
+import '../card/components/my_card.dart';
+import 'components/table_object.dart';
+import 'components/assets_details.dart';
 
 class DashboardScreen extends StatelessWidget {
   final bool isAuth;
+  final User user;
   DashboardScreen({super.key,
-   required this.isAuth,
-
+   required this.isAuth, required this.user,
 });
-
-  final User user = User(
-    username: "",
-    password: "",
-    phoneNumber: "",
-    homeAddress: "",
-    companyAddress: "",
-    lastName: "",
-    firstName: "",
-    avatar: "",
-    email: '', );
+final HashSet<String> objectColumnName = HashSet.from([
+  "File Name",
+  "Date",
+  "Budget",
+  "Type Money",
+  "Type"
+]);
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -35,7 +35,7 @@ class DashboardScreen extends StatelessWidget {
         padding: EdgeInsets.all(defaultPadding),
         child: Column(
           children: [
-            Header(title: "Dashboard",user: user, isAuth: isAuth,),
+            Header(title: AppLocalizations.of(context).translate("Dashboard"),user: user, isAuth: isAuth,),
             SizedBox(height: defaultPadding),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,10 +46,10 @@ class DashboardScreen extends StatelessWidget {
                     children: [
                       MyCard(),
                       SizedBox(height: defaultPadding),
-                      RecentFiles(),
+                      TableObject(object: demoTransactionList, objectColumnName: objectColumnName, title: 'RecentTrans',),
                       if (Responsive.isMobile(context))
                         SizedBox(height: defaultPadding),
-                      if (Responsive.isMobile(context)) StorageDetails(),
+                      if (Responsive.isMobile(context)) AssetsDetails(),
                     ],
                   ),
                 ),
@@ -59,7 +59,7 @@ class DashboardScreen extends StatelessWidget {
                 if (!Responsive.isMobile(context))
                   Expanded(
                     flex: 2,
-                    child: StorageDetails(),
+                    child: AssetsDetails(),
                   ),
               ],
             )

@@ -23,3 +23,8 @@ class AuthenticateEvent extends AuthEvent{
 //   final String phoneNumber;
 // }
 
+class ForgetPassWordEvent extends AuthEvent{
+  final String email;
+  ForgetPassWordEvent(this.email);
+}
+

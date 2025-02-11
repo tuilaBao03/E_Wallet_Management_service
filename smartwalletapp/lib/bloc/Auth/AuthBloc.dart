@@ -9,10 +9,12 @@ import '../../models/user.dart';
 class AuthBloc extends Bloc<AuthEvent,AuthState>{
   AuthBloc():super(AuthInitial()){
     on<AuthenticateEvent>(_Authenticate);
+    on<ForgetPassWordEvent>(_CheckAndChangePass);
   }
   Future<User?> _Authenticate(AuthenticateEvent event,Emitter<AuthState> emit) async{
     try{
       UserRepository userRepository = UserRepository();
+      print('----------------------------------------');
       bool check = await userRepository.Authenticate(event.username, event.password);
       print(check);
       if(check){
@@ -29,36 +31,20 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
     }
     return null;
   }
-  // ignore: unused_element
-  // Future<void> _Register(RegisterEvent event,Emitter<AuthState> emit) async{
-  //   try{
-  //     UserRepository userRepository = UserRepository();
-  //       if(event.password == event.repass){
-  //         User user = User(
-  //             username: event.username,
-  //             password: event.password,
-  //             phoneNumber: event.phoneNumber,
-  //             homeAddress: event.homeAddress,
-  //             companyAddress: event.companyAddress,
-  //             lastName: event.lastname,
-  //             firstName: event.firstname,
-  //             avatar: "", email: '',
-  //         );
-  //         String mess = await userRepository.Register_MPA(user);
-  //         if(mess == "200"){
-  //           emit(RegisterSuccess(true));
-  //         }
-  //         else{
-  //           emit(AuthError("Register fail"));
-  //         }
-  //
-  //       }
-  //       else{
-  //         emit(AuthError("Password non match"));
-  //       }
-  //   }
-  //   catch(e){
-  //     print("_Resister $e");
-  //   }
-  // }
+  Future<void> _CheckAndChangePass(ForgetPassWordEvent event,Emitter<AuthState> emit) async{
+    try{
+      UserRepository userRepository = UserRepository();
+      String check = await userRepository.GiveInfortoEmail(event.email);
+      if(check == '0'){
+        emit(AuthError("Email ko lien ket voi tk"));
+      }
+      else{
+        emit(RegisterSuccess(true));
+      }
+
+    }
+    catch(e){
+      print("_CheckAndChangePass $e");
+    }
+  }
 }
