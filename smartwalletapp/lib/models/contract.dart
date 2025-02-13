@@ -6,6 +6,8 @@ class Contract {
   final String userID;
   final String note;
   final String url;
+  final String cardHolderID;
+  final String parent;
 
   Contract(  {
     required this.contractID,
@@ -15,6 +17,8 @@ class Contract {
     required this.note,
     required this.url,
     required this.updatedDate,
+    required this.cardHolderID,
+    required this.parent,
   });
 }
 
@@ -27,6 +31,8 @@ List<Contract> contractlist =[
   status: true,
   note: "Hợp đồng mở thẻ ngân hàng",
   url: "https://example.com/contracts/C12345",
+  cardHolderID: '1', parent: 'null',
+  
   ),
   Contract(
     contractID: "2",
@@ -35,7 +41,8 @@ List<Contract> contractlist =[
     updatedDate: DateTime.now(),
     status: true,
     note: "Hợp đồng mở thẻ ngân hàng",
-    url: "https://example.com/contracts/C12345",
+    url: "https://example.com/contracts/C12345", cardHolderID: '1',
+    parent: '1',
   ),
   Contract(
     contractID: "3",
@@ -44,7 +51,8 @@ List<Contract> contractlist =[
     updatedDate: DateTime.now(),
     status: true,
     note: "Hợp đồng mở thẻ ngân hàng",
-    url: "https://example.com/contracts/C12345",
+    url: "https://example.com/contracts/C12345", cardHolderID: '1',
+    parent: '1',
   )
 ];
 

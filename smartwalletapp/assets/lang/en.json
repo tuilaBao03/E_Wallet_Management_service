@@ -72,6 +72,7 @@
 
 "5":"System",
         "Finding...":"Finding...",
+        "There is no matching information": "There is no matching information",
 
 
 "6":"Card",
@@ -83,6 +84,11 @@
         "PrepaidCard":"PrepaidCard",
         "CardDetail":"Card Detail",
         "CardId":"Card ID",
+        "limit": "Limit",
+        "TypeCard":"Type Card",
+        "cardList":"Cards List",
+        "Pick Date":"Pick Date",
+
 
 "7":"Transaction",
         "budget":"Budget",
@@ -93,6 +99,10 @@
         "startD":"Starting date",
         "endD":"Ending date",
         "Detail":"Detail",
+        "typeTran":"Type Tran",
+        "Cash out":"Cash out",
+        "Deposit":"Deposit",
+        "Transfer":"Transfer",
 
 "8":"Contract",
         "Contract":"Contract",
@@ -101,7 +111,8 @@
         "createdDate":"created Date",
         "status":"Status",
         "ContractImageUrl":"Contract Image Url",
-        "ContractDetail":"ContractDetail"
+        "ContractDetail":"ContractDetail",
+        "updatedDate":"Updated Date"
 
 
 }

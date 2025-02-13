@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, unused_field, non_constant_identifier_names
+// ignore_for_file: avoid_print, unused_field, non_constant_identifier_names, avoid_types_as_parameter_names
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -15,8 +15,9 @@ import '../main/components/side_menu.dart';
 import 'components/textfile.dart';
 class RegisterScreen extends StatefulWidget {
   final bool isAuth;
+  final Function(Locale) onLanguageChange;
   const RegisterScreen({super.key,
-    required this.isAuth,
+    required this.isAuth, required this.onLanguageChange,
   });
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -71,7 +72,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => LoginScreen(isAuth: false),
+                builder: (context) => LoginScreen(isAuth: false, onLanguageChange: (Locale ) { widget.onLanguageChange; }, ),
               ),
             );
           }
@@ -101,7 +102,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Header(title: AppLocalizations.of(context).translate("Register"),user: user, isAuth: widget.isAuth,),
+                      Header(title: AppLocalizations.of(context).translate("Register"),user: user, isAuth: widget.isAuth,onLanguageChange: widget.onLanguageChange),
                       SizedBox(height: defaultPadding),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -153,7 +154,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                           disabledForegroundColor: Theme.of(context).colorScheme.onPrimary, // Màu khi bị vô hiệu hóa
                                         ),
                                         onPressed: () {
-                                          Get.to(LoginScreen(isAuth: widget.isAuth));
+                                          Get.to(LoginScreen(isAuth: false, onLanguageChange: widget.onLanguageChange ),);
                                         },
                                         child: Text(AppLocalizations.of(context).translate("Login")),
                                       ),

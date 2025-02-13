@@ -10,13 +10,16 @@ class CardInfo {
   final Color color;
   final String CardID;
   final String userId;
+  final String cardHolderId;
   final String typeCard;
   final DateTime createdDate;
   final DateTime updateDate;
   final bool status;
   final String contractID;
+  final double limit;
 
   CardInfo({
+    required this.cardHolderId,
     required this.CardID,
     required this.userId,
     required this.svgSrc,
@@ -27,7 +30,8 @@ class CardInfo {
     required this.createdDate,
     required this.updateDate,
     required this.status,
-    required this.contractID
+    required this.contractID,
+    required this.limit
   });
 }
 
@@ -43,7 +47,7 @@ List<CardInfo> MyCards = [
     createdDate: DateTime.now(),
     updateDate: DateTime.now(),
     status: true,
-    contractID: "1",
+    contractID: "2", cardHolderId: '1', limit: 0,
   ),
   CardInfo(
     bankName: "ABChinaBank",
@@ -56,7 +60,8 @@ List<CardInfo> MyCards = [
     createdDate: DateTime.now(),
     updateDate: DateTime.now(),
     status: true,
-    contractID: "1",
+    contractID: "2",
+    cardHolderId: '1', limit: 0,
   ),
   CardInfo(
     bankName: "BangKokBank",
@@ -69,6 +74,7 @@ List<CardInfo> MyCards = [
     createdDate: DateTime.now(),
     updateDate: DateTime.now(),
     status: false,
-    contractID: "1",
+    contractID: "2",
+    cardHolderId: '1', limit: 0,
   ),
 ];

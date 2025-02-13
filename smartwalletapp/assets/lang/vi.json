@@ -73,6 +73,7 @@
     
 "5":"System",
         "Finding...":"Tìm kiếm...",
+        "There is no matching information": "Không có bất cứ thông tin trùng khớp",
         
 "6":"Card",
         "balance":"Số dư",
@@ -82,6 +83,10 @@
         "PrepaidCard":"Thẻ trả trước",
         "CardDetail":"Chi tiết thẻ",
         "CardId":"Mã số thẻ",
+        "limit": "Hạn mức",
+        "TypeCard":"Loại thẻ",
+        "cardList":"Danh sách thẻ",
+        "Pick Date":"Chọn ngày",
 
 "7":"Transaction",
         "budget":"Số tiền",
@@ -92,6 +97,10 @@
         "startD":"Ngày bắt đầu",
         "endD":"Ngày kết thúc",
         "Detail":"Chi tiết",
+        "typeTran":"Loại giao dịch",
+        "Cash out":"Rút tiền",
+        "Deposit":"Nạp tiền",
+        "Transfer":"Chuyển khoản",
 
 "8":"Contract",
         "Contract":"Hợp đồng",
@@ -101,8 +110,6 @@
         "status":"Trạng thái",
         "ContractImageUrl":"Link ảnh",
         "ContractDetail":"Chi tiết hợp đồng",
-        "ContractList":"Danh sách hợp đồng"
-
-
-        
+        "ContractList":"Danh sách hợp đồng",
+        "updatedDate":"Ngày sửa"
 }

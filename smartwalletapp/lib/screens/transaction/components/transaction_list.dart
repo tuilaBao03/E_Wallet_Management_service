@@ -3,16 +3,17 @@
 import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:smartwalletapp/app/locallization/app_localizations.dart';
-import 'package:smartwalletapp/models/card.dart';
+import 'package:smartwalletapp/models/contract.dart';
 import 'package:smartwalletapp/models/transaction.dart';
 import 'package:intl/intl.dart';
+import 'package:smartwalletapp/screens/transaction/components/transaction_detail.dart';
 
 class TransactionList extends StatefulWidget {
   final List<Transaction> object;
   final String title;
   final HashSet<String> objectColumnName;
   final Function(Transaction) onDetailSelected;
-  final CardInfo cardInfo;
+  final Contract contract;
   final bool currentPage;
 
   const TransactionList({
@@ -20,7 +21,7 @@ class TransactionList extends StatefulWidget {
     required this.object,
     required this.objectColumnName,
     required this.title,
-    required this.onDetailSelected, required this.cardInfo, required this.currentPage,
+    required this.onDetailSelected, required this.contract, required this.currentPage,
   });
 
   @override
@@ -35,12 +36,7 @@ class _TransactionListState extends State<TransactionList> {
   @override
   void initState() {
     super.initState();
-    if(widget.cardInfo.CardID == '0'){
-      _filteredTrans = widget.object;
-    }else{
-      _filteredTrans = widget.object.where((trans) => trans.cardId == widget.cardInfo.CardID)
-      .toList();
-    }
+    _filteredTrans = widget.object;
   }
 
     @override
@@ -48,9 +44,9 @@ class _TransactionListState extends State<TransactionList> {
     super.didUpdateWidget(oldWidget);
 
     // Nếu user thay đổi, cập nhật danh sách thẻ
-    if (oldWidget.cardInfo.CardID != widget.cardInfo.CardID) {
+    if (oldWidget.contract.contractID != widget.contract.contractID) {
       setState(() {
-        _filteredTrans = widget.object.where((trans) => trans.cardId == widget.cardInfo.CardID)
+        _filteredTrans = widget.object.where((trans) => trans.contractID == widget.contract.contractID)
       .toList();
       });
     }
@@ -87,7 +83,8 @@ class _TransactionListState extends State<TransactionList> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return
+      Container(
       height: MediaQuery.of(context).size.height / 1.5,
       padding: EdgeInsets.all(16.0),
       decoration: BoxDecoration(
@@ -148,6 +145,14 @@ class _TransactionListState extends State<TransactionList> {
               ],
             ),
             SizedBox(height: 16.0),
+            _filteredTrans.isEmpty ?
+            Container(
+              color: Theme.of(context).colorScheme.secondary,
+              child: Center(
+                child: Text(AppLocalizations.of(context).translate("There is no matching information")),
+              ),
+            )
+                :
             SizedBox(
               width: double.infinity,
               child: DataTable(
@@ -173,9 +178,7 @@ class _TransactionListState extends State<TransactionList> {
       ),
     );
   }
-}
-
-DataRow recentFileDataRow(Transaction fileInfo, VoidCallback onDetail,bool currentPage) {
+  DataRow recentFileDataRow(Transaction fileInfo, VoidCallback onDetail,bool currentPage) {
   return DataRow(
     cells: [
       
@@ -186,9 +189,27 @@ DataRow recentFileDataRow(Transaction fileInfo, VoidCallback onDetail,bool curre
       DataCell(
         IconButton(
           icon: Icon(Icons.details, color: Colors.green),
-          onPressed: onDetail,
+          onPressed: () => _showDetailDialog(context, fileInfo),
         ),
       ),
     ],
   );
 }
+void _showDetailDialog(BuildContext context, Transaction tran) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: TransactionDetail(object: tran, title: "TransactionDetail"), // Thay thế bằng widget chi tiết hợp đồng của bạn
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Icon(Icons.cancel, color: Colors.red,),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+

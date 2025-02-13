@@ -3,8 +3,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:smartwalletapp/bloc/MainApp/MainAppBloc.dart';
 import 'package:smartwalletapp/bloc/Register/RegistedBloc.dart';
 import 'package:smartwalletapp/models/user.dart';
 import 'package:smartwalletapp/screens/main/main_screen.dart';
@@ -24,7 +25,8 @@ void main() {
               create: (context) => MenuAppController(),
             ),
           BlocProvider(create: (context)=>AuthBloc()),
-          BlocProvider(create: (context)=>RegisterBloc())
+          BlocProvider(create: (context)=>RegisterBloc()),
+          BlocProvider(create: (context)=>MainAppBloc()),
             ]
           )
         ],
@@ -82,7 +84,10 @@ class _MyAppState extends State<MyApp> {
         Locale('en', ''), // English
         Locale('vi', ''), // Vietnamese
       ],
-      home: MainScreen(isAuth: true, user: u)
+      home: MainScreen(isAuth: true, user: u, onLanguageChange: (Locale newLocale) {
+        // Thay đổi ngôn ngữ trong toàn ứng dụng
+        Get.updateLocale(newLocale);
+      },)
     );
   }
 }

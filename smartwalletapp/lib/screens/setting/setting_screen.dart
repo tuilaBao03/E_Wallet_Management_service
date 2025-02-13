@@ -1,6 +1,8 @@
 
-import 'package:flutter/material.dart';
+// ignore_for_file: non_constant_identifier_names, avoid_types_as_parameter_names
 
+import 'package:flutter/material.dart';
+import 'package:smartwalletapp/screens/main/components/classInitial.dart';
 import '../../constants.dart';
 import '../../models/user.dart';
 import '../../responsive.dart';
@@ -11,22 +13,12 @@ import '../dashboard/components/assets_details.dart';
 
 class SettingScreen extends StatelessWidget {
   final bool isAuth;
+  final User user;
   SettingScreen({super.key,
     required this.isAuth,
+    required this.user,
   });
-  final User user = User(
-    username: "",
-    password: "",
-    phoneNumber: "",
-    homeAddress: "",
-    companyAddress: "",
-    lastName: "",
-    firstName: "",
-    avatar: "",
-    email: '', userId: '',
-    createdDate: DateTime.now(),
-    updateDate: DateTime.now(),
-    status: true, );
+  final User selecteduser = selectedUserInittial;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -35,7 +27,7 @@ class SettingScreen extends StatelessWidget {
         padding: EdgeInsets.all(defaultPadding),
         child: Column(
           children: [
-            Header(title: "Setting",user: user, isAuth: isAuth,),
+            Header(title: "Setting",user: user, isAuth: isAuth, onLanguageChange: (Locale ) {  },),
             SizedBox(height: defaultPadding),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,21 +38,12 @@ class SettingScreen extends StatelessWidget {
                     children: [
                       MyCard(),
                       SizedBox(height: defaultPadding),
-                      // RecentObject(),
                       if (Responsive.isMobile(context))
                         SizedBox(height: defaultPadding),
                       if (Responsive.isMobile(context)) AssetsDetails(),
                     ],
                   ),
                 ),
-                if (!Responsive.isMobile(context))
-                  SizedBox(width: defaultPadding),
-                // On Mobile means if the screen is less than 850 we don't want to show it
-                if (!Responsive.isMobile(context))
-                  Expanded(
-                    flex: 2,
-                    child: AssetsDetails(),
-                  ),
               ],
             )
           ],

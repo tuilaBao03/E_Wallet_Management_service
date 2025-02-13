@@ -3,25 +3,25 @@
 import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart'; // Import thư viện format ngày
 import 'package:smartwalletapp/app/locallization/app_localizations.dart';
 import 'package:smartwalletapp/models/card.dart';
-import 'package:smartwalletapp/models/user.dart';
+import 'package:smartwalletapp/models/contract.dart';
+import 'package:smartwalletapp/screens/card/components/card_detail.dart';
 import '../../../../constants.dart';
-
 
 class CardList extends StatefulWidget {
   final List<CardInfo> object;
   final String title;
   final HashSet<String> objectColumnName;
-  final Function(CardInfo) onDetailSelected;
-  final User user;
+  final Contract contract;
 
   const CardList({
-    super.key, 
-    required this.object, 
+    super.key,
+    required this.object,
     required this.objectColumnName,
     required this.title,
-    required this.onDetailSelected, required this.user,
+    required this.contract,
   });
 
   @override
@@ -31,38 +31,54 @@ class CardList extends StatefulWidget {
 class _CardListState extends State<CardList> {
   TextEditingController _searchController = TextEditingController();
   List<CardInfo> _filteredCardInfos = [];
-  late User _user;
+  late Contract _contract;
+  DateTime? _selectedDate; // Biến lưu ngày tháng được chọn
 
   @override
   void initState() {
-  super.initState();
-  _user = widget.user;
-  _filteredCardInfos = widget.object
-      .where((card) => card.userId == widget.user.userId)
-      .toList();
-  print(_filteredCardInfos.length);
-}
-
-  void _searchCardInfo() {
-    setState(() {
-      _filteredCardInfos = widget.object.where((card) =>
-        card.bankName.toLowerCase().contains(_searchController.text.toLowerCase())
-      ).toList();
-    });
+    super.initState();
+    _contract = widget.contract;
+    _filteredCardInfos = widget.object;
   }
 
-  @override
+      @override
   void didUpdateWidget(covariant CardList oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     // Nếu user thay đổi, cập nhật danh sách thẻ
-    if (oldWidget.user.userId != widget.user.userId) {
+    if (oldWidget.contract.contractID != widget.contract.contractID) {
       setState(() {
-        _user = widget.user;
-        _filteredCardInfos = widget.object
-            .where((card) => card.userId == widget.user.userId)
-            .toList();
+        _filteredCardInfos = widget.object.where((trans) => trans.contractID == widget.contract.contractID)
+      .toList();
       });
+    }
+  }
+
+  void _searchCardInfo() {
+    setState(() {
+      _filteredCardInfos = widget.object.where((card) {
+        bool matchesSearch = card.CardID.toLowerCase().contains(_searchController.text.toLowerCase());
+        bool matchesDate = _selectedDate == null ||
+            DateFormat('yyyy-MM-dd').format(card.createdDate) == DateFormat('yyyy-MM-dd').format(_selectedDate!);
+
+        return matchesSearch && matchesDate;
+      }).toList();
+    });
+  }
+
+  void _pickDate() async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime.now(),
+    );
+
+    if (pickedDate != null) {
+      setState(() {
+        _selectedDate = pickedDate;
+      });
+      _searchCardInfo();
     }
   }
 
@@ -81,9 +97,15 @@ class _CardListState extends State<CardList> {
           children: [
             Text(
               AppLocalizations.of(context).translate(widget.title),
-              style: Theme.of(context).textTheme.titleMedium,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onPrimary
+              )
+              
+              
             ),
             SizedBox(height: defaultPadding),
+
+            // Thanh tìm kiếm + Lọc theo ngày
             Row(
               children: [
                 Expanded(
@@ -103,50 +125,89 @@ class _CardListState extends State<CardList> {
                   icon: Icon(Icons.search, color: Colors.blue),
                   onPressed: _searchCardInfo,
                 ),
+                SizedBox(width: 8),
+                ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Theme.of(context).colorScheme.onPrimary, // Đổi màu chữ toàn bộ nút
+                      backgroundColor: Theme.of(context).colorScheme.primary, // Màu nền
+                    ),
+                    onPressed: _pickDate,
+                    icon: Icon(Icons.calendar_today, color: Theme.of(context).colorScheme.onPrimary),
+                    label: Text(
+                      _selectedDate == null
+                          ? AppLocalizations.of(context).translate("Pick Date")
+                          : DateFormat('yyyy-MM-dd').format(_selectedDate!),
+                    ),
+                  ),
               ],
             ),
             SizedBox(height: defaultPadding),
-            SizedBox(
-              width: double.infinity,
-              child: DataTable(
-                columnSpacing: defaultPadding,
-                columns: widget.objectColumnName.map((name) => DataColumn(
-                  label: Text(AppLocalizations.of(context).translate(name), overflow: TextOverflow.ellipsis, maxLines: 1),
-                )).toList(),
-                rows: List.generate(
-                  _filteredCardInfos.length,
-                  (index) => recentFileDataRow(
-                    _filteredCardInfos[index],
-                    () {
-                      widget.onDetailSelected(_filteredCardInfos[index]);
-                      print(_filteredCardInfos[index].toString());
-                    }
+
+            // Danh sách thẻ
+            _filteredCardInfos.isEmpty
+                ? Container(
+                    color: Theme.of(context).colorScheme.secondary,
+                    child: Center(
+                      child: Text(AppLocalizations.of(context).translate("There is no matching information")),
+                    ),
+                  )
+                : SizedBox(
+                    width: double.infinity,
+                    child: DataTable(
+                      columnSpacing: defaultPadding,
+                      columns: widget.objectColumnName
+                          .map((name) => DataColumn(
+                                label: Text(
+                                  AppLocalizations.of(context).translate(name),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                ),
+                              ))
+                          .toList(),
+                      rows: List.generate(
+                        _filteredCardInfos.length,
+                        (index) => recentFileDataRow(
+                          _filteredCardInfos[index],
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ),
           ],
         ),
       ),
     );
   }
-}
-
-DataRow recentFileDataRow(CardInfo fileInfo, VoidCallback onDetail) {
+  DataRow recentFileDataRow(CardInfo fileInfo) {
   return DataRow(
     cells: [
       DataCell(Text(fileInfo.CardID)),
       DataCell(
-        Row(
-          children: [
-        
-            IconButton(
+        IconButton(
               icon: Icon(Icons.details, color: Colors.green),
-              onPressed: onDetail,
-            )
-          ],
-        ),
+              onPressed: ()=>_showDetailDialog(context, fileInfo),
+            ),
       ),
     ],
   );
 }
+void _showDetailDialog(BuildContext context, CardInfo contract) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: CardDetail(object: contract, title: "CardList"), // Thay thế bằng widget chi tiết hợp đồng của bạn
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Icon(Icons.cancel, color: Colors.red,),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+// Hàm tạo hàng dữ liệu
+
+

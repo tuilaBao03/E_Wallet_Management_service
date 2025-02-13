@@ -1,6 +1,7 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, avoid_print
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:smartwalletapp/app/locallization/app_localizations.dart';
 import 'package:smartwalletapp/models/contract.dart';
 
@@ -41,6 +42,7 @@ class _ContractDetailState extends State<ContractDetail> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: Get.width/1.2,
       padding: EdgeInsets.all(defaultPadding),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.secondary,

@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, non_constant_identifier_names, unused_field
+// ignore_for_file: avoid_print, non_constant_identifier_names, unused_field, avoid_types_as_parameter_names
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -15,8 +15,9 @@ import '../../responsive.dart';
 import '../main/components/side_menu.dart';
 class LoginScreen extends StatefulWidget {
   final bool isAuth;
+  final Function(Locale) onLanguageChange;
   const LoginScreen({super.key,
-    required this.isAuth,
+    required this.isAuth, required this.onLanguageChange,
 });
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -80,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       padding: EdgeInsets.all(defaultPadding),
                       child: Column(
                         children: [
-                          Header(title: AppLocalizations.of(context).translate("Login"),user: user, isAuth: widget.isAuth,),
+                          Header(title: AppLocalizations.of(context).translate("Login"),user: user, isAuth: widget.isAuth,onLanguageChange: widget.onLanguageChange),
                           SizedBox(height: defaultPadding),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -188,7 +189,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                                       Navigator.pushReplacement(
                                                                         context,
                                                                         MaterialPageRoute(
-                                                                          builder: (context) => RegisterScreen(isAuth: widget.isAuth),
+                                                                          builder: (context) => RegisterScreen(isAuth: widget.isAuth, onLanguageChange: (Locale ) { widget.onLanguageChange; },),
                                                                         ),
                                                                       );
                                                                     },
@@ -236,7 +237,7 @@ class _LoginScreenState extends State<LoginScreen> {
         if(state is AuthSuccess){
             user = state.user;
             Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => MainScreen(isAuth: true, user: user,)),
+            MaterialPageRoute(builder: (context) => MainScreen(isAuth: true, user: user, onLanguageChange: widget.onLanguageChange,)),
             );
           }
         else if (state is AuthError) {

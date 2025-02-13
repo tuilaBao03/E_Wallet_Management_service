@@ -6,6 +6,7 @@ import '../../../app/locallization/app_localizations.dart';
 class SideMenu extends StatelessWidget {
   final bool isAuth;
   final Function(int) onMenuTap;
+  
 
   const SideMenu({super.key, required this.onMenuTap, required this.isAuth});
   @override
@@ -32,17 +33,6 @@ class SideMenu extends StatelessWidget {
             svgSrc: "assets/icons/menu_tran.svg",
             press: () => onMenuTap(3),
           ),
-
-          // DrawerListTile(
-          //   title: AppLocalizations.of(context).translate("MyCard"),
-          //   svgSrc: "assets/icons/menu_doc.svg",
-          //   press: () => onMenuTap(3),
-          // ),
-          // DrawerListTile(
-          //   title: AppLocalizations.of(context).translate("Store"),
-          //   svgSrc: "assets/icons/menu_store.svg",
-          //   press: () => onMenuTap(4),
-          // ),
           DrawerListTile(
             title: AppLocalizations.of(context).translate("Contract"),
             svgSrc: "assets/icons/menu_notification.svg",
@@ -53,15 +43,10 @@ class SideMenu extends StatelessWidget {
             svgSrc: "assets/icons/menu_profile.svg",
             press: () => onMenuTap(5),
           ),
-          DrawerListTile(
-            title: AppLocalizations.of(context).translate("Setting"),
-            svgSrc: "assets/icons/menu_setting.svg",
-            press: () => onMenuTap(6),
-          ),
           // DrawerListTile(
-          //   title: AppLocalizations.of(context).translate("Wallet"),
-          //   svgSrc: "assets/icons/menu_task.svg",
-          //   press: () => onMenuTap(8),
+          //   title: AppLocalizations.of(context).translate("Setting"),
+          //   svgSrc: "assets/icons/menu_setting.svg",
+          //   press: () => onMenuTap(6),
           // ),
           // DrawerListTile(
           //   title: AppLocalizations.of(context).translate("ParkingSpotManagement"),

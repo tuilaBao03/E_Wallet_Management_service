@@ -1,5 +1,7 @@
 
 
+// ignore_for_file: avoid_types_as_parameter_names, non_constant_identifier_names
+
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
@@ -7,6 +9,7 @@ import 'package:smartwalletapp/models/contract.dart';
 import 'package:smartwalletapp/responsive.dart';
 import 'package:smartwalletapp/screens/contract/components/contract_detail.dart';
 import 'package:smartwalletapp/screens/contract/components/contract_list.dart';
+import 'package:smartwalletapp/screens/main/components/classInitial.dart';
 
 
 import '../../constants.dart';
@@ -19,8 +22,9 @@ import '../general/header.dart';
 class ContractScreen extends StatefulWidget {
   final bool isAuth;
   final User user;
+  final Function(Locale) onLanguageChange;
   const ContractScreen({super.key,
-    required this.isAuth, required this.user,
+    required this.isAuth, required this.user, required this.onLanguageChange,
 
   });
 
@@ -32,33 +36,13 @@ class _ContractScreenState extends State<ContractScreen> {
   final HashSet<String> objectColumnNameOfContract = HashSet.from([
     "ContractID",
     "date",
-    "Detail"
+    "Detail",
+    "cardList",
+    "TranList"
   ]);
-  final User user = User(
-    username: "",
-    password: "",
-    phoneNumber: "",
-    homeAddress: "",
-    companyAddress: "",
-    lastName: "",
-    firstName: "",
-    avatar: "",
-    email: '', userId: '', 
-    createdDate: DateTime.now(),
-    updateDate: DateTime.now(),
-    status: true,
-    );
   
   
-  Contract selectedContract = Contract(
-  contractID: "1",
-  userID: "1",
-  createdDate: DateTime.now(),
-  updatedDate: DateTime.now(),
-  status: true,
-  note: "",
-  url: "https://example.com/contracts/C12345",
-  );
+  Contract selectedContract = selectedContractInittial;
   bool selectContractDetail = false;
   
   void updateContractDetail(Contract contract){
@@ -76,7 +60,7 @@ class _ContractScreenState extends State<ContractScreen> {
         padding: EdgeInsets.all(defaultPadding),
         child: Column(
           children: [
-            Header(title: "Contract",user: user, isAuth: widget.isAuth,),
+            Header(title: "Contract",user: widget.user, isAuth: widget.isAuth, onLanguageChange: widget.onLanguageChange,),
             SizedBox(height: defaultPadding),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,8 +73,9 @@ class _ContractScreenState extends State<ContractScreen> {
                         object: contractlist,
                         objectColumnName: objectColumnNameOfContract,
                         title: 'ContractList',
-                        onDetailSelected: updateContractDetail, currentPage: true,
-                        user: user,),
+                        onContract_CardList: updateContractDetail,
+                        onContract_TranSaction: (Contract ) {},
+                        cardHolder: selectedcardHolderInittial,),
                       if(!Responsive.isDesktop(context))
                         SizedBox(height: defaultPadding),
                       if(!Responsive.isDesktop(context) && selectContractDetail == true)

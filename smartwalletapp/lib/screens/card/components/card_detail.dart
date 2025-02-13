@@ -1,8 +1,6 @@
 // ignore_for_file: must_be_immutable
-
-
 import 'package:flutter/material.dart';
-
+import 'package:get/get.dart';
 import 'package:smartwalletapp/app/locallization/app_localizations.dart';
 import 'package:smartwalletapp/models/card.dart';
 
@@ -11,19 +9,14 @@ import '../../../../constants.dart';
 import '../../general/text_files.dart';
 
 class CardDetail extends StatefulWidget {
-  final bool isActive;
-  final bool isUpdate;
   final String title;
-  final bool isImage;
+
   final CardInfo object;
 
   const CardDetail({
     super.key,
     required this.object,
-    required this.isImage,
     required this.title,
-    required this.isActive,
-    required this.isUpdate,
   });
 
   @override
@@ -34,6 +27,7 @@ class _CardDetailState extends State<CardDetail> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: Get.width/1.2,
       padding: EdgeInsets.all(defaultPadding),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.secondary,
@@ -90,9 +84,7 @@ class ObjectDetailInfor extends StatefulWidget {
 }
 
 class _ObjectDetailInforState extends State<ObjectDetailInfor> {
-  late TextEditingController _bankNameController;
-  late TextEditingController _balanceController;
-  late String _selectedTypeCard;
+  late TextEditingController _limitController;
 
   final List<String> typeCardList = ["DebitCard", "CreditCard", "PrepaidCard"];
 
@@ -103,9 +95,7 @@ class _ObjectDetailInforState extends State<ObjectDetailInfor> {
   }
 
   void _initializeControllers(CardInfo objectInfo) {
-    _bankNameController = TextEditingController(text: objectInfo.bankName);
-    _balanceController = TextEditingController(text: objectInfo.balance.toString());
-    _selectedTypeCard = objectInfo.typeCard;
+    _limitController = TextEditingController(text: objectInfo.limit.toString());
   }
 
     @override
@@ -122,8 +112,7 @@ class _ObjectDetailInforState extends State<ObjectDetailInfor> {
 
   @override
   void dispose() {
-    _bankNameController.dispose();
-    _balanceController.dispose();
+    _limitController.dispose();
     super.dispose();
   }
 
@@ -133,37 +122,46 @@ class _ObjectDetailInforState extends State<ObjectDetailInfor> {
       child: Column(
         children: [
           SizedBox(height: defaultPadding),
-          TestFiles(editController: _bankNameController, title: 'Bank Name'),
-          SizedBox(height: defaultPadding),
-          TestFiles(editController: _balanceController, title: 'Balance'),
+          TestFiles(editController: _limitController, title: 'limit'),
           SizedBox(height: defaultPadding),
           
           // Dropdown thay thế TextField
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: defaultPadding),
-            child: DropdownButtonFormField<String>(
-              value: _selectedTypeCard,
-              decoration: InputDecoration(
-                labelText: 'Type Card',
-                border: OutlineInputBorder(),
-              ),
-              items: typeCardList.map((String type) {
-                return DropdownMenuItem<String>(
-                  value: type,
-                  child: Text(type),
-                );
-              }).toList(),
-              onChanged: (String? newValue) {
-                setState(() {
-                  _selectedTypeCard = newValue!;
-                });
-              },
-            ),
+          Table(
+            border: TableBorder.all(color: Theme.of(context).colorScheme.onPrimary),
+            columnWidths: const {
+              0: FlexColumnWidth(2), // Cột 1 rộng hơn
+              1: FlexColumnWidth(3), // Cột 2 rộng hơn để chứa dữ liệu
+            },
+            children: [
+              _buildTableRow('CardId', widget.objectInfo.CardID),
+              _buildTableRow('Balance', widget.objectInfo.balance.toString()),
+              _buildTableRow('TypeCard', widget.objectInfo.typeCard),
+              _buildTableRow('bankName', widget.objectInfo.bankName.toString()),
+              _buildTableRow('createdDate', widget.objectInfo.createdDate.toString()),
+              _buildTableRow('updatedDate', widget.objectInfo.updateDate.toString()),
+            ],
           ),
 
           SizedBox(height: defaultPadding),
         ],
       ),
+    );
+  }
+  TableRow _buildTableRow(String field, String value) {
+    return TableRow(
+      decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary),
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+              AppLocalizations.of(context).translate(field)
+              , style: TextStyle( color: Theme.of(context).colorScheme.onPrimary)),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(value,style: TextStyle( color: Theme.of(context).colorScheme.onPrimary)),
+        ),
+      ],
     );
   }
 }

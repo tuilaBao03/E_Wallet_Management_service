@@ -13,8 +13,9 @@ import '../../responsive.dart';
 import '../main/components/side_menu.dart';
 class ForgetPassWordScreen extends StatefulWidget {
   final bool isAuth;
+  final Function(Locale) onLanguageChange;
   const ForgetPassWordScreen({super.key,
-    required this.isAuth,
+    required this.isAuth, required this.onLanguageChange,
 });
   @override
   State<ForgetPassWordScreen> createState() => _ForgetPassWordScreenState();
@@ -80,7 +81,7 @@ class _ForgetPassWordScreenState extends State<ForgetPassWordScreen> {
                       padding: EdgeInsets.all(defaultPadding),
                       child: Column(
                         children: [
-                          Header(title: AppLocalizations.of(context).translate("Login"),user: user, isAuth: widget.isAuth,),
+                          Header(title: AppLocalizations.of(context).translate("Login"),user: user, isAuth: widget.isAuth,onLanguageChange: widget.onLanguageChange),
                           SizedBox(height: defaultPadding),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -166,7 +167,7 @@ class _ForgetPassWordScreenState extends State<ForgetPassWordScreen> {
                                                                       Navigator.pushReplacement(
                                                                         context,
                                                                         MaterialPageRoute(
-                                                                          builder: (context) => RegisterScreen(isAuth: widget.isAuth),
+                                                                          builder: (context) => RegisterScreen(isAuth: widget.isAuth,onLanguageChange: widget.onLanguageChange,),
                                                                         ),
                                                                       );
                                                                     },

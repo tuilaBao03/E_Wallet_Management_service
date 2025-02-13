@@ -1,11 +1,9 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
-
+import 'package:get/get.dart';
 import 'package:smartwalletapp/app/locallization/app_localizations.dart';
 import 'package:smartwalletapp/models/transaction.dart';
-
-
 import '../../../../constants.dart';
 
 
@@ -13,10 +11,11 @@ class TransactionDetail extends StatefulWidget {
   final String title;
   final Transaction object;
 
+
   const TransactionDetail({
     super.key,
     required this.object,
-    required this.title,
+    required this.title, 
   });
 
   @override
@@ -29,6 +28,7 @@ class _TransactionDetailState extends State<TransactionDetail> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: Get.width/1.2,
       padding: EdgeInsets.all(defaultPadding),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.secondary,
@@ -87,7 +87,13 @@ class _ObjectDetailInforState extends State<ObjectDetailInfor> {
             _buildTableRow('TransactionID', widget.transaction.transactionId.toString()),
             _buildTableRow('budget', widget.transaction.budget.toString()),
             _buildTableRow('typeMoney', widget.transaction.typeMoney),
-            _buildTableRow('date', widget.transaction.date.toString()),
+            _buildTableRow('bankName', widget.transaction.bankName.toString()),
+            _buildTableRow('typeTran', 
+                widget.transaction.typeTransaction ==0 ? "Deposit" :
+                widget.transaction.typeTransaction == 1 
+                ?"Cash out":"Transfer"),
+            _buildTableRow('note', widget.transaction.note.toString()),
+            _buildTableRow('CardId', widget.transaction.contractID.toString()),
           ],
         ),
       ),
@@ -102,11 +108,11 @@ class _ObjectDetailInforState extends State<ObjectDetailInfor> {
           padding: const EdgeInsets.all(8.0),
           child: Text(
             AppLocalizations.of(context).translate(field)
-            , style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onPrimary)),
+            , style: TextStyle( color: Theme.of(context).colorScheme.onPrimary)),
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text(value,style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onPrimary)),
+          child: Text(value,style: TextStyle( color: Theme.of(context).colorScheme.onPrimary)),
         ),
       ],
     );

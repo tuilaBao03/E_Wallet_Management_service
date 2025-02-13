@@ -2,22 +2,29 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:smartwalletapp/app/locallization/app_localizations.dart';
 
 import '../../constants.dart';
 import '../../controllers/menu_app_controller.dart';
 import '../../models/user.dart';
 import '../../responsive.dart';
 
-class Header extends StatelessWidget {
+class Header extends StatefulWidget {
+  final Function(Locale) onLanguageChange;
+
   final User user;
   final String title; // Thêm biến title vào class
   final bool isAuth;
   const Header({
-    super.key, required this.title, required this.user, required this.isAuth,
+    super.key, required this.title, required this.user, required this.isAuth, required this.onLanguageChange,
   });
 
+  @override
+  State<Header> createState() => _HeaderState();
+}
+
+class _HeaderState extends State<Header> {
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -29,15 +36,84 @@ class Header extends StatelessWidget {
           ),
         if (!Responsive.isMobile(context))
           Text(
-            title,
+            widget.title,
             style: Theme.of(context).textTheme.titleLarge,
           ),
         if (!Responsive.isMobile(context) )
           Spacer(flex: Responsive.isDesktop(context) ? 2 : 1),
+        Container(
+          width: 200, // Giới hạn chiều rộng cho Container
+          decoration: BoxDecoration(
+            color: Colors.white60,
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 4,
+                offset: Offset(0, 2),
+              ),
+            ],
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: SizedBox(
+            width: double.infinity, // Đảm bảo ListTile chiếm toàn bộ chiều rộng có sẵn
+            child: buildListTile(
+              Icons.language,
+              AppLocalizations.of(context).translate("App Language"),
+              onTap: () {
+                _showLanguageDialog();
+              },
+            ),
+          ),
+        ),
 
-        if(isAuth)Expanded(child: SearchField()),
-        if(isAuth)ProfileCard(user: user,)
+        if(widget.isAuth)ProfileCard(user: widget.user,)
       ],
+    );
+  }
+
+    ListTile buildListTile(IconData icon, String title,
+      {required VoidCallback onTap}) {
+    return ListTile(
+      leading: CircleAvatar(
+        backgroundColor: Colors.blueAccent,
+        child: Icon(icon, color: Colors.white),
+      ),
+      title: Text(
+        title,
+        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+      ),
+      trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+      onTap: onTap,
+    );
+  }
+
+  void _showLanguageDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(AppLocalizations.of(context).translate('Choose Language')),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: Text(AppLocalizations.of(context).translate('English')),
+                onTap: () {
+                  widget.onLanguageChange(const Locale('en'));
+                  Navigator.pop(context); // Đóng dialog
+                },
+              ),
+              ListTile(
+                title: Text(AppLocalizations.of(context).translate('Vietnamese')),
+                onTap: () {
+                  widget.onLanguageChange(const Locale('vi'));
+                  Navigator.pop(context); // Đóng dialog
+                },
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
@@ -75,38 +151,6 @@ class ProfileCard extends StatelessWidget {
             ),
           Icon(Icons.keyboard_arrow_down),
         ],
-      ),
-    );
-  }
-}
-class SearchField extends StatelessWidget {
-  const SearchField({
-    super.key,
-  });
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      decoration: InputDecoration(
-        hintText: "Search",
-        fillColor: Theme.of(context).colorScheme.secondary,
-        filled: true,
-        border: OutlineInputBorder(
-          borderSide: BorderSide.none,
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-        ),
-        suffixIcon: InkWell(
-          onTap: () {},
-          child: Container(
-            padding: EdgeInsets.all(defaultPadding * 0.75),
-            margin: EdgeInsets.symmetric(horizontal: defaultPadding / 2),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.onPrimary,
-              borderRadius: const BorderRadius.all(Radius.circular(10)),
-              border: Border.all(color: Theme.of(context).colorScheme.onPrimary,),
-            ),
-            child: SvgPicture.asset("assets/icons/Search.svg",color: Theme.of(context).colorScheme.secondary,),
-          ),
-        ),
       ),
     );
   }

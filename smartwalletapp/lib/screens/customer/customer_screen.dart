@@ -4,14 +4,18 @@
 import 'dart:collection';
 import 'dart:core';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smartwalletapp/app/locallization/app_localizations.dart';
+import 'package:smartwalletapp/bloc/MainApp/MainAppBloc.dart';
+import 'package:smartwalletapp/bloc/MainApp/MainAppEvent.dart';
 import 'package:smartwalletapp/models/card.dart';
+import 'package:smartwalletapp/models/cardholder.dart';
+import 'package:smartwalletapp/models/contract.dart';
 import 'package:smartwalletapp/models/transaction.dart';
-import 'package:smartwalletapp/screens/card/components/card_detail.dart';
 import 'package:smartwalletapp/screens/card/components/card_list.dart';
-import 'package:smartwalletapp/screens/customer/components/customer_detail.dart';
+import 'package:smartwalletapp/screens/contract/components/contract_list.dart';
 import 'package:smartwalletapp/screens/customer/components/customer_list.dart';
-import 'package:smartwalletapp/screens/transaction/components/Transaction_detail.dart';
+import 'package:smartwalletapp/screens/main/components/classInitial.dart';
 import 'package:smartwalletapp/screens/transaction/components/transaction_list.dart';
 
 import '../../constants.dart';
@@ -22,12 +26,22 @@ import '../general/header.dart';
 
 class CustomerScreen extends StatefulWidget {
 
-  final List<User> users;
   final List<Transaction> trans;
   final List<CardInfo> cards; 
+  final List<CardHolder> cardHolders;
+  final List<Contract> contracts;
   final bool isAuth;
   final User user;
-  const CustomerScreen({super.key, required this.isAuth, required this.user, required this.users, required this.trans, required this.cards});
+  final Function(Locale) onLanguageChange;
+  const CustomerScreen({
+    super.key, 
+    required this.isAuth, 
+    required this.user,  
+    required this.trans, 
+    required this.cards, 
+    required this.cardHolders, 
+    required this.contracts, 
+    required this.onLanguageChange});
 
   @override
   _CustomerScreenState createState() => _CustomerScreenState();
@@ -38,82 +52,65 @@ class _CustomerScreenState extends State<CustomerScreen> {
     "FirstName",
     "LastName",
     "Detail",
+    "ContractList"
+  ]);
+  final HashSet<String> objectColumnNameOfContract = HashSet.from([
+    "ContractID",
+    "date",
+    "Detail",
+    "cardList",
+    "TranList"
   ]);
   final HashSet<String> objectColumnNameOfCard = HashSet.from([
     "CardId",
-    "Detail"
+    "Detail",
   ]);
   final HashSet<String> objectColumnNameOfTransaction = HashSet.from([
     "TransactionID",
     "date",
     "Detail"
   ]);
+ 
 
-  User selectedUser = User(
-    username: "",
-    password: "",
-    phoneNumber: "",
-    homeAddress: "",
-    companyAddress: "",
-    lastName: "",
-    firstName: "Hà",
-    avatar: "",
-    email: "", userId: '',
-    createdDate: DateTime.now(),
-    updateDate: DateTime.now(),
-    status: true,
-  );
-  CardInfo selectedCard = CardInfo(
-    bankName: "ChineBank",
-    balance: 1328,
-    svgSrc: "assets/logos/xynsh-rect.svg",
-    color: primaryColor,
-    CardID: '1',
-    userId: '',
-    typeCard: "DebitCard",
-    createdDate: DateTime.now(),
-    updateDate: DateTime.now(),
-    status: true,
-    contractID: "1",
-  );
-  Transaction selectedTransaction = Transaction(
-    icon: "assets/logos/zybank-rect.svg",
-    bankName: "zybank",
-    date: DateTime.now(),
-    budget: "100000",
-    typeMoney:"VNĐ",
-    typeTransaction: true, 
-    transactionId: '1', cardId: '1'
-  );
 
-  bool SelectUserDetail = false;
-  bool SelectCardDetail = false;
-  bool SelectTranDetail = false;
+
+  User selectedUser = selectedUserInittial;
+  CardHolder selectedcardHolder = selectedcardHolderInittial;
+  CardInfo selectedCard = selectedCardInittial;
+  Transaction selectedTransaction = selectedTransactionInittial;
+  Contract selectedContract = selectedContractInittial;
+
+
   bool SelectCardList = false;
   bool SelectTranList = false;
+  bool SelectContractList = false;
 
-  void updateUserDetail(User user) {
+  void updateCardHolder_contract(CardHolder cardHolder) {
     setState(() {
-      selectedUser = user;
-      SelectUserDetail = true;
-      SelectCardList = true;
-      SelectCardDetail = false;
+      context.read<MainAppBloc>().add(giveContractListEvent(cardHolder));
+      selectedcardHolder  = cardHolder;
+      SelectContractList = true;
       SelectTranList = false;
+      SelectCardList = false;
     });
   }
-  void updateCardDetail(CardInfo card ){
-    setState((){
-      selectedCard = card;
-      SelectTranList = true;
-      SelectCardDetail = true;
-      SelectTranDetail = false;
-    });
+  void updateContract_card(Contract contract){
+    context.read<MainAppBloc>().add(giveCardListEvent(contract));
+    selectedContract = contract;
+    SelectCardList =true;
+    SelectTranList = false;
   }
+  void updateContract_tran(Contract contract){
+    context.read<MainAppBloc>().add(giveTransactionEvent(contract));
+    selectedContract = contract;
+    SelectCardList =false;
+    SelectTranList = true;
+  }
+
   void updateTranDetail(Transaction tran){
    setState(() {
      selectedTransaction = tran;
      SelectTranList = true;
-     SelectTranDetail = true;
    });
   }
 
@@ -127,121 +124,65 @@ class _CustomerScreenState extends State<CustomerScreen> {
           children: [
             Header(title: AppLocalizations.of(context).translate("Customer"),
             user: widget.user,
-            isAuth: widget.isAuth),
+            isAuth: widget.isAuth, onLanguageChange: widget.onLanguageChange),
             SizedBox(height: defaultPadding),
             Column(
                     children: [
                       SingleChildScrollView(
                         child: Column(
                           children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: CustomerList(
-                                object: demoCustomersList,
+                          CustomerList(
+                                object: widget.cardHolders,
                                 objectColumnName: objectColumnNameOfUser,
                                 title: 'cusList',
-                                onDetailSelected: updateUserDetail,
+                                onCustomer_Contracts: updateCardHolder_contract,
                               ),
-                              ),
-                              if(Responsive.isDesktop(context) && SelectUserDetail == true)
-                                SizedBox(width: defaultPadding),
-                              if(Responsive.isDesktop(context) && SelectUserDetail == true)
+                          SizedBox(height: defaultPadding),
+                          if (SelectContractList)
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
                                 Expanded(
-                                  flex: 2,
-                                  child:  CustomerDetail(
-                                      object: selectedUser,
-                                      isImage: true,
-                                      title: 'CustomerDetail',
-                                      isActive: true,
-                                      isUpdate: false,
-                                    ),
-                              ),
+                                  flex: 1,
+                                  child: ContractList(
+                                    object: widget.contracts,
+                                    objectColumnName: objectColumnNameOfContract, 
+                                    title: "Contract", 
+                                    onContract_CardList: updateContract_card,
+                                    onContract_TranSaction: updateContract_tran, cardHolder: selectedcardHolder,),
+                                ),
+                                if(Responsive.isDesktop(context) && SelectTranList)
+                                  SizedBox(width: defaultPadding),
+
+                                if(Responsive.isDesktop(context) && SelectTranList)
+                                  Expanded(
+                                    flex: 1,
+                                    child: TransactionList(
+                                      object: widget.trans, 
+                                      objectColumnName: objectColumnNameOfTransaction, 
+                                      title: "TranList", 
+                                      onDetailSelected: updateTranDetail, 
+                                      contract: selectedContract, currentPage: false,),
+                                  ),
                               ],
-                          ),
-                          SizedBox(height: defaultPadding),
-                          if(!Responsive.isDesktop(context) && SelectUserDetail == true)
-                            CustomerDetail(
-                                object: selectedUser,
-                                isImage: true,
-                                title: 'CustomerDetail',
-                                isActive: true,
-                                isUpdate: false,
-                              ),
-                          SizedBox(height: defaultPadding),
-                          if (SelectCardList)
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: CardList(
-                                  object: MyCards,
-                                  objectColumnName: objectColumnNameOfCard,
-                                  title: 'MyCard',
-                                  onDetailSelected: updateCardDetail,
-                                  user: selectedUser,),
-                              ),
-                              if(Responsive.isDesktop(context) && SelectCardDetail)
-                                SizedBox(width: defaultPadding),
-                              if(Responsive.isDesktop(context) && SelectCardDetail)
-                                Expanded(
-                                  flex: 2,
-                                  child:  CardDetail(
-                                    object: selectedCard,
-                                    isImage: true,
-                                    title: 'CardDetail',
-                                    isActive: true,
-                                    isUpdate: false,
-                                  ),
-                              )],
                             ),
                           SizedBox(height: defaultPadding),
-                          if (!Responsive.isDesktop(context) && SelectCardDetail)
-                          CardDetail(
-                              object: selectedCard,
-                              isImage: true,
-                              title: 'CardDetail',
-                              isActive: true,
-                              isUpdate: false,
-                            ),
+                          if(!Responsive.isDesktop(context) && SelectTranList)
+                            TransactionList(
+                                      object: widget.trans, 
+                                      objectColumnName: objectColumnNameOfTransaction, 
+                                      title: "TranList", 
+                                      onDetailSelected: updateTranDetail, 
+                                      contract: selectedContract, currentPage: false,),
                           SizedBox(height: defaultPadding),
-                          if (SelectTranList)
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: TransactionList(
-                                  object: demoTransactionList, 
-                                  objectColumnName: objectColumnNameOfTransaction, 
-                                  title: "TranList", 
-                                  onDetailSelected: updateTranDetail, 
-                                  cardInfo: selectedCard, currentPage: false,),
-                              ),
-                              if(Responsive.isDesktop(context) && SelectTranDetail)
-                                SizedBox(width: defaultPadding),
-                              if(Responsive.isDesktop(context) && SelectTranDetail)
-                                Expanded(
-                                  flex: 2,
-                                  child:  TransactionDetail(
-                                    object: selectedTransaction,
-                                    title: 'DetailTransaction',
-                                  ),
-                              )],
-                            ),
+                          if(SelectCardList)
+                            CardList(
+                                    object: widget.cards,
+                                    objectColumnName: objectColumnNameOfCard,
+                                    title: 'cardList',
+                                    contract: selectedContract),
                           SizedBox(height: defaultPadding),
-                          if (!Responsive.isDesktop(context) && SelectTranDetail)
-                            TransactionDetail(
-                                object: selectedTransaction,
-                                title: 'DetailTransaction',
-                              ),
-                          SizedBox(height: defaultPadding), 
                     ],
                   ),
                 ),

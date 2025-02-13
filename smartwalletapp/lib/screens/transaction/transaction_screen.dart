@@ -3,7 +3,7 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
-import 'package:smartwalletapp/models/card.dart';
+import 'package:smartwalletapp/models/contract.dart';
 import 'package:smartwalletapp/models/transaction.dart';
 import 'package:smartwalletapp/responsive.dart';
 import 'package:smartwalletapp/screens/transaction/components/transaction_detail.dart';
@@ -12,14 +12,17 @@ import 'package:smartwalletapp/screens/transaction/components/transaction_list.d
 import '../../constants.dart';
 import '../../models/user.dart';
 import '../general/header.dart';
+import '../main/components/classInitial.dart';
 
 
 
 
 class TransactionScreen extends StatefulWidget {
   final bool isAuth;
+  final User user;
+  final Function(Locale) onLanguageChange;
   const TransactionScreen({super.key,
-    required this.isAuth,
+    required this.isAuth, required this.user, required this.onLanguageChange,
 
   });
 
@@ -34,43 +37,9 @@ class _TransactionScreenState extends State<TransactionScreen> {
     "budget",
     "Detail"
   ]);
-  final User user = User(
-    username: "",
-    password: "",
-    phoneNumber: "",
-    homeAddress: "",
-    companyAddress: "",
-    lastName: "",
-    firstName: "",
-    avatar: "",
-    email: '', userId: '', 
-    createdDate: DateTime.now(),
-    updateDate: DateTime.now(),
-    status: true,
-    );
-  final CardInfo cardInfo = CardInfo(
-    bankName: "",
-    balance: 1328,
-    svgSrc: "assets/logos/xynsh-rect.svg",
-    color: primaryColor,
-    CardID: '0',
-    userId: '0',
-    typeCard: "",
-    createdDate: DateTime.now(),
-    updateDate: DateTime.now(),
-    status: true,
-    contractID: "1",
-  );
   
-  Transaction selectedTransaction = Transaction(
-    icon: "assets/logos/zybank-rect.svg",
-    bankName: "zybank",
-    date: DateTime.now(),
-    budget: "100000",
-    typeMoney:"VNĐ",
-    typeTransaction: true, 
-    transactionId: '1', cardId: '1'
-  );
+  Contract selectedContract = selectedContractInittial;
+  Transaction selectedTransaction = selectedTransactionInittial;
   bool selectTranDetail = false;
   
   void updateTranDetail(Transaction tran){
@@ -88,7 +57,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
         padding: EdgeInsets.all(defaultPadding),
         child: Column(
           children: [
-            Header(title: "Transaction",user: user, isAuth: widget.isAuth,),
+            Header(title: "Transaction",user: widget.user, isAuth: widget.isAuth, onLanguageChange: widget.onLanguageChange,),
             SizedBox(height: defaultPadding),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,11 +71,11 @@ class _TransactionScreenState extends State<TransactionScreen> {
                         objectColumnName: objectColumnNameOfTransaction,
                         title: 'TranList',
                         onDetailSelected: updateTranDetail, currentPage: true,
-                        cardInfo: cardInfo,),
+                        contract: selectedContract,),
                       if(!Responsive.isDesktop(context))
                         SizedBox(height: defaultPadding),
                       if(!Responsive.isDesktop(context) && selectTranDetail == true)
-                        TransactionDetail(object: selectedTransaction, title: 'DetailTransaction',)
+                        TransactionDetail(object: selectedTransaction, title: 'DetailTransaction')
                     ],
                   ),
                 ),
@@ -115,7 +84,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                 if(Responsive.isDesktop(context) && selectTranDetail == true)
                 Expanded(
                   flex: 2,
-                  child: TransactionDetail(object: selectedTransaction, title: 'DetailTransaction',)
+                  child: TransactionDetail(object: selectedTransaction, title: 'DetailTransaction')
                   
                 ),
                 

@@ -5,31 +5,31 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:smartwalletapp/app/locallization/app_localizations.dart';
-import 'package:smartwalletapp/models/cardholder.dart';
+import 'package:smartwalletapp/models/user.dart';
+
 
 import '../../../../constants.dart';
 
-class CustomerDetail extends StatefulWidget {
-  final bool isActive;
-  final bool isUpdate;
+class UserDetail extends StatefulWidget {
   final String title;
-  final bool isImage;
-  final CardHolder object;
+  final User object;
+  
+  final dynamic isImage;
 
-  const CustomerDetail({
+  const UserDetail({
     super.key,
     required this.object,
     required this.isImage,
     required this.title,
-    required this.isActive,
-    required this.isUpdate,
+
+
   });
 
   @override
-  State<CustomerDetail> createState() => _CustomerDetailState();
+  State<UserDetail> createState() => _UserDetailState();
 }
 
-class _CustomerDetailState extends State<CustomerDetail> {
+class _UserDetailState extends State<UserDetail> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -87,7 +87,7 @@ class _CustomerDetailState extends State<CustomerDetail> {
 
 
 class ObjectDetailInfor extends StatefulWidget {
-  final CardHolder objectInfo;
+  final User objectInfo;
 
   const ObjectDetailInfor({super.key, required this.objectInfo});
 
@@ -119,7 +119,7 @@ class _ObjectDetailInforState extends State<ObjectDetailInfor> {
     }
   }
 
-  void _initializeControllers(CardHolder objectInfo) {
+  void _initializeControllers(User objectInfo) {
     _lastnameController = TextEditingController(text: objectInfo.lastName);
     _firstnameController = TextEditingController(text: objectInfo.firstName);
     _emailController = TextEditingController(text: objectInfo.email);
@@ -180,9 +180,7 @@ class _ObjectDetailInforState extends State<ObjectDetailInfor> {
                 ),
                 onPressed: _pickImage,
                 icon: Icon(Icons.image),
-                label: Text(AppLocalizations.of(context).translate("Choose Image"), style: TextStyle(
-                  color: Theme.of(context).colorScheme.onPrimary
-                ),),
+                label: Text(AppLocalizations.of(context).translate("Choose Image")),
               ),
             ],
           ),

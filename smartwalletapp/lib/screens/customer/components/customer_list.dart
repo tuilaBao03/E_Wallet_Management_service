@@ -1,25 +1,25 @@
-// ignore_for_file: file_names, library_private_types_in_public_api, prefer_final_fields, avoid_print
+// ignore_for_file: file_names, library_private_types_in_public_api, prefer_final_fields, avoid_print, non_constant_identifier_names
 
 import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:smartwalletapp/app/locallization/app_localizations.dart';
+import 'package:smartwalletapp/models/cardholder.dart';
+import 'package:smartwalletapp/screens/customer/components/customer_detail.dart';
 import '../../../constants.dart';
-import '../../../models/user.dart';
 
 class CustomerList extends StatefulWidget {
-  final List<User> object;
+  final List<CardHolder> object;
   final String title;
   final HashSet<String> objectColumnName;
-  final Function(User) onDetailSelected;
- 
+  final Function(CardHolder) onCustomer_Contracts;
 
   const CustomerList({
-    super.key, 
-    required this.object, 
+    super.key,
+    required this.object,
     required this.objectColumnName,
     required this.title,
-    required this.onDetailSelected,
+    required this.onCustomer_Contracts,
   });
 
   @override
@@ -27,23 +27,32 @@ class CustomerList extends StatefulWidget {
 }
 
 class _CustomerListState extends State<CustomerList> {
-  TextEditingController _searchController = TextEditingController();
-  List<User> _filteredUsers = [];
-
-  
+  final TextEditingController _searchController = TextEditingController();
+  List<CardHolder> _filteredCardHolder = [];
 
   @override
   void initState() {
     super.initState();
-    _filteredUsers = widget.object;
+    _filteredCardHolder = widget.object;
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   void _searchUser() {
+    String query = _searchController.text.trim().toLowerCase();
+    if (query.isEmpty) {
+      setState(() => _filteredCardHolder = widget.object);
+      return;
+    }
     setState(() {
-      _filteredUsers = widget.object.where((user) =>
-        user.firstName.toLowerCase().contains(_searchController.text.toLowerCase()) ||
-        user.lastName.toLowerCase().contains(_searchController.text.toLowerCase())
-      ).toList();
+      _filteredCardHolder = widget.object.where((user) {
+        return user.firstName.toLowerCase().contains(query) ||
+               user.lastName.toLowerCase().contains(query);
+      }).toList();
     });
   }
 
@@ -76,59 +85,92 @@ class _CustomerListState extends State<CustomerList> {
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
-                    onChanged: (value) => _searchUser(),
+                    onChanged: (_) => _searchUser(),
+                    onSubmitted: (_) => _searchUser(),
                   ),
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 IconButton(
-                  icon: Icon(Icons.search, color: Colors.blue),
+                  icon: const Icon(Icons.search, color: Colors.blue),
                   onPressed: _searchUser,
                 ),
               ],
             ),
             SizedBox(height: defaultPadding),
-            SizedBox(
-              width: double.infinity,
-              child: DataTable(
-                columnSpacing: defaultPadding,
-                columns: widget.objectColumnName.map((name) => DataColumn(
-                  label: Text(AppLocalizations.of(context).translate(name), overflow: TextOverflow.ellipsis, maxLines: 1),
-                )).toList(),
-                rows: List.generate(
-                  _filteredUsers.length,
-                  (index) => recentFileDataRow(
-                    _filteredUsers[index],
-                    () {
-                      widget.onDetailSelected(_filteredUsers[index]);
-                    }
+            _filteredCardHolder.isEmpty
+                ? Center(
+                    child: Text(
+                      AppLocalizations.of(context).translate("There is no matching information"),
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  )
+                : SizedBox(
+                    width: double.infinity,
+                    child: DataTable(
+                      columnSpacing: defaultPadding,
+                      columns: widget.objectColumnName
+                          .map(
+                            (name) => DataColumn(
+                              label: Text(
+                                AppLocalizations.of(context).translate(name),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
+                            ),
+                          )
+                          .toList(),
+                      rows: _filteredCardHolder.map((cardHolder) {
+                        return _buildDataRow(cardHolder, context);
+                      }).toList(),
+                    ),
                   ),
-                ),
-              ),
-            ),
           ],
         ),
       ),
     );
   }
-}
 
-DataRow recentFileDataRow(User fileInfo, VoidCallback onDetail) {
-  return DataRow(
-    cells: [
-      DataCell(Text(fileInfo.firstName)),
-      DataCell(Text(fileInfo.lastName)),
-      DataCell(
-        Row(
-          children: [
-        
-            IconButton(
-              icon: Icon(Icons.details, color: Colors.green),
-              onPressed: onDetail,
-            ),
-          
-          ],
+  DataRow _buildDataRow(CardHolder cardHolder, BuildContext context) {
+    return DataRow(
+      cells: [
+        DataCell(Text(cardHolder.firstName)),
+        DataCell(Text(cardHolder.lastName)),
+        DataCell(
+          IconButton(
+            icon: const Icon(Icons.details, color: Colors.green),
+            onPressed: () => _showDetailDialog(context, cardHolder),
+          ),
         ),
-      ),
-    ],
-  );
+        DataCell(
+          IconButton(
+            icon: const Icon(Icons.content_paste_search_outlined, color: Colors.blueAccent),
+            onPressed: () => widget.onCustomer_Contracts(cardHolder),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _showDetailDialog(BuildContext context, CardHolder cardHolder) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: CustomerDetail(
+            object: cardHolder,
+            isImage: true,
+            title: 'CustomerDetail',
+            isActive: true,
+            isUpdate: false,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Icon(Icons.cancel, color: Colors.red,),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
