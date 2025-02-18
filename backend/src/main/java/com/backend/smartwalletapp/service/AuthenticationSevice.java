@@ -1,22 +1,18 @@
 package com.backend.smartwalletapp.service;
-
-
 import java.text.ParseException;
 import java.util.Date;
 import java.util.StringJoiner;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-
 import com.backend.smartwalletapp.dto.request.Login.AuthenticationRequest;
 import com.backend.smartwalletapp.dto.request.Login.IntrospectRequest;
 import com.backend.smartwalletapp.dto.response.AuthenticationResponse;
 import com.backend.smartwalletapp.dto.response.IntrospectResponse;
+import com.backend.smartwalletapp.repository.UserRepository;
 import com.backend.smartwalletapp.exception.AppException;
 import com.backend.smartwalletapp.exception.ErrorCode;
 import com.backend.smartwalletapp.model.User;
-import com.backend.smartwalletapp.repository.UserRepository;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
@@ -54,12 +50,10 @@ public class AuthenticationSevice {
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        System.out.println("Request: " + request);
-        System.err.println(request.getUsername());
         User user = userReponsitory.findByUsername(request.getUsername()).orElseThrow(
             () -> new AppException(ErrorCode.USER_NOT_FOUND)
         );
-        System.err.println(request.getPassword());
+        
     
         boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
         if(!authenticated)
@@ -70,7 +64,6 @@ public class AuthenticationSevice {
             .authenticated(true)
             .build();
     }
-
     private String generalToken(User user){
         JWSHeader JWSHead =  new JWSHeader(JWSAlgorithm.HS256);
         JWTClaimsSet JWTClaimsSet = new JWTClaimsSet.Builder()

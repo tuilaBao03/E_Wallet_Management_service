@@ -26,7 +26,8 @@ class giveTransactionEvent extends MainAppEvent{
 
 class UpdateUserInforEvent  extends MainAppEvent{
   final User user;
-  UpdateUserInforEvent (this.user);
+  final String token;
+  UpdateUserInforEvent (this.user, this.token);
 }
 
 class UpdateCardInforEvent  extends MainAppEvent{
@@ -52,6 +53,8 @@ class UpdateStatusContractEvent  extends MainAppEvent{
   UpdateStatusContractEvent(this.newStatus);
 
 }
+
+
 
 // create 
 class AddCardHolderEvent extends MainAppEvent{
@@ -83,4 +86,8 @@ class AddCardEvent extends MainAppEvent{
 class AddContractEvent extends MainAppEvent{
 
 }
+
+class LogoutEvent extends MainAppEvent{
+}
+
 

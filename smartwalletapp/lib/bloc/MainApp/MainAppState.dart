@@ -3,6 +3,7 @@ import 'package:smartwalletapp/models/card.dart';
 import 'package:smartwalletapp/models/cardholder.dart';
 import 'package:smartwalletapp/models/contract.dart';
 import 'package:smartwalletapp/models/transaction.dart';
+import 'package:smartwalletapp/models/user.dart';
 
 abstract class MainAppState{}
 
@@ -29,7 +30,15 @@ class giveContractsListState extends MainAppState{
   giveContractsListState(this.contracts);
 }
 
-class MainAppError extends MainAppState{
+class MainAppErrorState extends MainAppState{
   final String error;
-  MainAppError(this.error);
+  MainAppErrorState(this.error);
+}
+
+class UpdateUserSuccessState extends MainAppState{
+  final User user;
+  UpdateUserSuccessState(this.user);
+}
+
+class LogoutSuccess extends MainAppState{
 }

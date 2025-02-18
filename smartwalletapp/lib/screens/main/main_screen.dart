@@ -22,17 +22,19 @@ import 'components/side_menu.dart';
 import '../../responsive.dart';
 
 class MainScreen extends StatefulWidget {
+  final String token;
   final bool isAuth;
   final User user;
   final Function(Locale) onLanguageChange;
   const MainScreen({super.key,
-    required this.isAuth, required this.user, required this.onLanguageChange
+    required this.isAuth, required this.user, required this.onLanguageChange, required this.token
 });
   @override
   State<MainScreen> createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {
+  late User selectedUsers; 
   int _currentTab = 1;
   List<CardHolder> cardHolders = [];
   List<Contract> contracts = [];
@@ -41,6 +43,8 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
+    selectedUsers = widget.user;
+
     context.read<MainAppBloc>().add(initializationEvent());
   }
   
@@ -68,6 +72,11 @@ class _MainScreenState extends State<MainScreen> {
           else if(state is giveContractsListState){
             contracts = state.contracts;
           }
+          else if(state is UpdateUserSuccessState){
+            selectedUsers = state.user;
+
+          }
+          
         return SafeArea(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,8 +98,17 @@ class _MainScreenState extends State<MainScreen> {
       );
     
       }, listener: (context,state){
-        if(state is MainAppError){
+        if(state is MainAppErrorState){
           print(state.error);
+        }
+        else if(state is LogoutSuccess){
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => LoginScreen(isAuth: false, onLanguageChange: widget.onLanguageChange, ),
+              ),
+            );
+
         }
       })
     );
@@ -101,18 +119,18 @@ class _MainScreenState extends State<MainScreen> {
   Widget _getScreen(int tab) {
     switch (tab) {
       case 1:
-        return DashboardScreen(isAuth: widget.isAuth, user: widget.user, onLanguageChange: widget.onLanguageChange);
+        return DashboardScreen(isAuth: widget.isAuth, user: selectedUsers, onLanguageChange: widget.onLanguageChange);
       case 2:
-        return CustomerScreen(isAuth: widget.isAuth, user: widget.user, cardHolders: cardHolders, trans: trans, cards: cards, contracts: contracts, onLanguageChange: widget.onLanguageChange);
+        return CustomerScreen(isAuth: widget.isAuth, user: selectedUsers, cardHolders: cardHolders, trans: trans, cards: cards, contracts: contracts, onLanguageChange: widget.onLanguageChange);
       case 3: 
-        return TransactionScreen(isAuth: widget.isAuth, user: widget.user,onLanguageChange: widget.onLanguageChange,);
+        return TransactionScreen(isAuth: widget.isAuth, user: selectedUsers,onLanguageChange: widget.onLanguageChange,);
       case 4:
-        return ContractScreen(isAuth: widget.isAuth, user: widget.user,onLanguageChange: widget.onLanguageChange,);
+        return ContractScreen(isAuth: widget.isAuth, user: selectedUsers,onLanguageChange: widget.onLanguageChange,);
       case 5:
-        return MyprofileScreen(isAuth: widget.isAuth, user: widget.user,onLanguageChange: widget.onLanguageChange,);
+        return MyprofileScreen(isAuth: widget.isAuth, user: selectedUsers,onLanguageChange: widget.onLanguageChange, token: widget.token,);
        // Thêm màn hình SettingScreen
       default:
-        return DashboardScreen(isAuth: widget.isAuth,user: widget.user, onLanguageChange: widget.onLanguageChange,);
+        return DashboardScreen(isAuth: widget.isAuth,user: selectedUsers, onLanguageChange: widget.onLanguageChange,);
     }
   }
 }

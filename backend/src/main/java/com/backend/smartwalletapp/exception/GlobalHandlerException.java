@@ -37,7 +37,7 @@ public class GlobalHandlerException {
     @SuppressWarnings("rawtypes")
     @ExceptionHandler(AppException.class)
     ResponseEntity<ApiResponse> handleAppException(AppException e) {
-        System.err.println("appException 22");
+        System.err.println("appException :"+e.getMessage());
         return buildResponse(e.getErrorCode().getCode(), e.getMessage());
     }
     

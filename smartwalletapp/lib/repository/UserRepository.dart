@@ -3,67 +3,78 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/services.dart';
 
 import '../models/user.dart';
 import 'package:http/http.dart' as http;
 
-class UserRepository{
-  Future<List<User>> loadUsersFromJson() async {
-    String jsonString = await rootBundle.loadString('assets/mockup/UserMockup.json');
-    List<dynamic> jsonList = json.decode(jsonString);
-    print("----------------------------------");
-    int a = jsonList.map((data) => User.fromJson(data)).toList().length;
-    print("so luwonng user : $a");
-    return jsonList.map((data) => User.fromJson(data)).toList();
-  }
-  Future<User?> findUserByUserName(String username) async{
-    
-    List<User> users = await loadUsersFromJson();
-    User user = users.firstWhere(
-        (user) =>user.username == username,
+class AuthResult {
+  final int code;
+  final String token;
+  final bool authenticated;
+
+  AuthResult({required this.code, required this.token, required this.authenticated});
+
+  factory AuthResult.fromJson(Map<String, dynamic> json) {
+    return AuthResult(
+      code: json["code"],
+      token: json["result"]["token"] ?? "",  // Lấy token từ result
+      authenticated: json["result"]["authenticated"] ?? false, // Tránh lỗi null
     );
-    return user;
-  }
-  Future<String> checkingEmail(String email) async {
-  List<User> users = await loadUsersFromJson();
-  
-  try {
-    User user = users.firstWhere(
-      (user) => user.email == email,
-    );
-    return GiveInfortoEmail(email); // Nếu tìm thấy user, gọi hàm xử lý
-  } catch (e) {
-    return "0"; // Nếu không tìm thấy user, trả về "0"
   }
 }
-  Future<String> GiveInfortoEmail(String email) async{
-    print("completed");
-    return "completed";
+
+class UserRepository{
+
+
+
+Future<AuthResult> authenticate(String password, String username) async {
+  String apiUrl = "http://localhost:8080/auth/login";
+
+  try {
+  
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({"password": password, "username": username}),
+    );
+
+    Map<String, dynamic> responseData = json.decode(response.body);
+    print("responseData.length: ${responseData.length}");
+    
+    return AuthResult.fromJson(responseData);
+  } catch (e) {
+    return AuthResult(code: 0, token: "null", authenticated: false);
   }
-  Future<bool> Authenticate(String username, String password) async {
-    print("ssss$username");
-    List<User> users = await loadUsersFromJson();
-    print(users.length);
-    return users.any((user) => user.username == username && user.password == password);
+}
+
+Future<User> giveUserByName(String userName, String token) async {
+  String apiUrl = "http://localhost:8080/smartwalletapp/users/$userName/name";
+
+  try {
+    final response = await http.get(
+      Uri.parse(apiUrl),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+    print("Response body: ${response.body}");
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> responseData = json.decode(response.body);
+      return User.fromJson(responseData["result"]);
+    } else {
+      Map<String, dynamic> errorData = json.decode(response.body);
+      throw Exception("Lỗi API: ${errorData["message"]}");
+    }
+  } catch (e) {
+    print("Lỗi kết nối: $e");
+    throw Exception("Lỗi kết nối: $e");
   }
-  Future<bool> UserExisted(String username) async{
-    List<User> users = await loadUsersFromJson();
-    return users.any((user) => user.username == username);
-  }
-  // Chuyển danh sách Users thành JSON và lưu vào file
-  // Future<void> saveUsersToJson(List<User> users) async {
-  //   try {
-  //     File file = await _getLocalFile();
-  //     String jsonString = jsonEncode(users.map((user) => user.toJson()).toList());
-  //     await file.writeAsString(jsonString);
-  //     print("✅ Users saved to $file");
-  //   } catch (e) {
-  //     print("❌ Error saving users: $e");
-  //   }
-  // }
-  Future<String> Register_MPA(User user) async{
-    final String apiUrl = 'http://10.0.2.2:8080/myparkingapp/users';
+}
+
+Future<String> Register_MPA(User user) async{
+    final String apiUrl = 'http://localhost:8080/smartwalletapp/users';
 
     try {
       final response = await http.post(
@@ -81,13 +92,59 @@ class UserRepository{
         Map<String, dynamic> responseData = json.decode(response.body);
         String code = responseData["code"];
         return code;
-
       }
     } catch (e) {
       print('Exception occurred: $e');
       return "Error";
     }
   }
+
+Future<User> updatedUser(User user, String token) async{
+    final String apiUrl = 'http://localhost:8080/smartwalletapp/users/${user.userId}';
+    print("apiUrl $apiUrl");
+    try {
+      print("user $user");
+      final response = await http.put(
+        Uri.parse(apiUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(user.toJson()),
+      );
+      
+      print(response.body);
+      Map<String, dynamic> responseData = json.decode(response.body);
+
+      if(response.statusCode == 200){
+        print(responseData["result"]);
+        User user = User.fromJson(responseData["result"]);
+        return user;
+      }
+      else {
+        throw Exception("Update User faule");
+      }
+    }
+    catch(e){
+      print("updatedUser_repo: $e");
+      throw Exception("updatedUser_repo:  $e");
+    }
+  }
+
+Future<void> logout() async{
+  final String apiUrl = 'http://localhost:8080/auth/logout';
+  try{
+    final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Content-Type': 'application/json',
+
+        });
+  }
+  catch(e){
+    print(e);
+  }
+}
 
 }
 

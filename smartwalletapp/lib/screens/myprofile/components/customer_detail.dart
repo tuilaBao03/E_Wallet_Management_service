@@ -1,26 +1,27 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, avoid_print
 
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:smartwalletapp/app/locallization/app_localizations.dart';
+import 'package:smartwalletapp/bloc/MainApp/MainAppBloc.dart';
+import 'package:smartwalletapp/bloc/MainApp/MainAppEvent.dart';
 import 'package:smartwalletapp/models/user.dart';
-
 
 import '../../../../constants.dart';
 
 class UserDetail extends StatefulWidget {
+  final String token;
   final String title;
   final User object;
   
-  final dynamic isImage;
 
   const UserDetail({
     super.key,
     required this.object,
-    required this.isImage,
-    required this.title,
+    required this.title, required this.token,
 
 
   });
@@ -42,42 +43,7 @@ class _UserDetailState extends State<UserDetail> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  AppLocalizations.of(context).translate(widget.title),
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Row(
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.save),
-                      onPressed: () {
-                        // Add your save functionality here
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.delete),
-                      onPressed: () {
-                        // Add your delete functionality here
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            if (widget.isImage && widget.object.avatar.isNotEmpty)
-              Center(
-                child: widget.object.avatar.startsWith('http')
-                    ? Image.network(widget.object.avatar, width: 100, height: 100, fit: BoxFit.cover)
-                    : Image.asset(widget.object.avatar, width: 100, height: 100, fit: BoxFit.cover),
-              ),
-            SizedBox(height: defaultPadding),
-            ObjectDetailInfor(objectInfo: widget.object),
+            ObjectDetailInfor(objectInfo: widget.object, token: widget.token, title: widget.title,),
           ],
         ),
       ),
@@ -88,8 +54,11 @@ class _UserDetailState extends State<UserDetail> {
 
 class ObjectDetailInfor extends StatefulWidget {
   final User objectInfo;
+    final String token;
+  final String title;
+  
 
-  const ObjectDetailInfor({super.key, required this.objectInfo});
+  const ObjectDetailInfor({super.key, required this.objectInfo, required this.token, required this.title});
 
   @override
   State<ObjectDetailInfor> createState() => _ObjectDetailInforState();
@@ -108,6 +77,7 @@ class _ObjectDetailInforState extends State<ObjectDetailInfor> {
 
   @override
   void initState() {
+    
     super.initState();
     _initializeControllers(widget.objectInfo);
   }
@@ -126,7 +96,8 @@ class _ObjectDetailInforState extends State<ObjectDetailInfor> {
     _homeAddressController = TextEditingController(text: objectInfo.homeAddress);
     _companyAddressController = TextEditingController(text: objectInfo.companyAddress);
     _numberPhoneController = TextEditingController(text: objectInfo.phoneNumber);
-    _avatarController = TextEditingController(text: objectInfo.avatar); // Hiển thị đường link ảnh
+    _avatarController = TextEditingController(text: objectInfo.avatar);
+     // Hiển thị đường link ảnh
   }
 
   Future<void> _pickImage() async {
@@ -155,6 +126,60 @@ class _ObjectDetailInforState extends State<ObjectDetailInfor> {
     return SingleChildScrollView(
       child: Column(
         children: [
+          Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  AppLocalizations.of(context).translate(widget.title),
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Row(
+                  children: [
+                    IconButton(
+                        icon: Icon(Icons.save),
+                        onPressed: () {
+                          // Tạo một đối tượng User mới với các giá trị đã thay đổi
+                          final updatedUser = User(
+                            userId: widget.objectInfo.userId, // Giữ nguyên userId
+                            lastName: _lastnameController.text,
+                            firstName: _firstnameController.text,
+                            email: _emailController.text,
+                            homeAddress: _homeAddressController.text,
+                            companyAddress: _companyAddressController.text,
+                            phoneNumber: _numberPhoneController.text,
+                            avatar: _avatarController.text,
+                            username: '',
+                            password: '',
+                            createdDate: widget.objectInfo.createdDate,
+                            updateDate: widget.objectInfo.updateDate,
+                            status: true,
+                          );
+
+                          // Gửi sự kiện cập nhật với đối tượng mới
+                          context.read<MainAppBloc>().add(UpdateUserInforEvent(updatedUser, widget.token));
+
+                          print("Updated object: ${updatedUser.toJson()}");
+                        },
+                      ),
+                    IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () {
+                        // Add your delete functionality here
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            if (widget.objectInfo.avatar.isNotEmpty)
+              Center(
+                child: Image.asset(widget.objectInfo.avatar, width: 100, height: 100, fit: BoxFit.cover),
+              ),
+            SizedBox(height: defaultPadding),
+
           SizedBox(height: defaultPadding),
           TestFiles(editController: _lastnameController, title: 'LastName', width: double.infinity,),
           SizedBox(height: defaultPadding),

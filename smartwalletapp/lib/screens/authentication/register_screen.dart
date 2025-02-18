@@ -67,15 +67,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       }, isAuth: widget.isAuth,),
       body: BlocConsumer<RegisterBloc,RegisterState>(
         builder: (context,state){
-          if(state is RegisterSuccess){
-            result = state.isRegis;
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => LoginScreen(isAuth: false, onLanguageChange: (Locale ) { widget.onLanguageChange; }, ),
-              ),
-            );
-          }
           return SafeArea(
             child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -138,6 +129,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                             // dia chi cong ty
                                             TestFiles(editController: _numberPhoneController, title: 'Phone',),
                                             SizedBox(height: defaultPadding),
+
+                                            TestFiles(editController: _firstnameController, title: 'firstname',),
+                                            SizedBox(height: defaultPadding),
+
+                                            TestFiles(editController: _lastnameController, title: 'lastname',),
+                                            SizedBox(height: defaultPadding),
+
+                                            TestFiles(editController: _homeAddressController, title: 'homeaddress',),
+                                            SizedBox(height: defaultPadding),
+
+                                            TestFiles(editController: _companyAddressController, title: 'companyaddress',),
+                                            SizedBox(height: defaultPadding),
+
+
+
                                           ],
                                         ),
                                       ),
@@ -199,7 +205,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
           );
         },       listener: (context, state) {
-        if (state is RegisterError) {
+          
+        if(state is RegisterSuccess){
+                    result = state.isRegis;
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LoginScreen(isAuth: false, onLanguageChange: widget.onLanguageChange ),
+                      ),
+                    );
+                  }
+        else if (state is RegisterError) {
           // Hiển thị AlertDialog khi có lỗi
           showDialog(
             context: context,

@@ -1,6 +1,8 @@
 package com.backend.smartwalletapp.config;
 
 
+import java.util.List;
+
 import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -12,8 +14,8 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
 
-import com.backend.smartwalletapp.enums.Roles;
 
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -21,13 +23,16 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
     // user :
 
     // login :
-    private static final String[] POST_LIST_PUBLIC = {"/auth/login", "/auth/introspect"};
+    private static final String[] POST_LIST_PUBLIC = {"/auth/login", "/auth/introspect","/auth/logout"};
+
+   
 
     @Value("${jwt.signerKey}")
 
@@ -35,10 +40,15 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(request ->
+        http.csrf(AbstractHttpConfigurer::disable)
+        .cors(cors -> cors.configurationSource(corsConfigurationSource())).
+        authorizeHttpRequests(request ->
         request.requestMatchers(HttpMethod.POST, "/smartwalletapp/users").permitAll().
         requestMatchers(HttpMethod.POST, POST_LIST_PUBLIC).permitAll().
-        requestMatchers(HttpMethod.GET,"/smartwalletapp/users").hasRole(Roles.ADMIN.name()).
+        // requestMatchers(HttpMethod.GET,"/smartwalletapp/users").hasRole(Roles.ADMIN.name()).
+        // requestMatchers(HttpMethod.PUT,"/smartwalletapp/users").hasRole(Roles.ADMIN.name()).
+        
+
         anyRequest().authenticated());
 
         http.oauth2ResourceServer(
@@ -47,6 +57,19 @@ public class SecurityConfig {
         );
         http.csrf(AbstractHttpConfigurer::disable);
         return http.build();
+    }
+    @Bean
+
+    public UrlBasedCorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(List.of("http://localhost:57939", "http://localhost:8080", "http://localhost:55191/")); // ⚠️ Cổng Flutter Web
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS","PATCH"));
+        config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        config.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 
     @Bean

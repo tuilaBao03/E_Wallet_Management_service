@@ -1,4 +1,5 @@
-package com.backend.smartwalletapp.dto.request.user;
+package com.backend.smartwalletapp.dto.request.User;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,13 +12,12 @@ import lombok.AccessLevel;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserCreateRequest {
-    String username;
-    String password;
+public class UserUpdatedRequest {
     String phoneNumber;
     String homeAddress;
     String companyAddress;
     String lastName;
     String firstName;
     String email;
+    String avatar;
 }

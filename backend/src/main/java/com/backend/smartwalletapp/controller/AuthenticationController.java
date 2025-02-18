@@ -1,5 +1,8 @@
 package com.backend.smartwalletapp.controller;
 import java.text.ParseException;
+
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,15 +17,17 @@ import com.backend.smartwalletapp.service.AuthenticationSevice;
 import com.nimbusds.jose.JOSEException;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 @RestController
 @RequestMapping("/auth")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@AllArgsConstructor
 public class AuthenticationController {
     AuthenticationSevice authenticationSevice;
-    public AuthenticationController(AuthenticationSevice authenticationSevice) {
-        this.authenticationSevice = authenticationSevice;
-    }
+    // public AuthenticationController(AuthenticationSevice authenticationSevice) {
+    //     this.authenticationSevice = authenticationSevice;
+    // }
     @PostMapping("/login")
     ApiResponse<AuthenticationResponse> login(@RequestBody AuthenticationRequest request) {
         var result = authenticationSevice.authenticate(request);
@@ -40,5 +45,11 @@ public class AuthenticationController {
         return ApiResponse.<IntrospectResponse>builder()
         .result(result)
         .build();
+    }
+
+    @PostMapping("/logout")
+    public String logout() {
+        SecurityContextHolder.clearContext();  // Xóa context đăng nhập
+        return "Logout successful";
     }
 }

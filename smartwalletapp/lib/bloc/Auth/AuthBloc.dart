@@ -9,20 +9,20 @@ import '../../models/user.dart';
 class AuthBloc extends Bloc<AuthEvent,AuthState>{
   AuthBloc():super(AuthInitial()){
     on<AuthenticateEvent>(_Authenticate);
-    on<ForgetPassWordEvent>(_CheckAndChangePass);
+    // on<ForgetPassWordEvent>(_CheckAndChangePass);
   }
   Future<User?> _Authenticate(AuthenticateEvent event,Emitter<AuthState> emit) async{
     try{
       UserRepository userRepository = UserRepository();
-      print('----------------------------------------');
-      bool check = await userRepository.Authenticate(event.username, event.password);
-      print(check);
-      if(check){
-        User? user = await userRepository.findUserByUserName(event.username);
-        emit(AuthSuccess(user!));
+      AuthResult result = await userRepository.authenticate(event.password, event.username);
+      print(result.code);
+      print(result.token);
+      if(result.code == 0){
+        User user = await userRepository.giveUserByName(event.username, result.token);
+        emit(AuthSuccess(user,result.token));
       }
       else{
-        emit(AuthError("Wrong password or username"));
+        emit(AuthError("123456${result.code.toString()}"));
       }
     }
     catch(e){
@@ -30,21 +30,5 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
       return null;
     }
     return null;
-  }
-  Future<void> _CheckAndChangePass(ForgetPassWordEvent event,Emitter<AuthState> emit) async{
-    try{
-      UserRepository userRepository = UserRepository();
-      String check = await userRepository.GiveInfortoEmail(event.email);
-      if(check == '0'){
-        emit(AuthError("Email ko lien ket voi tk"));
-      }
-      else{
-        emit(RegisterSuccess(true));
-      }
-
-    }
-    catch(e){
-      print("_CheckAndChangePass $e");
-    }
   }
 }

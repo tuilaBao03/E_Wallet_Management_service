@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:smartwalletapp/bloc/MainApp/MainAppBloc.dart';
 import 'package:smartwalletapp/bloc/Register/RegistedBloc.dart';
 import 'package:smartwalletapp/models/user.dart';
-import 'package:smartwalletapp/screens/main/main_screen.dart';
+import 'package:smartwalletapp/screens/authentication/login_screen.dart';
 import 'app/locallization/app_localizations.dart';
 import 'app/theme/app_theme.dart';
 import 'bloc/Auth/AuthBloc.dart';
@@ -84,10 +84,13 @@ class _MyAppState extends State<MyApp> {
         Locale('en', ''), // English
         Locale('vi', ''), // Vietnamese
       ],
-      home: MainScreen(isAuth: true, user: u, onLanguageChange: (Locale newLocale) {
-        // Thay đổi ngôn ngữ trong toàn ứng dụng
+      home: 
+      // MainScreen(isAuth: true, user: u, onLanguageChange: (Locale newLocale) {
+      //   Get.updateLocale(newLocale);
+      // },)
+      LoginScreen(isAuth: false, onLanguageChange: (Locale newLocale) {
         Get.updateLocale(newLocale);
-      },)
+       },)
     );
   }
 }

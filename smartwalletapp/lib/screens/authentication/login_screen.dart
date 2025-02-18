@@ -235,9 +235,10 @@ class _LoginScreenState extends State<LoginScreen> {
           );
         },       listener: (context, state) {
         if(state is AuthSuccess){
+            String token = state.token;
             user = state.user;
             Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => MainScreen(isAuth: true, user: user, onLanguageChange: widget.onLanguageChange,)),
+            MaterialPageRoute(builder: (context) => MainScreen(isAuth: true, user: user, onLanguageChange: widget.onLanguageChange, token: token,)),
             );
           }
         else if (state is AuthError) {

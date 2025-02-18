@@ -34,6 +34,18 @@ public enum ErrorCode {
     WALLET_NOT_FOUND(2001, "Wallet not found"),
     INVALID_CURRENCY(2002, "Invalid currency"),
     CURRENCY_MISMATCH(2003, "Currency mismatch"),
+
+
+    // cardholder
+    CARDHOLDER_NOT_FOUND(6001, "cardholder not found"),
+    CARDHOLDER_NOT_EXISTS(6002, "cardholder not exists"),
+
+    // contract 
+    CONTRACT_NOT_FOUND(7001, "cardholder not found"),
+    CONTRACT_NOT_EXISTS(7002, "cardholder not exists"),
+    LOCK_UNLOCK_FAILE(7003,"lock or unlock failed"),
+    CREATE_CONTRACT_FAILE(7004,"update contract failed")
+
     ;
 
     ErrorCode(int code, String message) {

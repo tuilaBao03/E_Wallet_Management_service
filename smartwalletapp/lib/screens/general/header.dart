@@ -4,6 +4,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smartwalletapp/app/locallization/app_localizations.dart';
+import 'package:smartwalletapp/bloc/MainApp/MainAppBloc.dart';
+import 'package:smartwalletapp/bloc/MainApp/MainAppEvent.dart';
 
 import '../../constants.dart';
 import '../../controllers/menu_app_controller.dart';
@@ -119,6 +121,7 @@ class _HeaderState extends State<Header> {
 }
 
 class ProfileCard extends StatelessWidget {
+
   final User user;
   const ProfileCard({
     super.key, required this.user,
@@ -149,9 +152,49 @@ class ProfileCard extends StatelessWidget {
                   EdgeInsets.symmetric(horizontal: defaultPadding / 2),
               child: Text(user.firstName, style: TextStyle(color: Theme.of(context).colorScheme.onPrimary,),),
             ),
-          Icon(Icons.keyboard_arrow_down),
+          
+
+          
+          IconButton(
+            onPressed: () => _showOptionsDialog(context),
+            icon: Icon(Icons.keyboard_arrow_down),
+          ),
         ],
       ),
+    );
+    
+  }
+    void _showOptionsDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Choose an action'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: Text('Logout'),
+                onTap: () {
+                  // Xử lý đăng xuất ở đây
+                  context.read<MainAppBloc>().add(
+                                              LogoutEvent()
+                                          );
+                  // Ví dụ: gọi một hàm đăng xuất hoặc reset token
+                },
+              ),
+              ListTile(
+                title: Text('Change Password'),
+                onTap: () {
+                  // Chuyển tới màn hình đổi mật khẩu
+                  Navigator.pop(context);
+                  // Ví dụ: Điều hướng tới màn hình đổi mật khẩu
+                },
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

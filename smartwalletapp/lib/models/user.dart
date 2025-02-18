@@ -32,23 +32,23 @@ class User {
   });
 
   /// **Chuyển từ JSON sang `User` object**
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
-      userId: json["userId"],
-      username: json['username'],
-      password: json['password'],
-      phoneNumber: json['phoneNumber'],
-      homeAddress: json['homeAddress'],
-      companyAddress: json['companyAddress'],
-      lastName: json['lastName'],
-      firstName: json['firstName'],
-      avatar: json['avatar'],
-      email: json['email'],
-      createdDate: DateTime.parse(json['createdDate']),
-      updateDate: DateTime.parse(json['updateDate']),
-      status: json['status'],
-    );
-  }
+    factory User.fromJson(Map<String, dynamic> json) {
+      return User(
+        userId: json["userId"] ?? '',
+        username: json["username"] ?? '',
+        password: json["password"] ?? '',
+        phoneNumber: json["phoneNumber"] ?? '',
+        homeAddress: json["homeAddress"] ?? '',
+        companyAddress: json["companyAddress"] ?? '',
+        lastName: json["lastName"] ?? '',
+        firstName: json["firstName"] ?? '',
+        avatar: json["avatar"] ?? 'default-avatar.png',
+        email: json["email"] ?? '',
+        createdDate: json["createdDate"] != null ? DateTime.parse(json["createdDate"]) : DateTime.now(),
+        updateDate: json["updatedDate"] != null ? DateTime.parse(json["updatedDate"]) : DateTime.now(),
+        status: json["status"] ?? false,
+      );
+    }
 
   /// **Chuyển từ `User` object sang JSON**
   Map<String, dynamic> toJson() {

@@ -16,8 +16,9 @@ class MyprofileScreen extends StatefulWidget {
 
   final bool isAuth;
   final User user;
+  final String token;
   final Function(Locale) onLanguageChange;
-  const MyprofileScreen({super.key, required this.isAuth, required this.user, required this.onLanguageChange});
+  const MyprofileScreen({super.key, required this.isAuth, required this.user, required this.onLanguageChange, required this.token});
 
   @override
   _MyprofileScreenState createState() => _MyprofileScreenState();
@@ -44,8 +45,7 @@ class _MyprofileScreenState extends State<MyprofileScreen> {
               flex: 1,
               child: UserDetail(
               object: widget.user,
-              isImage: true,
-              title: 'My Profile',
+              title: 'My Profile', token: widget.token,
             ),),
             SizedBox(width: defaultPadding*2),
             ],
