@@ -27,6 +27,7 @@ class CustomerList extends StatefulWidget {
 }
 
 class _CustomerListState extends State<CustomerList> {
+
   final TextEditingController _searchController = TextEditingController();
   List<CardHolder> _filteredCardHolder = [];
 
@@ -34,6 +35,19 @@ class _CustomerListState extends State<CustomerList> {
   void initState() {
     super.initState();
     _filteredCardHolder = widget.object;
+    print("${_filteredCardHolder.length}");
+  }
+
+  @override
+  void didUpdateWidget(covariant CustomerList oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    // Nếu user thay đổi, cập nhật danh sách thẻ
+    if (oldWidget.object.length != widget.object.length) {
+      setState(() {
+        _filteredCardHolder = widget.object;
+      });
+    }
   }
 
   @override

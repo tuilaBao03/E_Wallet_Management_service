@@ -6,6 +6,7 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:smartwalletapp/models/contract.dart';
+import 'package:smartwalletapp/models/transaction.dart';
 import 'package:smartwalletapp/responsive.dart';
 import 'package:smartwalletapp/screens/contract/components/contract_detail.dart';
 import 'package:smartwalletapp/screens/contract/components/contract_list.dart';
@@ -13,6 +14,7 @@ import 'package:smartwalletapp/screens/main/components/classInitial.dart';
 
 
 import '../../constants.dart';
+import '../../models/card.dart';
 import '../../models/user.dart';
 import '../general/header.dart';
 
@@ -20,6 +22,7 @@ import '../general/header.dart';
 
 
 class ContractScreen extends StatefulWidget {
+  
   final bool isAuth;
   final User user;
   final Function(Locale) onLanguageChange;
@@ -40,18 +43,16 @@ class _ContractScreenState extends State<ContractScreen> {
     "cardList",
     "TranList"
   ]);
-  
-  
+
   Contract selectedContract = selectedContractInittial;
   bool selectContractDetail = false;
-  
+
   void updateContractDetail(Contract contract){
    setState(() {
      selectedContract = contract;
      selectContractDetail = true;
    });
   }
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -70,12 +71,11 @@ class _ContractScreenState extends State<ContractScreen> {
                   child: Column(
                     children: [
                       ContractList(
-                        object: contractlist,
+                        object: contractList,
                         objectColumnName: objectColumnNameOfContract,
                         title: 'ContractList',
                         onContract_CardList: updateContractDetail,
-                        onContract_TranSaction: (Contract ) {},
-                        cardHolder: selectedcardHolderInittial,),
+                        cardHolder: selectedcardHolderInittial, isContractScreent: true, cards: MyCards, trans: demoTransactionList,),
                       if(!Responsive.isDesktop(context))
                         SizedBox(height: defaultPadding),
                       if(!Responsive.isDesktop(context) && selectContractDetail == true)

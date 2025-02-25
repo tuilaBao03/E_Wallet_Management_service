@@ -11,9 +11,7 @@ class AuthResult {
   final int code;
   final String token;
   final bool authenticated;
-
   AuthResult({required this.code, required this.token, required this.authenticated});
-
   factory AuthResult.fromJson(Map<String, dynamic> json) {
     return AuthResult(
       code: json["code"],
@@ -24,9 +22,6 @@ class AuthResult {
 }
 
 class UserRepository{
-
-
-
 Future<AuthResult> authenticate(String password, String username) async {
   String apiUrl = "http://localhost:8080/auth/login";
 
@@ -145,6 +140,7 @@ Future<void> logout() async{
     print(e);
   }
 }
+
 
 }
 

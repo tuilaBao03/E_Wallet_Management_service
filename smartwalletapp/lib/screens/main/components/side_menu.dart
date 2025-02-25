@@ -29,35 +29,15 @@ class SideMenu extends StatelessWidget {
             press: () => onMenuTap(2),
           ),
           DrawerListTile(
-            title: AppLocalizations.of(context).translate("Transaction"),
-            svgSrc: "assets/icons/menu_tran.svg",
-            press: () => onMenuTap(3),
-          ),
-          DrawerListTile(
             title: AppLocalizations.of(context).translate("Contract"),
             svgSrc: "assets/icons/menu_notification.svg",
-            press: () => onMenuTap(4),
+            press: () => onMenuTap(3),
           ),
           DrawerListTile(
             title: AppLocalizations.of(context).translate("My Profile"),
             svgSrc: "assets/icons/menu_profile.svg",
-            press: () => onMenuTap(5),
+            press: () => onMenuTap(4),
           ),
-          // DrawerListTile(
-          //   title: AppLocalizations.of(context).translate("Setting"),
-          //   svgSrc: "assets/icons/menu_setting.svg",
-          //   press: () => onMenuTap(6),
-          // ),
-          // DrawerListTile(
-          //   title: AppLocalizations.of(context).translate("ParkingSpotManagement"),
-          //   svgSrc: "assets/icons/menu_task.svg",
-          //   press: () => onMenuTap(9),
-          // ),
-          // DrawerListTile(
-          //   title: AppLocalizations.of(context).translate("SpotOwnerManagement"),
-          //   svgSrc: "assets/icons/menu_task.svg",
-          //   press: () => onMenuTap(10),
-          // ),
         ],
       ):ListView(
         children: [

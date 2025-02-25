@@ -45,6 +45,7 @@
 
 
     "4.2":"Trang chủ",
+        "Card amount was created byyear":"Card amount was created by year",
         "Dashboard":"Dashboard",
         "Wallet":"Wallet",
         "MyCard":"MyCard",
@@ -88,8 +89,7 @@
         "TypeCard":"Type Card",
         "cardList":"Cards List",
         "Pick Date":"Pick Date",
-
-
+  
 "7":"Transaction",
         "budget":"Budget",
         "typeMoney":"Type Money",

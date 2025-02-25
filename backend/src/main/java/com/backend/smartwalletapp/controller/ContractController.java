@@ -53,4 +53,6 @@ public class ContractController {
                                @RequestParam(defaultValue = "5") int size) {
         return contractService.getContractPage(page, size);
     }
+
+    
 }

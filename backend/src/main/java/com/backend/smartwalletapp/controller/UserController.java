@@ -32,83 +32,55 @@ public class UserController {
 
     @PostMapping
     @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")
-    ApiResponse<User> createRequestUser(@RequestBody @Valid UserCreatedRequest request){
-        @SuppressWarnings({ "rawtypes", "unchecked" })
-        ApiResponse<User> ApiResponse = new ApiResponse();
-        ApiResponse.setCode(200);
-        ApiResponse.setMessage("user created successfully");
-        ApiResponse.setResult(userService.createUser(request));
-        return ApiResponse;
+    ApiResponse<User> createRequestUser(@RequestBody @Valid UserCreatedRequest request) {
+        return ApiResponse.<User>builder()
+                .code(200)
+                .message("User created successfully")
+                .result(userService.createUser(request))
+                .build();
     }
 
     @GetMapping
     @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")
-    ApiResponse<List<User>> getUser(){
-        var authentication =  SecurityContextHolder.getContext().getAuthentication();
-        log.info("Username: {}",authentication.getName());
+    ApiResponse<List<User>> getUser() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        log.info("Username: {}", authentication.getName());
         authentication.getAuthorities().forEach(grantedAuthority -> log.info(grantedAuthority.getAuthority()));
-        @SuppressWarnings({ "rawtypes", "unchecked" })
-        ApiResponse<List<User>> ApiResponse = new ApiResponse();
-        ApiResponse.setCode(200);
-        ApiResponse.setMessage("User fetched successfully");
-        ApiResponse.setResult(userService.getUser());
-        return ApiResponse;
+        
+        return ApiResponse.<List<User>>builder()
+                .result(userService.getUser())
+                .code(200)
+                .message("User fetched successfully")
+                .build();
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")
-    ApiResponse<User> getUserById(@PathVariable String id){
-        ApiResponse<User> ApiResponse = new ApiResponse<>();
-        ApiResponse.setCode(200);
-        ApiResponse.setResult(userService.getUserById(id));
-        ApiResponse.setMessage("User fetched successfully");
-        return ApiResponse;
+    ApiResponse<User> getUserById(@PathVariable String id) {
+        return ApiResponse.<User>builder()
+                .code(200)
+                .result(userService.getUserById(id))
+                .message("User fetched successfully")
+                .build();
     }
+
     @GetMapping("/{name}/name")
     @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")
-    ApiResponse<User> getUserByName(@PathVariable String name){
-        ApiResponse<User> ApiResponse = new ApiResponse<>();
-        ApiResponse.setCode(200);
-        ApiResponse.setResult(userService.getUserByName(name));
-        ApiResponse.setMessage("User fetched successfully");
-        return ApiResponse;
+    ApiResponse<User> getUserByName(@PathVariable String name) {
+        return ApiResponse.<User>builder()
+                .code(200)
+                .result(userService.getUserByName(name))
+                .message("User fetched successfully")
+                .build();
     }
-    // @DeleteMapping("/{id}")
-    // ApiResponse<String> deleteUser(@PathVariable String id) {
-    //     ApiResponse<String> ApiResponse = new ApiResponse<>();
-    //     ApiResponse.setCode(200);
-    //     userService.deleteUser(id);
-    //     ApiResponse.setMessage("User deleted successfully");
-    //     return ApiResponse;
-    // }
-
-    // @PatchMapping("/{id}/status")
-    // ApiResponse<User> updateStatusUser(@PathVariable String id, @RequestBody UpdatedStatusUserRequest request){
-    //     ApiResponse<User> ApiResponse = new ApiResponse<>();
-    //     ApiResponse.setCode(200);
-    //     ApiResponse.setMessage("User updated successfully");
-    //     ApiResponse.setResult(userService.updatedStatusUser(id, request));
-    //     return ApiResponse;
-    // }
-
-    // @PatchMapping("/{id}/role")
-    // ApiResponse<User> updateRoleUser(@PathVariable String id, @RequestBody UpdatedRoleUserRequest request){
-    //     ApiResponse<User> ApiResponse = new ApiResponse<>();
-    //     ApiResponse.setCode(200);
-    //     ApiResponse.setMessage("Role User updated successfully");
-    //     ApiResponse.setResult(userService.updatedRoleUser(id, request));
-    //     return ApiResponse;
-    // }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")
-    ApiResponse<User> updateUser(@PathVariable String id, @RequestBody UserUpdatedRequest request){
-        ApiResponse<User> ApiResponse = new ApiResponse<>();
-        ApiResponse.setCode(200);
-        ApiResponse.setMessage("User updated successfully");
-        ApiResponse.setResult(userService.updateUser(id, request));
-        return ApiResponse;
+    ApiResponse<User> updateUser(@PathVariable String id, @RequestBody UserUpdatedRequest request) {
+        return ApiResponse.<User>builder()
+                .code(200)
+                .message("User updated successfully")
+                .result(userService.updateUser(id, request))
+                .build();
     }
-
-    
 }

@@ -1,10 +1,11 @@
-// ignore_for_file: unused_import, avoid_print
+// ignore_for_file: unused_import, avoid_print, non_constant_identifier_names
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smartwalletapp/bloc/MainApp/MainAppBloc.dart';
 import 'package:smartwalletapp/bloc/MainApp/MainAppEvent.dart';
 import 'package:smartwalletapp/bloc/MainApp/MainAppState.dart';
 import 'package:smartwalletapp/models/cardholder.dart';
 import 'package:smartwalletapp/models/contract.dart';
+import 'package:smartwalletapp/repository/DashboardRepository.dart';
 import 'package:smartwalletapp/screens/myprofile/myprofile_screen.dart';
 import 'package:smartwalletapp/screens/contract/contract_screen.dart';
 import 'package:smartwalletapp/screens/customer/customer_screen.dart';
@@ -32,19 +33,18 @@ class MainScreen extends StatefulWidget {
   @override
   State<MainScreen> createState() => _MainScreenState();
 }
-
 class _MainScreenState extends State<MainScreen> {
   late User selectedUsers; 
   int _currentTab = 1;
   List<CardHolder> cardHolders = [];
   List<Contract> contracts = [];
   List<Transaction> trans =[];
-  List<CardInfo> cards = []; 
+  List<CardInfo> cards = [];
+  List<Card_Time> card_times = [];
   @override
   void initState() {
     super.initState();
     selectedUsers = widget.user;
-
     context.read<MainAppBloc>().add(initializationEvent());
   }
   
@@ -74,9 +74,10 @@ class _MainScreenState extends State<MainScreen> {
           }
           else if(state is UpdateUserSuccessState){
             selectedUsers = state.user;
-
           }
-          
+          else if(state is GiveCardListState) {
+            card_times = state.list;
+          }
         return SafeArea(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -90,7 +91,7 @@ class _MainScreenState extends State<MainScreen> {
               }, isAuth: widget.isAuth,)),
             Expanded(
               // It takes 5/6 part of the screen
-              flex: 8,
+              flex: 7,
               child: _getScreen(_currentTab),
             ),
           ],
@@ -119,18 +120,16 @@ class _MainScreenState extends State<MainScreen> {
   Widget _getScreen(int tab) {
     switch (tab) {
       case 1:
-        return DashboardScreen(isAuth: widget.isAuth, user: selectedUsers, onLanguageChange: widget.onLanguageChange);
+        return DashboardScreen(isAuth: widget.isAuth, user: selectedUsers, onLanguageChange: widget.onLanguageChange, card_times: card_times,);
       case 2:
         return CustomerScreen(isAuth: widget.isAuth, user: selectedUsers, cardHolders: cardHolders, trans: trans, cards: cards, contracts: contracts, onLanguageChange: widget.onLanguageChange);
       case 3: 
-        return TransactionScreen(isAuth: widget.isAuth, user: selectedUsers,onLanguageChange: widget.onLanguageChange,);
-      case 4:
         return ContractScreen(isAuth: widget.isAuth, user: selectedUsers,onLanguageChange: widget.onLanguageChange,);
-      case 5:
+      case 4:
         return MyprofileScreen(isAuth: widget.isAuth, user: selectedUsers,onLanguageChange: widget.onLanguageChange, token: widget.token,);
        // Thêm màn hình SettingScreen
       default:
-        return DashboardScreen(isAuth: widget.isAuth,user: selectedUsers, onLanguageChange: widget.onLanguageChange,);
+        return DashboardScreen(isAuth: widget.isAuth,user: selectedUsers, onLanguageChange: widget.onLanguageChange, card_times: card_times,);
     }
   }
 }

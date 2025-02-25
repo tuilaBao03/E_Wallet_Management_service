@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, deprecated_member_use
 
 import 'package:flutter/material.dart';
 
@@ -33,7 +33,46 @@ class CardInfo {
     required this.contractID,
     required this.limit
   });
+  /// 🔹 **Chuyển đối tượng `CardInfo` thành JSON**
+  Map<String, dynamic> toJson() {
+    return {
+      'cardHolderId': cardHolderId,
+      'CardID': CardID,
+      'userId': userId,
+      'svgSrc': svgSrc,
+      'bankName': bankName,
+      'balance': balance,
+      'color': color.value, // Chuyển màu thành số nguyên để lưu trữ
+      'typeCard': typeCard,
+      'createdDate': createdDate.toIso8601String(),
+      'updateDate': updateDate.toIso8601String(),
+      'status': status,
+      'contractID': contractID,
+      'limit': limit,
+    };
+  }
+
+  /// 🔹 **Chuyển JSON thành đối tượng `CardInfo`**
+  factory CardInfo.fromJson(Map<String, dynamic> json) {
+    return CardInfo(
+      cardHolderId: json['cardHolderId'],
+      CardID: json['CardID'],
+      userId: json['userId'],
+      svgSrc: json['svgSrc'],
+      bankName: json['bankName'],
+      balance: json['balance'].toDouble(),
+      color: Color(json['color']), // Chuyển số nguyên thành màu
+      typeCard: json['typeCard'],
+      createdDate: DateTime.parse(json['createdDate']),
+      updateDate: DateTime.parse(json['updateDate']),
+      status: json['status'],
+      contractID: json['contractID'],
+      limit: json['limit'].toDouble(),
+    );
+  }
 }
+
+
 
 List<CardInfo> MyCards = [
   CardInfo(
@@ -64,16 +103,30 @@ List<CardInfo> MyCards = [
     cardHolderId: '1', limit: 0,
   ),
   CardInfo(
-    bankName: "BangKokBank",
+    bankName: "ABChinaBank",
     balance: 1328,
-    svgSrc: "assets/logos/zxbk-rect.svg",
+    svgSrc: "assets/logos/zybank-rect.svg",
     color: primaryColor,
-    CardID: '3',
+    CardID: '2',
     userId: '1',
     typeCard: "DebitCard",
     createdDate: DateTime.now(),
     updateDate: DateTime.now(),
-    status: false,
+    status: true,
+    contractID: "2",
+    cardHolderId: '1', limit: 0,
+  ),
+  CardInfo(
+    bankName: "ABChinaBank",
+    balance: 1328,
+    svgSrc: "assets/logos/zybank-rect.svg",
+    color: primaryColor,
+    CardID: '2',
+    userId: '1',
+    typeCard: "DebitCard",
+    createdDate: DateTime.now(),
+    updateDate: DateTime.now(),
+    status: true,
     contractID: "2",
     cardHolderId: '1', limit: 0,
   ),

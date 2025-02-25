@@ -90,4 +90,9 @@ class AddContractEvent extends MainAppEvent{
 class LogoutEvent extends MainAppEvent{
 }
 
+class GiveCard_TimeListEvent extends MainAppEvent{
+  final DateTime start;
+  final DateTime end;
+  GiveCard_TimeListEvent (this.start, this.end);
+}
 

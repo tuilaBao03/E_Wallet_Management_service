@@ -5,6 +5,8 @@ import 'package:smartwalletapp/models/contract.dart';
 import 'package:smartwalletapp/models/transaction.dart';
 import 'package:smartwalletapp/models/user.dart';
 
+import '../../repository/DashboardRepository.dart';
+
 abstract class MainAppState{}
 
 class MainInitial extends MainAppState{}
@@ -41,4 +43,9 @@ class UpdateUserSuccessState extends MainAppState{
 }
 
 class LogoutSuccess extends MainAppState{
+}
+
+class GiveCardListState extends MainAppState{
+  final List<Card_Time> list;
+  GiveCardListState(this.list);
 }

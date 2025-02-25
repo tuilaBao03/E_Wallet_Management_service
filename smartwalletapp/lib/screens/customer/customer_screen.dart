@@ -12,11 +12,9 @@ import 'package:smartwalletapp/models/card.dart';
 import 'package:smartwalletapp/models/cardholder.dart';
 import 'package:smartwalletapp/models/contract.dart';
 import 'package:smartwalletapp/models/transaction.dart';
-import 'package:smartwalletapp/screens/card/components/card_list.dart';
 import 'package:smartwalletapp/screens/contract/components/contract_list.dart';
 import 'package:smartwalletapp/screens/customer/components/customer_list.dart';
 import 'package:smartwalletapp/screens/main/components/classInitial.dart';
-import 'package:smartwalletapp/screens/transaction/components/transaction_list.dart';
 
 import '../../constants.dart';
 import '../../models/user.dart';
@@ -42,7 +40,6 @@ class CustomerScreen extends StatefulWidget {
     required this.cardHolders, 
     required this.contracts, 
     required this.onLanguageChange});
-
   @override
   _CustomerScreenState createState() => _CustomerScreenState();
 }
@@ -59,25 +56,14 @@ class _CustomerScreenState extends State<CustomerScreen> {
     "date",
     "Detail",
     "cardList",
-    "TranList"
   ]);
   final HashSet<String> objectColumnNameOfCard = HashSet.from([
     "CardId",
     "Detail",
   ]);
-  final HashSet<String> objectColumnNameOfTransaction = HashSet.from([
-    "TransactionID",
-    "date",
-    "Detail"
-  ]);
- 
-
-
-
   User selectedUser = selectedUserInittial;
   CardHolder selectedcardHolder = selectedcardHolderInittial;
   CardInfo selectedCard = selectedCardInittial;
-  Transaction selectedTransaction = selectedTransactionInittial;
   Contract selectedContract = selectedContractInittial;
 
 
@@ -106,12 +92,11 @@ class _CustomerScreenState extends State<CustomerScreen> {
     SelectCardList =false;
     SelectTranList = true;
   }
+  @override
+  void initState() {
 
-  void updateTranDetail(Transaction tran){
-   setState(() {
-     selectedTransaction = tran;
-     SelectTranList = true;
-   });
+    super.initState();
+    context.read<MainAppBloc>().add(initializationEvent());
   }
 
   @override
@@ -131,58 +116,41 @@ class _CustomerScreenState extends State<CustomerScreen> {
                       SingleChildScrollView(
                         child: Column(
                           children: [
-                          CustomerList(
-                                object: widget.cardHolders,
-                                objectColumnName: objectColumnNameOfUser,
-                                title: 'cusList',
-                                onCustomer_Contracts: updateCardHolder_contract,
-                              ),
-                          SizedBox(height: defaultPadding),
-                          if (SelectContractList)
-                            Row(
+                          Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Expanded(
                                   flex: 1,
-                                  child: ContractList(
-                                    object: widget.contracts,
-                                    objectColumnName: objectColumnNameOfContract, 
-                                    title: "Contract", 
-                                    onContract_CardList: updateContract_card,
-                                    onContract_TranSaction: updateContract_tran, cardHolder: selectedcardHolder,),
-                                ),
-                                if(Responsive.isDesktop(context) && SelectTranList)
+                                  child: 
+                                  CustomerList(
+                                      object: widget.cardHolders,
+                                      objectColumnName: objectColumnNameOfUser,
+                                      title: 'cusList',
+                                      onCustomer_Contracts: updateCardHolder_contract,
+                                    ),),
+                                if(Responsive.isDesktop(context) && SelectContractList)
                                   SizedBox(width: defaultPadding),
-
-                                if(Responsive.isDesktop(context) && SelectTranList)
-                                  Expanded(
-                                    flex: 1,
-                                    child: TransactionList(
-                                      object: widget.trans, 
-                                      objectColumnName: objectColumnNameOfTransaction, 
-                                      title: "TranList", 
-                                      onDetailSelected: updateTranDetail, 
-                                      contract: selectedContract, currentPage: false,),
-                                  ),
+                                if(Responsive.isDesktop(context) && SelectContractList)
+                                Expanded(
+                                  flex: 1,
+                                  child: 
+                                  ContractList(
+                                    object: widget.contracts,
+                                    objectColumnName: objectColumnNameOfContract,
+                                    title: "Contract",
+                                    onContract_CardList: updateContract_card,
+                                    cardHolder: selectedcardHolder, isContractScreent: false, cards: MyCards, trans: [],),)
                               ],
                             ),
                           SizedBox(height: defaultPadding),
-                          if(!Responsive.isDesktop(context) && SelectTranList)
-                            TransactionList(
-                                      object: widget.trans, 
-                                      objectColumnName: objectColumnNameOfTransaction, 
-                                      title: "TranList", 
-                                      onDetailSelected: updateTranDetail, 
-                                      contract: selectedContract, currentPage: false,),
-                          SizedBox(height: defaultPadding),
-                          if(SelectCardList)
-                            CardList(
-                                    object: widget.cards,
-                                    objectColumnName: objectColumnNameOfCard,
-                                    title: 'cardList',
-                                    contract: selectedContract),
-                          SizedBox(height: defaultPadding),
+                          if(!Responsive.isDesktop(context) && SelectContractList)
+                            ContractList(
+                                    object: widget.contracts,
+                                    objectColumnName: objectColumnNameOfContract,
+                                    title: "Contract",
+                                    onContract_CardList: updateContract_card,
+                                    cardHolder: selectedcardHolder, isContractScreent: false, cards: MyCards, trans: [],),
                     ],
                   ),
                 ),

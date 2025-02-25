@@ -1,24 +1,32 @@
 
-import 'dart:collection';
+// ignore_for_file: non_constant_identifier_names
+
+
 
 import 'package:flutter/material.dart';
 import 'package:smartwalletapp/app/locallization/app_localizations.dart';
 
 
 import '../../constants.dart';
+
 import '../../models/user.dart';
+import '../../repository/DashboardRepository.dart';
 import '../../responsive.dart';
 import '../general/header.dart';
 
-import '../card/components/my_card.dart';
+
 import 'components/assets_details.dart';
+import 'components/diagram.dart';
 
 class DashboardScreen extends StatefulWidget {
+  final List<Card_Time> card_times;
   final bool isAuth;
   final User user;
   final Function(Locale) onLanguageChange;
-  const DashboardScreen({super.key,
-   required this.isAuth, required this.user, required this.onLanguageChange,
+  const DashboardScreen({
+
+    super.key,
+   required this.isAuth, required this.user, required this.onLanguageChange, required this.card_times,
 });
 
   @override
@@ -26,14 +34,6 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-final HashSet<String> objectColumnName = HashSet.from([
-  "File Name",
-  "Date",
-  "Budget",
-  "Type Money",
-  "Type"
-]);
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -49,11 +49,13 @@ final HashSet<String> objectColumnName = HashSet.from([
               children: [
                 Expanded(
                   flex: 5,
-                  child: Column(
+                  child: Row(
                     children: [
-                      MyCard(),
+                      Expanded(
+                        flex:4,
+                          child: Diagram(list_card_time: widget.card_times, ByObject: 'year',))
+                      ,
                       SizedBox(height: defaultPadding),
-                      // TableObject(object: demoTransactionList, objectColumnName: objectColumnName, title: 'RecentTrans',),
                       if (Responsive.isMobile(context))
                         SizedBox(height: defaultPadding),
                       if (Responsive.isMobile(context)) AssetsDetails(),

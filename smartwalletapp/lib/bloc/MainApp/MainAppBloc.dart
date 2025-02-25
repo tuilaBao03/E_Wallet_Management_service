@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, file_names
+// ignore_for_file: avoid_print, file_names, non_constant_identifier_names
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smartwalletapp/bloc/MainApp/MainAppEvent.dart';
@@ -8,22 +8,27 @@ import 'package:smartwalletapp/models/cardholder.dart';
 import 'package:smartwalletapp/models/contract.dart';
 import 'package:smartwalletapp/models/transaction.dart';
 import 'package:smartwalletapp/models/user.dart';
+import 'package:smartwalletapp/repository/DashboardRepository.dart';
 import 'package:smartwalletapp/repository/UserRepository.dart';
+
 
 class MainAppBloc extends Bloc<MainAppEvent, MainAppState> {
   MainAppBloc() : super(MainInitial()) {
     on<initializationEvent>(_giveCardHolderList);
-    on<giveContractListEvent>(_giveContractList);
+    on<giveContractListEvent>(_giveContractListParent);
     on<giveCardListEvent>(_giveCardList);
     on<giveTransactionEvent>(_giveTransactionList);
     on<UpdateUserInforEvent>(_updatedUserInfor);
     on<LogoutEvent>(_logout);
+    on<GiveCard_TimeListEvent>(GiveCard_TimeList);
+
   }
 
   void _giveCardHolderList(initializationEvent event, Emitter<MainAppState> emit) async {
     try {
       List<CardHolder> cardHolders = [];
       cardHolders = demoCardHoldersList;
+      print(cardHolders.length);
       emit(giveCardHolderListState(cardHolders)); // Ensure a value is returned
     } catch (e) {
       print("_giveUserList $e");
@@ -31,10 +36,10 @@ class MainAppBloc extends Bloc<MainAppEvent, MainAppState> {
     }
   }
 
-  void _giveContractList(giveContractListEvent event, Emitter<MainAppState> emit) async {
+  void _giveContractListParent(giveContractListEvent event, Emitter<MainAppState> emit) async {
     try {
       List<Contract> contracts = [];
-      contracts = contractlist.where((contract)=>contract.cardHolderID == event.cardHolder.cardHolderId).toList();
+      contracts = contractList.where((contract)=>contract.cardHolderID == event.cardHolder.cardHolderId && contract.type=="A").toList();
       emit(giveContractsListState(contracts)); // Ensure a value is returned
     } catch (e) {
       print("_giveUserList $e");
@@ -86,6 +91,23 @@ class MainAppBloc extends Bloc<MainAppEvent, MainAppState> {
       LogoutSuccess()
     );
   }
+
+  void GiveCard_TimeList(GiveCard_TimeListEvent event, Emitter<MainAppState> emit) async{
+    final DashboardRepository dashboardRepository = DashboardRepository();
+    print(event.end);
+    print(event.start);
+    List<Card_Time> list = [];
+    try{
+      list =  await dashboardRepository.getCardCountEachDay(event.start, event.end);
+      emit(GiveCardListState(list));
+    }
+    catch(e){
+      print("GiveCard_TimeList $e");
+    }
+  }
+
+
+
 } 
 
 

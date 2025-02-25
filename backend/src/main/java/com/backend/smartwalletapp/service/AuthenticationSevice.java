@@ -53,8 +53,6 @@ public class AuthenticationSevice {
         User user = userReponsitory.findByUsername(request.getUsername()).orElseThrow(
             () -> new AppException(ErrorCode.USER_NOT_FOUND)
         );
-        
-    
         boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
         if(!authenticated)
             throw new AppException(ErrorCode.UNAUTHORIZED);

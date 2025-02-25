@@ -65,5 +65,5 @@ User selectedUserInittial = User(
   updatedDate: DateTime.now(),
   status: true,
   note: "",
-  url: "", cardHolderID: '', parent: '',
+  url: "", cardHolderID: '', parent: '', type: 'A',
   );

@@ -17,7 +17,7 @@ class AssetsDetails extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(defaultPadding),
       decoration: BoxDecoration(
-        color: secondaryColor,
+        color: Theme.of(context).colorScheme.secondary,
         borderRadius: const BorderRadius.all(Radius.circular(10)),
       ),
       child: SingleChildScrollView(

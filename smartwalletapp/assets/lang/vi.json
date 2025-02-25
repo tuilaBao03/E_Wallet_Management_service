@@ -46,6 +46,10 @@
 
 
     "4.2":"Trang chủ",
+        "Card amount was created by year":"Số lượng thẻ đã được đăng ký theo năm",
+        "Card amount was created by month":"Số lượng thẻ đã được đăng ký theo tháng",
+        "Card amount was created by day":"Số lượng thẻ đã được đăng ký theo ngày",
+
         "Dashboard":"Trang chủ",
         "Wallet":"Ví",
         "MyCard":"Thẻ của tôi",

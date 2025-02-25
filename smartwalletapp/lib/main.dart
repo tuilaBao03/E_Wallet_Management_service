@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:smartwalletapp/bloc/MainApp/MainAppBloc.dart';
 import 'package:smartwalletapp/bloc/Register/RegistedBloc.dart';
 import 'package:smartwalletapp/models/user.dart';
-import 'package:smartwalletapp/screens/authentication/login_screen.dart';
+import 'package:smartwalletapp/screens/main/main_screen.dart';
 import 'app/locallization/app_localizations.dart';
 import 'app/theme/app_theme.dart';
 import 'bloc/Auth/AuthBloc.dart';
@@ -43,7 +43,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Locale _locale = const Locale('en'); // Ngôn ngữ mặc định là tiếng Anh
+  Locale _locale = const Locale('en');
   void _changeLanguage(Locale locale) {
     setState(() {
       _locale = locale;
@@ -85,12 +85,12 @@ class _MyAppState extends State<MyApp> {
         Locale('vi', ''), // Vietnamese
       ],
       home: 
-      // MainScreen(isAuth: true, user: u, onLanguageChange: (Locale newLocale) {
-      //   Get.updateLocale(newLocale);
-      // },)
-      LoginScreen(isAuth: false, onLanguageChange: (Locale newLocale) {
+      MainScreen(isAuth: true, user: u, onLanguageChange: (Locale newLocale) {
         Get.updateLocale(newLocale);
-       },)
+      }, token: '',)
+      // LoginScreen(isAuth: false, onLanguageChange: (Locale newLocale) {
+      //   Get.updateLocale(newLocale);
+      //  },)
     );
   }
 }

@@ -1,7 +1,6 @@
 package com.backend.smartwalletapp.controller;
 import java.text.ParseException;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

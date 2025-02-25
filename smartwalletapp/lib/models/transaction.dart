@@ -16,6 +16,36 @@ class Transaction {
     required this.typeMoney,
     required this.note,
      });
+  /// 🔹 **Chuyển đối tượng `Transaction` thành JSON**
+  Map<String, dynamic> toJson() {
+    return {
+      'contractID': contractID,
+      'transactionId': transactionId,
+      'icon': icon,
+      'bankName': bankName,
+      'date': date.toIso8601String(),
+      'budget': budget,
+      'typeTransaction': typeTransaction,
+      'typeMoney': typeMoney,
+      'note': note,
+    };
+  }
+
+  /// 🔹 **Chuyển JSON thành đối tượng `Transaction`**
+  factory Transaction.fromJson(Map<String, dynamic> json) {
+    return Transaction(
+      contractID: json['contractID'],
+      transactionId: json['transactionId'],
+      icon: json['icon'],
+      bankName: json['bankName'],
+      date: DateTime.parse(json['date']),
+      budget: json['budget'],
+      typeTransaction: json['typeTransaction'],
+      typeMoney: json['typeMoney'],
+      note: json['note'],
+    );
+  }
+
 }
 
 List<Transaction> demoTransactionList = [
