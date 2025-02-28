@@ -30,21 +30,11 @@ public class Transaction {
     @Id 
     @GeneratedValue(strategy = GenerationType.UUID)
     private String transactionID;
-    
-    @Column( nullable =  false)
-    @NotNull(message = "amount cannot be null")
     private double amount;
-    
-    @Column( nullable =  false)
-    @NotNull(message = "status cannot be null")
     private TransactionStatus status;
-
     private String note;
     Timestamp createdDate;
     Timestamp updatedDate;
-
-    @ManyToOne
-    @JoinColumn(name = "contractID", nullable = false)
     @JsonIgnore
     private Contract contract;
 

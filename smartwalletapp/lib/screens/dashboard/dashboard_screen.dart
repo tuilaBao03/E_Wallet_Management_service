@@ -10,7 +10,7 @@ import 'package:smartwalletapp/app/locallization/app_localizations.dart';
 import '../../constants.dart';
 
 import '../../models/user.dart';
-import '../../repository/DashboardRepository.dart';
+import '../../repository/dashboardRepository.dart';
 import '../../responsive.dart';
 import '../general/header.dart';
 

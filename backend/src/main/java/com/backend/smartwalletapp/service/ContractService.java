@@ -28,29 +28,23 @@ import lombok.experimental.FieldDefaults;
 public class ContractService {
     ContractMapper contractMapper;
     ContractRepository contractRepository;
-    CardHolderRepository cardHolderRepository;
     
-    public Contract createContract(ContractCreatedRequest request){
-        try {
-            Contract contract = contractMapper.toCreateContract(request);
-            contract.setCreatedDate(Timestamp.from(Instant.now()));
-            contract.setUpdatedDate(Timestamp.from(Instant.now()));
-            contract.setStatus(true);
-            System.err.println(request.getCardHolderID());
-            if(!cardHolderRepository.existsById(request.getCardHolderID())){
-                throw new AppException(ErrorCode.CARDHOLDER_NOT_FOUND);
-            }
-            CardHolder cardHolder = cardHolderRepository.findByCardHolderId(request.getCardHolderID());
-            contract.setCardHolder(cardHolder);
-            return contractRepository.save(contract);
-        } catch (AppException e) {
-            throw e; 
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            throw new AppException(ErrorCode.CREATE_CONTRACT_FAILE);
-        }
-    }
+    // public Contract createContract(ContractCreatedRequest request){
+    //     try {
+    //         Contract contract = contractMapper.toCreateContract(request);
+    //         contract.setCreatedDate(Timestamp.from(Instant.now()));
+    //         contract.setUpdatedDate(Timestamp.from(Instant.now()));
+    //         contract.setStatus(true);
+    //         contract.setCardHolderID(request.getCardHolderID());
+    //         return contractRepository.save(contract);
+    //     } catch (AppException e) {
+    //         throw e; 
+    //     }
+    //     catch (Exception e) {
+    //         e.printStackTrace();
+    //         throw new AppException(ErrorCode.CREATE_CONTRACT_FAILE);
+    //     }
+    // }
     public Contract LockUnlockContract(String id,LockUnLockContracRequest request){
         try {
             if(contractRepository.existsById(id)){
@@ -64,8 +58,9 @@ public class ContractService {
             throw new AppException(ErrorCode.LOCK_UNLOCK_FAILE);
         }
     }
-    public Page<Contract> getContractPage(int page, int size) {
+    public Page<Contract> getContractPage(String name, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return contractRepository.findAll(pageable);
+        return contractRepository.findByNameContaining(name, pageable);
     }
+
 }

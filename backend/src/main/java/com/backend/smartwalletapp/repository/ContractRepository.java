@@ -10,6 +10,5 @@ public interface ContractRepository extends JpaRepository<Contract,String>{
     @SuppressWarnings("null")
     boolean existsById(String id);
     Contract findByContractID(String contractID);
-    @SuppressWarnings("null")
-    Page<Contract> findAll(Pageable pageable);
+    Page<Contract> findByNameContaining(String name, Pageable pageable);
 }

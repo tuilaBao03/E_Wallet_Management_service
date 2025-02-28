@@ -4,9 +4,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.smartwalletapp.dto.request.CardHolder.CardHolderCreatedRequest;
-import com.backend.smartwalletapp.dto.request.CardHolder.CardHolderUpdatedRequest;
 import com.backend.smartwalletapp.dto.request.CardHolder.LockUnlockStatusCardHolderRequest;
 import com.backend.smartwalletapp.dto.response.ApiResponse;
+import com.backend.smartwalletapp.dto.response.CardHolder.CardHolderResponse;
 import com.backend.smartwalletapp.model.CardHolder;
 import com.backend.smartwalletapp.service.CardHolderService;
 
@@ -15,10 +15,8 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.List;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,19 +40,14 @@ public class CardHolderController {
     }
 
     @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")
-    @GetMapping()
-    ApiResponse<List<CardHolder>> getAllCardHolder(){
-        return ApiResponse.<List<CardHolder>>builder()
-            .result(cardHolderService.getAllCardHolder())
-            .code(200)
-            .message("all cardholder ").build();
-    }
-
-    @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")
-    @GetMapping("/{id}")
-    ApiResponse<CardHolder> getCardHolderByID(@PathVariable String id){
-        return ApiResponse.<CardHolder>builder()
-            .result(cardHolderService.getCardHolderbyID(id))
+    @GetMapping("/{search}/{page}/{size}")
+    ApiResponse<CardHolderResponse> getAllCardHolderBySearch(
+        @PathVariable String search,
+        @PathVariable int page,
+        @PathVariable int size
+    ){
+        return ApiResponse.<CardHolderResponse>builder()
+            .result(cardHolderService.getCardHolders(search, page, size))
             .code(200)
             .message("all cardholder ").build();
     }
@@ -68,17 +61,6 @@ public class CardHolderController {
             .result(cardHolderService.updateStatusCardHolder(id,request ))
             .message("CardHolder status was updated")
             .code(200).build();
-    }
-
-    @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")
-    @PutMapping("/{id}")
-    ApiResponse<CardHolder> updateCardHolder(
-        @PathVariable String id,
-        @RequestBody @Valid CardHolderUpdatedRequest request){
-            return ApiResponse.<CardHolder>builder()
-                .result(cardHolderService.updateCardHolder(id, request))
-                .code(200)
-                .build();
     }
 
 

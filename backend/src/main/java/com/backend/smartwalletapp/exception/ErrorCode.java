@@ -12,31 +12,9 @@ public enum ErrorCode {
     UNAUTHORIZED(1006, "Unauthorized"),
     INVALID_REQUEST(1007, "Invalid request"),
     INTERNAL_SERVER_ERROR(1008, "Internal server error"),
-    USER_NOT_EXISTS(1009, "User not exists"),
-     // ParkingSpot errors
-    PARKINGSPOT_NOT_FOUND(2001, "parking spot not found"),
-    PARKINGSPOT_ALREADY_EXISTS(2002,"parking spot alrealy exitst"),
-    PARKINGSPOT_NOT_EXISTS(2003,"parking spot not exists"),
-    FALSE_UPDATE_STATUS_SPOT(2004,"updating spot status false"),
-     // Image errors
-    IMAGE_NOT_FOUND(3001, "image not found"),
-    IMAGE_ALREADY_EXISTS(3002,"image alrealy exitst"),
-    IMAGE_NOT_EXISTS(3003,"image not exists"),
-    IMAGE_UPDATE_STATUS_SLOT(3004,"updating image status false"),
-
-     // ParkingSlot errors
-    SLOT_NOT_FOUND(4001, "slot not found"),
-    SLOT_ALREADY_EXISTS(4002,"slot alrealy exitst"),
-    SLOT_NOT_EXISTS(4003,"slot not exists"),
-    FALSE_UPDATE_STATUS_SLOT(4004,"updating slot status false"),
-
-    // Wallet errors
-    WALLET_NOT_FOUND(2001, "Wallet not found"),
-    INVALID_CURRENCY(2002, "Invalid currency"),
-    CURRENCY_MISMATCH(2003, "Currency mismatch"),
-
 
     // cardholder
+    GET_CARDHOLDER_FAILE(6000,"get cardholder faile"),
     CARDHOLDER_NOT_FOUND(6001, "cardholder not found"),
     CARDHOLDER_NOT_EXISTS(6002, "cardholder not exists"),
 
@@ -44,9 +22,13 @@ public enum ErrorCode {
     CONTRACT_NOT_FOUND(7001, "cardholder not found"),
     CONTRACT_NOT_EXISTS(7002, "cardholder not exists"),
     LOCK_UNLOCK_FAILE(7003,"lock or unlock failed"),
-    CREATE_CONTRACT_FAILE(7004,"update contract failed")
+    CREATE_CONTRACT_FAILE(7004,"update contract failed"),
+    GET_CONTRACT_FAILE(7005,"get contract failed"),
+    UPDATE_CONTRACT_FAILE(7004,"update contract failed"),
 
-    ;
+    // card 
+    GET_CARD_FAILLE(8000, "get card fail"),
+    LOCK_UNLOCK_CARD_FAILE(8001, "lock or unlock card faile");
 
     ErrorCode(int code, String message) {
         this.code = code;

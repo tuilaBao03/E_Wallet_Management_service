@@ -25,7 +25,7 @@ import '../general/header.dart';
 class CustomerScreen extends StatefulWidget {
 
   final List<Transaction> trans;
-  final List<CardInfo> cards; 
+  final List<CardInfo> cards;
   final List<CardHolder> cardHolders;
   final List<Contract> contracts;
   final bool isAuth;
@@ -71,9 +71,12 @@ class _CustomerScreenState extends State<CustomerScreen> {
   bool SelectTranList = false;
   bool SelectContractList = false;
 
+  int page = 1;
+  int pageAmount = 1;
+
   void updateCardHolder_contract(CardHolder cardHolder) {
     setState(() {
-      context.read<MainAppBloc>().add(giveContractListEvent(cardHolder));
+      context.read<MainAppBloc>().add(giveContractListEvent(cardHolder,page-1));
       selectedcardHolder  = cardHolder;
       SelectContractList = true;
       SelectTranList = false;
@@ -96,7 +99,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
   void initState() {
 
     super.initState();
-    context.read<MainAppBloc>().add(initializationEvent());
+    context.read<MainAppBloc>().add(initializationEvent(page-1));
   }
 
   @override

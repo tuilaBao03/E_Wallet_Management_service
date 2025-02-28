@@ -7,11 +7,14 @@ import 'package:smartwalletapp/models/user.dart';
 abstract class MainAppEvent{}
 
 class initializationEvent extends MainAppEvent{
+  final int page;
+  initializationEvent(this.page);
 }
 
 class giveContractListEvent extends MainAppEvent{
     final CardHolder cardHolder;
-    giveContractListEvent(this.cardHolder);
+    final int page;
+    giveContractListEvent(this.cardHolder, this.page);
 }
 
 class giveCardListEvent extends MainAppEvent{
@@ -21,7 +24,8 @@ class giveCardListEvent extends MainAppEvent{
 
 class giveTransactionEvent extends MainAppEvent{
   final Contract contract;
-  giveTransactionEvent(this.contract);
+
+  giveTransactionEvent(this.contract,);
 }
 
 class UpdateUserInforEvent  extends MainAppEvent{
@@ -32,62 +36,53 @@ class UpdateUserInforEvent  extends MainAppEvent{
 
 class UpdateCardInforEvent  extends MainAppEvent{
   final CardInfo cardInfo;
-  UpdateCardInforEvent(this.cardInfo); 
+  final String token;
+  UpdateCardInforEvent(this.cardInfo, this.token); 
 
 }
 
 class UpdateStatusUserEvent  extends MainAppEvent{
   final bool newStatus;
-  UpdateStatusUserEvent(this.newStatus);
+  final String token;
+  UpdateStatusUserEvent(this.newStatus, this.token);
 
 }
 
-class UpdateStatusCardEvent  extends MainAppEvent{
-  final bool newStatus;
-  UpdateStatusCardEvent(this.newStatus);
+class UpdateNewLimitCardEvent  extends MainAppEvent{
+  final double limit;
+  final String token;
+  UpdateNewLimitCardEvent(this.limit, this.token);
 
 }
-
-class UpdateStatusContractEvent  extends MainAppEvent{
-  final bool newStatus;
-  UpdateStatusContractEvent(this.newStatus);
-
-}
-
-
 
 // create 
 class AddCardHolderEvent extends MainAppEvent{
-  final String phoneNumber;
-  final String homeAddress;
-  final String companyAddress;
-  final String lastName;
-  final String firstName;
-  final String avatar;
-  final String email;
-  final String cardHolderId;
+  final CardHolder cardHolder;
+  final String token;
+
   AddCardHolderEvent(
-    this.phoneNumber,
-    this.homeAddress,
-    this.companyAddress,
-    this.lastName,
-    this.firstName,
-    this.avatar,
-    this.email,
-    this.cardHolderId,
+    this.cardHolder, this.token
   );
 
 }
 
-class AddCardEvent extends MainAppEvent{
+class LockOrUnLockCardEvent extends MainAppEvent{
+  String token;
+  CardInfo card;
+  bool newStatus;
+  LockOrUnLockCardEvent(this.token,this.newStatus,this.card);
 
 }
 
-class AddContractEvent extends MainAppEvent{
-
+class LockOrUnLockContractEvent extends MainAppEvent{
+  String token;
+  bool newStatus;
+  Contract contract;
+  LockOrUnLockContractEvent(this.token, this.newStatus,this.contract);
 }
 
 class LogoutEvent extends MainAppEvent{
+
 }
 
 class GiveCard_TimeListEvent extends MainAppEvent{

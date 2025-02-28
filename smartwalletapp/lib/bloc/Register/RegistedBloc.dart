@@ -3,9 +3,10 @@
 
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smartwalletapp/repository/authRepository.dart';
 
 import '../../models/user.dart';
-import '../../repository/UserRepository.dart';
+import '../../repository/userRepository.dart';
 import 'RegistedEvent.dart';
 import 'RegistedState.dart';
 
@@ -17,6 +18,7 @@ class RegisterBloc extends Bloc<RegisterEvent,RegisterState>{
   Future<void> _Register(RegisteredEvent event,Emitter<RegisterState> emit) async{
     try{
       UserRepository userRepository = UserRepository();
+      AuthenRepository authenRepository = AuthenRepository();
         if(event.password == event.repass){
           User user = User(
               username: event.username,
@@ -33,7 +35,7 @@ class RegisterBloc extends Bloc<RegisterEvent,RegisterState>{
               updateDate: DateTime.now(),
               status: true,
           );
-          String mess = await userRepository.Register_MPA(user);
+          String mess = await authenRepository.Register_MPA(user);
           if(mess == "200"){
             emit(RegisterSuccess(true));
           }

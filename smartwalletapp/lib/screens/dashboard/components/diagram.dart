@@ -10,7 +10,7 @@ import 'package:smartwalletapp/bloc/MainApp/MainAppEvent.dart';
 import '../../../app/locallization/app_localizations.dart';
 import '../../../bloc/MainApp/MainAppBloc.dart';
 import '../../../constants.dart';
-import '../../../repository/DashboardRepository.dart';
+import '../../../repository/dashboardRepository.dart';
 import 'line_chart.dart';
 
 class Diagram extends StatefulWidget {

@@ -49,9 +49,11 @@ public class ContractController {
 
     @GetMapping()
     @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")
-    public Page<Contract> getContractPage(@RequestParam(defaultValue = "0") int page,
-                               @RequestParam(defaultValue = "5") int size) {
-        return contractService.getContractPage(page, size);
+    public Page<Contract> getContractPage(
+        @PathVariable String name,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "5") int size) {
+        return contractService.getContractPage(name, page, size);
     }
 
     

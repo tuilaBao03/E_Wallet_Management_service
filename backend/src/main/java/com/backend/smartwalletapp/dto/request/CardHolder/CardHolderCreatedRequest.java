@@ -13,11 +13,18 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CardHolderCreatedRequest {
-    String phoneNumber;
-    String homeAddress;
-    String companyAddress;
-    String lastName;
-    String firstName;
-    String avatar;
-    String email;
+    private String phoneNumber;
+    private String homeAddress;
+    private String companyAddress;
+    private String lastName;
+    private String firstName;
+    private String avatar;
+    private String email;
+    private String Reason;
+    private String ClientTypeCode;
+    private String InstitutionCode;
+    private String Branch;
+    private String ClientCategory;
+    private String ProductCategory;
+    private String ShortName;
 }

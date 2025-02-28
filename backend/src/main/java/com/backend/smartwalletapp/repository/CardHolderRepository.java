@@ -14,7 +14,6 @@ public interface CardHolderRepository  extends JpaRepository<CardHolder, String>
     @SuppressWarnings("null")
     boolean existsById( String id);
     CardHolder findByCardHolderId(String cardHolderId);
-    @SuppressWarnings("null")
-    Page<CardHolder> findAll(Pageable pageable);
+    Page<CardHolder> findByNameContaining(String name, Pageable pageable);
 }
     

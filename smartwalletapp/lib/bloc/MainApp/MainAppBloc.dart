@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print, file_names, non_constant_identifier_names
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smartwalletapp/ApiResult.dart';
 import 'package:smartwalletapp/bloc/MainApp/MainAppEvent.dart';
 import 'package:smartwalletapp/bloc/MainApp/MainAppState.dart';
 import 'package:smartwalletapp/models/card.dart';
@@ -8,8 +9,12 @@ import 'package:smartwalletapp/models/cardholder.dart';
 import 'package:smartwalletapp/models/contract.dart';
 import 'package:smartwalletapp/models/transaction.dart';
 import 'package:smartwalletapp/models/user.dart';
-import 'package:smartwalletapp/repository/DashboardRepository.dart';
-import 'package:smartwalletapp/repository/UserRepository.dart';
+import 'package:smartwalletapp/repository/cardHolderRepository.dart';
+import 'package:smartwalletapp/repository/cardRepository.dart';
+import 'package:smartwalletapp/repository/contractRepository.dart';
+import 'package:smartwalletapp/repository/dashboardRepository.dart';
+import 'package:smartwalletapp/repository/userRepository.dart';
+import 'package:smartwalletapp/repository/authRepository.dart';
 
 
 class MainAppBloc extends Bloc<MainAppEvent, MainAppState> {
@@ -20,7 +25,8 @@ class MainAppBloc extends Bloc<MainAppEvent, MainAppState> {
     on<giveTransactionEvent>(_giveTransactionList);
     on<UpdateUserInforEvent>(_updatedUserInfor);
     on<LogoutEvent>(_logout);
-    on<GiveCard_TimeListEvent>(GiveCard_TimeList);
+    on<GiveCard_TimeListEvent>(giveCard_TimeList);
+    on<AddCardHolderEvent>(_createCardHolder);
 
   }
 
@@ -29,7 +35,7 @@ class MainAppBloc extends Bloc<MainAppEvent, MainAppState> {
       List<CardHolder> cardHolders = [];
       cardHolders = demoCardHoldersList;
       print(cardHolders.length);
-      emit(giveCardHolderListState(cardHolders)); // Ensure a value is returned
+      emit(giveCardHolderListState(cardHolders,1,1)); // Ensure a value is returned
     } catch (e) {
       print("_giveUserList $e");
       emit(MainAppErrorState('Failed to fetch user list')); // Ensure an exception is thrown
@@ -84,18 +90,31 @@ class MainAppBloc extends Bloc<MainAppEvent, MainAppState> {
     }
   }
 
+  void _createCardHolder(AddCardHolderEvent event, Emitter<MainAppState> emit) async{
+    try{
+      CardHolder cardHolder = event.cardHolder;
+      CardholderRepository cardholderRepository = CardholderRepository();
+      ApiResult apiResult = await cardholderRepository.createCardHolder(cardHolder, event.token);
+      if(apiResult.code == 200){
+        emit(CreateCardHolderSuccessState(apiResult.messenger));
+      }
+      else{
+        emit(MainAppErrorState(apiResult.messenger));
+      }
+      }
+    catch (e){
+      throw Exception("_createCardHolder: $e");
+    }
+  }
   void _logout(LogoutEvent event, Emitter<MainAppState> emit) async{
-    final UserRepository userRepository = UserRepository();
-    userRepository.logout();
+    final AuthenRepository authRepository = AuthenRepository();
+    authRepository.logout();
     emit(
       LogoutSuccess()
     );
   }
-
-  void GiveCard_TimeList(GiveCard_TimeListEvent event, Emitter<MainAppState> emit) async{
+  void giveCard_TimeList(GiveCard_TimeListEvent event, Emitter<MainAppState> emit) async{
     final DashboardRepository dashboardRepository = DashboardRepository();
-    print(event.end);
-    print(event.start);
     List<Card_Time> list = [];
     try{
       list =  await dashboardRepository.getCardCountEachDay(event.start, event.end);
@@ -105,7 +124,44 @@ class MainAppBloc extends Bloc<MainAppEvent, MainAppState> {
       print("GiveCard_TimeList $e");
     }
   }
+  void LockOrUnLockCard(LockOrUnLockCardEvent event, Emitter<MainAppState> emit) async{
+    final CardRepository cardRepository = CardRepository();
+    try{
+        ApiResult apiResult = await cardRepository.lockOrUnLockCard(event.newStatus, event.card, event.token);
+        int code = apiResult.code;
+        String message = apiResult.messenger;
+        if(code == 200){
+          CardInfo cardInfo = apiResult.result;
+          emit(UpdateStatusCardSuccessState(cardInfo.status));
+        }
+        else {
+          emit(MainAppErrorState(message));
+        }
+    }
+    catch(e){
+      throw Exception("_LockOrUnLockCard $e");
 
+    }
+  }
+  void LockOrUnLockContract(LockOrUnLockContractEvent event, Emitter<MainAppState> emit) async{
+    final ContractRepository contractRepository = ContractRepository();
+    try{
+        ApiResult apiResult = await contractRepository.lockOrUnLockContract(event.newStatus, event.contract, event.token);
+        int code = apiResult.code;
+        String message = apiResult.messenger;
+        if(code == 200){
+          CardInfo cardInfo = apiResult.result;
+          emit(UpdateStatusContractSuccessState(cardInfo.status));
+        }
+        else {
+          emit(MainAppErrorState(message));
+        }
+    }
+    catch(e){
+      throw Exception("_LockOrUnLockContract $e");
+
+    }
+  }
 
 
 } 

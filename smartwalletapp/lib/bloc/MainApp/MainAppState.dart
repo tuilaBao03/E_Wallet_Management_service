@@ -5,7 +5,7 @@ import 'package:smartwalletapp/models/contract.dart';
 import 'package:smartwalletapp/models/transaction.dart';
 import 'package:smartwalletapp/models/user.dart';
 
-import '../../repository/DashboardRepository.dart';
+import '../../repository/dashboardRepository.dart';
 
 abstract class MainAppState{}
 
@@ -24,7 +24,9 @@ class giveTransactionState extends MainAppState{
 
 class giveCardHolderListState extends MainAppState{
   final List<CardHolder> cardHolders;
-  giveCardHolderListState(this.cardHolders);
+  final int page;
+  final int pageAmount;
+  giveCardHolderListState(this.cardHolders, this.page, this.pageAmount);
 }
 
 class giveContractsListState extends MainAppState{
@@ -32,20 +34,41 @@ class giveContractsListState extends MainAppState{
   giveContractsListState(this.contracts);
 }
 
-class MainAppErrorState extends MainAppState{
-  final String error;
-  MainAppErrorState(this.error);
-}
 
 class UpdateUserSuccessState extends MainAppState{
   final User user;
   UpdateUserSuccessState(this.user);
 }
+class CreateCardHolderSuccessState extends MainAppState{
+  String message;
+  CreateCardHolderSuccessState(this.message);
+}
+class UpdateCardHolderSuccessState extends MainAppState{
+  final CardHolder cardHolder;
+  UpdateCardHolderSuccessState(this.cardHolder);
+}
 
+class UpdateStatusContractSuccessState extends MainAppState{
+  final bool newState;
+  UpdateStatusContractSuccessState(this.newState);
+}
+class UpdateStatusCardSuccessState extends MainAppState{
+  final bool newState;
+  UpdateStatusCardSuccessState(this.newState);
+}
+
+class UpdateLimitCardSuccessState extends MainAppState{
+  final double newLimit;
+  UpdateLimitCardSuccessState(this.newLimit);
+}
 class LogoutSuccess extends MainAppState{
 }
 
 class GiveCardListState extends MainAppState{
   final List<Card_Time> list;
   GiveCardListState(this.list);
+}
+class MainAppErrorState extends MainAppState{
+  final String message;
+  MainAppErrorState(this.message);
 }

@@ -2,7 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 
-import '../../../repository/DashboardRepository.dart';
+import '../../../repository/dashboardRepository.dart';
 
 class LineChartSample extends StatelessWidget {
   final List<Card_Time> cardTimes;

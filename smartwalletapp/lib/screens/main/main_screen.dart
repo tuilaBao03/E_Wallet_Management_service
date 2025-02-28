@@ -5,7 +5,7 @@ import 'package:smartwalletapp/bloc/MainApp/MainAppEvent.dart';
 import 'package:smartwalletapp/bloc/MainApp/MainAppState.dart';
 import 'package:smartwalletapp/models/cardholder.dart';
 import 'package:smartwalletapp/models/contract.dart';
-import 'package:smartwalletapp/repository/DashboardRepository.dart';
+import 'package:smartwalletapp/repository/dashboardRepository.dart';
 import 'package:smartwalletapp/screens/myprofile/myprofile_screen.dart';
 import 'package:smartwalletapp/screens/contract/contract_screen.dart';
 import 'package:smartwalletapp/screens/customer/customer_screen.dart';
@@ -45,7 +45,7 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     selectedUsers = widget.user;
-    context.read<MainAppBloc>().add(initializationEvent());
+    context.read<MainAppBloc>().add(initializationEvent(_currentTab-1));
   }
   
   @override
@@ -100,7 +100,7 @@ class _MainScreenState extends State<MainScreen> {
     
       }, listener: (context,state){
         if(state is MainAppErrorState){
-          print(state.error);
+          print(state.message);
         }
         else if(state is LogoutSuccess){
           Navigator.pushReplacement(

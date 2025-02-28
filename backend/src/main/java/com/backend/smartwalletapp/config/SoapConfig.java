@@ -7,10 +7,9 @@ import org.springframework.ws.transport.http.HttpUrlConnectionMessageSender;
 
 @Configuration
 public class SoapConfig {
-        @Bean
-    public WebServiceTemplate webServiceTemplate() {
+    @Bean
+    WebServiceTemplate webServiceTemplate() {
         WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
-        
         // Cấu hình sender (nếu cần xác thực hoặc proxy)
         webServiceTemplate.setMessageSender(new HttpUrlConnectionMessageSender());
         return webServiceTemplate;

@@ -2,14 +2,15 @@ package com.backend.smartwalletapp.Mapper;
 
 import org.mapstruct.Mapper;
 
-import org.mapstruct.MappingTarget;
 
+import com.backend.smartwalletapp.client.requests.CardHolders.CreateCardHolderSoapRequest;
+import com.backend.smartwalletapp.client.requests.CardHolders.LockOrUnlockCardHolderSoapRequest;
 import com.backend.smartwalletapp.dto.request.CardHolder.CardHolderCreatedRequest;
-import com.backend.smartwalletapp.dto.request.CardHolder.CardHolderUpdatedRequest;
-import com.backend.smartwalletapp.model.CardHolder;
+import com.backend.smartwalletapp.dto.request.CardHolder.LockUnlockStatusCardHolderRequest;
+
 
 @Mapper(componentModel = "spring")
 public interface CardHolderMapper {
-    CardHolder toCreatedCardHolder(CardHolderCreatedRequest request);
-    void updateCardHolderFromRequest(CardHolderUpdatedRequest request, @MappingTarget CardHolder cardHolder);
+    CreateCardHolderSoapRequest toSoapRequest(CardHolderCreatedRequest request);
+    LockOrUnlockCardHolderSoapRequest toStatusCardHolderSoapRequest(LockUnlockStatusCardHolderRequest request);
 }

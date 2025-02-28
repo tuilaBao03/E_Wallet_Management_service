@@ -1,38 +1,34 @@
 package com.backend.smartwalletapp.service;
-
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.List;
 import org.springframework.stereotype.Service;
-
 import com.backend.smartwalletapp.Mapper.CardHolderMapper;
+import com.backend.smartwalletapp.client.requests.CardHolders.CreateCardHolderSoapRequest;
+import com.backend.smartwalletapp.client.requests.CardHolders.LockOrUnlockCardHolderSoapRequest;
+import com.backend.smartwalletapp.client.responses.CardHolders.CreateCardHolderSoapResponse;
+import com.backend.smartwalletapp.client.responses.CardHolders.GetCardHolderBySearchResponse;
+import com.backend.smartwalletapp.client.responses.CardHolders.LockOrUnlockCardHolderSoapResponse;
+import com.backend.smartwalletapp.client.service.CardHolderSoapService;
 import com.backend.smartwalletapp.dto.request.CardHolder.CardHolderCreatedRequest;
-import com.backend.smartwalletapp.dto.request.CardHolder.CardHolderUpdatedRequest;
 import com.backend.smartwalletapp.dto.request.CardHolder.LockUnlockStatusCardHolderRequest;
+import com.backend.smartwalletapp.dto.response.CardHolder.CardHolderResponse;
 import com.backend.smartwalletapp.exception.AppException;
 import com.backend.smartwalletapp.exception.ErrorCode;
 import com.backend.smartwalletapp.model.CardHolder;
-import com.backend.smartwalletapp.repository.CardHolderRepository;
-
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-
 @Service
-
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class CardHolderService {
-    CardHolderRepository cardHolderRepository;
     CardHolderMapper cardHolderMapper;
+    CardHolderSoapService soapClient;
 
     public CardHolder createCardHolder(CardHolderCreatedRequest request){
         try{
-            CardHolder cardHolder = cardHolderMapper.toCreatedCardHolder(request);
-            cardHolder.setStatus(true);
-            cardHolder.setCreatedDate(Timestamp.from(Instant.now()));
-            cardHolder.setUpdateDate(Timestamp.from(Instant.now()));
-            return cardHolderRepository.save(cardHolder);
+            CreateCardHolderSoapRequest cardHolderSoapRequest = cardHolderMapper.toSoapRequest(request);
+            CreateCardHolderSoapResponse createCardHolderSoapResponse = soapClient.CreateCardHolder(cardHolderSoapRequest);
+            return createCardHolderSoapResponse.getCardHolder();
         }
         catch( Exception e){
             e.printStackTrace();
@@ -41,33 +37,37 @@ public class CardHolderService {
     }
     public CardHolder updateStatusCardHolder(String id,LockUnlockStatusCardHolderRequest request){
         try{
-            if(!cardHolderRepository.existsById(id)){
-                throw new AppException(ErrorCode.CARDHOLDER_NOT_EXISTS);
-            }
-            CardHolder cardHolder = cardHolderRepository.findByCardHolderId(id);
-            cardHolder.setStatus(request.isNewStatus());
-            cardHolder.setUpdateDate(Timestamp.from(Instant.now()));
-            return cardHolderRepository.save(cardHolder);  
+            LockOrUnlockCardHolderSoapRequest lockOrUnlockCardHolderSoapRequest
+            = cardHolderMapper.toStatusCardHolderSoapRequest(request);
+            LockOrUnlockCardHolderSoapResponse lockOrUnlockCardHolderSoapResponse 
+            = soapClient.UpdateStatusCardHolder(lockOrUnlockCardHolderSoapRequest, id);
+            return lockOrUnlockCardHolderSoapResponse.getCardHolder();
         }
         catch(Exception e){
             e.printStackTrace();
             throw new AppException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
-    public List<CardHolder> getAllCardHolder(){
-        return cardHolderRepository.findAll();
-    }
-    public CardHolder getCardHolderbyID(String id){
-        return cardHolderRepository.findByCardHolderId(id);
-    }
-
-    public CardHolder updateCardHolder(String id, CardHolderUpdatedRequest request){
-        if(!cardHolderRepository.existsById(id)){
-            throw new AppException(ErrorCode.CARDHOLDER_NOT_EXISTS);
+    public CardHolder updateCardHolder(String id, CardHolderCreatedRequest request){
+        try {
+            CreateCardHolderSoapRequest cardHolderSoapRequest = cardHolderMapper.toSoapRequest(request);
+            CreateCardHolderSoapResponse createCardHolderSoapResponse = soapClient.UpdateCardHolder(cardHolderSoapRequest, id);
+            return createCardHolderSoapResponse.getCardHolder();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new AppException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
-        CardHolder cardHolder = cardHolderRepository.findByCardHolderId(id);
-        cardHolderMapper.updateCardHolderFromRequest(request, cardHolder);
-        cardHolder.setUpdateDate(Timestamp.from(Instant.now()));
-        return cardHolderRepository.save(cardHolder);
+        
+    }
+    public CardHolderResponse getCardHolders(String name, int page, int size) {
+        // Gửi request đến SOAP API với tham số tìm kiếm
+        GetCardHolderBySearchResponse soapResponse = soapClient.getCardHolderFromSoap(name, page);
+        // Lấy danh sách CardHolder từ SOAP response
+        List<CardHolder> cardHolders = soapResponse.getCardHolder();
+        int Page = soapResponse.getPage();
+        int pageAmount = soapResponse.getPageAmount();
+        // Chuyển danh sách sang Page<CardHolder> 
+        CardHolderResponse cardHolderResponse = new CardHolderResponse(Page, pageAmount, cardHolders);
+        return cardHolderResponse;
     }
 }
