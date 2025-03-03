@@ -10,13 +10,12 @@ import com.backend.smartwalletapp.client.responses.CardHolders.LockOrUnlockCardH
 import com.backend.smartwalletapp.exception.AppException;
 import com.backend.smartwalletapp.exception.ErrorCode;
 import jakarta.xml.bind.JAXBElement;
+import lombok.RequiredArgsConstructor;
 @Service
+@RequiredArgsConstructor
 public class CardHolderSoapService {
     private final WebServiceTemplate webServiceTemplate;
-    StringBuilder soapUrl = new StringBuilder("http://example.com/soap-api/cardholders");
-    public CardHolderSoapService(WebServiceTemplate webServiceTemplate) {
-        this.webServiceTemplate = webServiceTemplate;
-    }
+    private String soapUrl = "http://example.com/soap-api/contracts";
     @SuppressWarnings("unchecked")
     public GetCardHolderBySearchResponse getCardHolderFromSoap(String name, int page) {
         // Tạo request có tham số tìm kiếm

@@ -1,8 +1,7 @@
-package com.backend.smartwalletapp.client.responses.Card;
+package com.backend.smartwalletapp.client.responses.Transaction;
 
 import java.util.List;
-
-import com.backend.smartwalletapp.model.Card;
+import com.backend.smartwalletapp.model.Transaction;
 
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -12,11 +11,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @XmlRootElement(name = "GetCardByContractSoapResponse")
-public class GetCardByContractSoapResponse {
+public class GetTransactionByContractSoapResponse {
     @XmlElement(name = "Card")
-    List<Card> cards;
-    @XmlElement(name="page")
-    int page;
-    @XmlElement(name = "pageAmount" )
-    int pageAmount;
+    List<Transaction> tranList;
 }

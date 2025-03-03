@@ -1,6 +1,7 @@
 package com.backend.smartwalletapp.model;
 
 import java.sql.Timestamp;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,8 +14,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-
-
 public class CardHolder {
     private String cardHolderId;
     private String phoneNumber;

@@ -1,4 +1,4 @@
-package com.backend.smartwalletapp.client.requests.Card;
+package com.backend.smartwalletapp.client.requests.Transaction;
 
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -13,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class GetCardByContractSoapRequest{
+public class GetTranByTransactionSoapRequest{
     @XmlElement(name = "ContractId")
     String ContractId; 
 }

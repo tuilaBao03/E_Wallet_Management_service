@@ -28,7 +28,11 @@ public enum ErrorCode {
 
     // card 
     GET_CARD_FAILLE(8000, "get card fail"),
-    LOCK_UNLOCK_CARD_FAILE(8001, "lock or unlock card faile");
+    LOCK_UNLOCK_CARD_FAILE(8001, "lock or unlock card faile"),
+    
+    // tran 
+    GET_TRAN_FAILLE(9000, "get tran fail"),
+    ;
 
     ErrorCode(int code, String message) {
         this.code = code;

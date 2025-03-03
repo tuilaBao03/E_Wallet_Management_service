@@ -1,6 +1,8 @@
 package com.backend.smartwalletapp.client.responses.Card;
 
-import javax.smartcardio.Card;
+
+
+import com.backend.smartwalletapp.model.Card;
 
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;

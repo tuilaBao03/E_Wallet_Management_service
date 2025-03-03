@@ -1,4 +1,4 @@
-package com.backend.smartwalletapp.client.requests.CardHolders;
+package com.backend.smartwalletapp.client.requests.Contract;
 
 import java.math.BigDecimal;
 

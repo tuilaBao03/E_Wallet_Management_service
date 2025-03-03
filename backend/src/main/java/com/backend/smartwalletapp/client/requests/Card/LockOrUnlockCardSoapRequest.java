@@ -14,6 +14,8 @@ import lombok.AccessLevel;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class LockOrUnlockCardSoapRequest {
+    @XmlElement(name = "ContractId")
+    String ContractId; 
     @XmlElement(name = "status")
-    String newStatus; 
+    boolean newStatus; 
 }

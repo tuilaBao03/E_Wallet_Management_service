@@ -1,5 +1,5 @@
 package com.backend.smartwalletapp.Mapper;
 
-public interface TransactionMapper {
+public interface CardMapper {
     
 }

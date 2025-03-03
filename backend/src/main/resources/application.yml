@@ -19,3 +19,7 @@ spring:
     address: 0.0.0.0
 jwt:
   signerKey: "1g588fp61K3ru1mWsoT900vsoqykoJs63qAzM2917QKkIAf1ff0WwGHvNu3+vmJ7"
+
+
+Way4Url:
+  ApiKey: "http://example.com/soap-api/contracts"

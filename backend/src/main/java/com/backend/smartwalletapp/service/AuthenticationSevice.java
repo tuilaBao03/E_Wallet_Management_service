@@ -56,13 +56,34 @@ public class AuthenticationSevice {
         boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
         if(!authenticated)
             throw new AppException(ErrorCode.UNAUTHORIZED);
-        String token = generalToken(user);
+        String token = generalAccessToken(user);
         return AuthenticationResponse.builder()
             .token(token)
             .authenticated(true)
             .build();
     }
-    private String generalToken(User user){
+    private String generalAccessToken(User user){
+        JWSHeader JWSHead =  new JWSHeader(JWSAlgorithm.HS256);
+        JWTClaimsSet JWTClaimsSet = new JWTClaimsSet.Builder()
+            .subject(user.getUsername())
+            .issuer("smartwalletapp")
+            .issueTime(new Date())
+            .expirationTime(new Date(System.currentTimeMillis() + 60 * 100000)).
+            claim("scope", buildString(user)).
+            build();
+        Payload payload = new Payload(JWTClaimsSet.toJSONObject());
+        JWSObject JWSObject = new JWSObject(JWSHead, payload);
+        try {
+            JWSObject.sign(new MACSigner(SECRET_KEY));
+            return JWSObject.serialize();
+        } catch (Exception e) {
+        
+            e.printStackTrace();
+            throw new AppException(ErrorCode.INTERNAL_SERVER_ERROR); // Trả lỗi chung nếu tạo token thất bại
+        }
+    }
+
+    private String generalRefreshToken(User user){
         JWSHeader JWSHead =  new JWSHeader(JWSAlgorithm.HS256);
         JWTClaimsSet JWTClaimsSet = new JWTClaimsSet.Builder()
             .subject(user.getUsername())

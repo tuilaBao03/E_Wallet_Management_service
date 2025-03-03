@@ -1,20 +1,23 @@
 package com.backend.smartwalletapp.controller;
-import org.springframework.data.domain.Page;
+import java.util.List;
+
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.backend.smartwalletapp.dto.request.Contract.ContractCreatedRequest;
 import com.backend.smartwalletapp.dto.request.Contract.LockUnLockContracRequest;
+import com.backend.smartwalletapp.dto.request.Contract.UpdateLimitContractRequest;
 import com.backend.smartwalletapp.dto.response.ApiResponse;
+import com.backend.smartwalletapp.dto.response.Contract.ContractResponse;
+import com.backend.smartwalletapp.model.Card;
 import com.backend.smartwalletapp.model.Contract;
+import com.backend.smartwalletapp.model.Transaction;
+import com.backend.smartwalletapp.service.CardSevice;
 import com.backend.smartwalletapp.service.ContractService;
+import com.backend.smartwalletapp.service.TransactionService;
 
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -27,18 +30,12 @@ import lombok.experimental.FieldDefaults;
 @RequiredArgsConstructor
 public class ContractController {
     ContractService contractService;
-    @PostMapping()
-    @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")
-    ApiResponse<Contract> createContract(@RequestBody @Valid ContractCreatedRequest request){
-        return ApiResponse.<Contract>builder()
-            .result(contractService.createContract(request))
-            .code(200)
-            .message("Create contract successed").build();
-    };
-
+    TransactionService transactionService;
+    CardSevice cardSevice;
+    
     @PatchMapping("/{id}/status")
     @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")
-    ApiResponse<Contract> LockUnLockContract(
+    public ApiResponse<Contract> LockUnLockContract(
         @PathVariable String id,
         @RequestBody @Valid LockUnLockContracRequest request){
         return ApiResponse.<Contract>builder()
@@ -47,14 +44,49 @@ public class ContractController {
         .build();
     }
 
-    @GetMapping()
+    @PatchMapping("/{id}/Limit")
     @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")
-    public Page<Contract> getContractPage(
-        @PathVariable String name,
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "5") int size) {
-        return contractService.getContractPage(name, page, size);
+    ApiResponse<Contract> UpdateLimitContract(
+        @RequestBody @Valid UpdateLimitContractRequest request,
+        @PathVariable String id
+    ){
+        return ApiResponse.<Contract>builder()
+        .result(contractService.updateLimit(id, request.getNewLimit()))
+            .code(200)
+            .message("cardholder success").build();
+        
     }
 
-    
+
+    @PatchMapping("/{id}/cards")
+    @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")
+    public ApiResponse<List<Card>> GetCardByContract(
+        @PathVariable String id){
+        return ApiResponse.<List<Card>>builder()
+        .result(cardSevice.getCardbyContract(id))
+        .code(200)
+        .build();
+    }
+
+    @PatchMapping("/{id}/transactions")
+    @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")
+    public ApiResponse<List<Transaction>> GetTransByContract(
+        @PathVariable String id){
+        return ApiResponse.<List<Transaction>>builder()
+        .result(transactionService.getTransactionByContract(id))
+        .code(200)
+        .build();
+    }
+
+    @PatchMapping("/{search}/{page}")
+    @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")
+    public ApiResponse<ContractResponse> GetContractBySearchAndPage(
+        @PathVariable String search,
+        @PathVariable int page){
+        return ApiResponse.<ContractResponse>builder()
+        .result(contractService.giveContractBySearch(search, page))
+        .code(200)
+        .build();
+    }
+
 }

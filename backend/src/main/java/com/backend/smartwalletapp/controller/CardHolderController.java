@@ -8,7 +8,9 @@ import com.backend.smartwalletapp.dto.request.CardHolder.LockUnlockStatusCardHol
 import com.backend.smartwalletapp.dto.response.ApiResponse;
 import com.backend.smartwalletapp.dto.response.CardHolder.CardHolderResponse;
 import com.backend.smartwalletapp.model.CardHolder;
+import com.backend.smartwalletapp.model.Contract;
 import com.backend.smartwalletapp.service.CardHolderService;
+import com.backend.smartwalletapp.service.ContractService;
 
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -17,6 +19,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.List;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +33,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 public class CardHolderController {
     CardHolderService cardHolderService;
+    ContractService contractService;
     @PostMapping()
     @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")
     ApiResponse<CardHolder> createCardHolder(@RequestBody @Valid CardHolderCreatedRequest request){
@@ -48,6 +52,17 @@ public class CardHolderController {
     ){
         return ApiResponse.<CardHolderResponse>builder()
             .result(cardHolderService.getCardHolders(search, page, size))
+            .code(200)
+            .message("all cardholder ").build();
+    }
+
+    @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")
+    @GetMapping("/{id}/contracts")
+    ApiResponse<List<Contract>> getCOntractByCardHolderBySearch(
+        @PathVariable String id
+    ){
+        return ApiResponse.<List<Contract>>builder()
+            .result(contractService.giveContractByCardHolder(id))
             .code(200)
             .message("all cardholder ").build();
     }
