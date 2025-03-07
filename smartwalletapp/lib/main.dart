@@ -15,6 +15,8 @@ import 'bloc/Auth/AuthBloc.dart';
 import 'controllers/menu_app_controller.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'screens/authentication/login_screen.dart';
+
 
 void main() {
   runApp(
@@ -85,12 +87,12 @@ class _MyAppState extends State<MyApp> {
         Locale('vi', ''), // Vietnamese
       ],
       home: 
-      MainScreen(isAuth: true, user: u, onLanguageChange: (Locale newLocale) {
-        Get.updateLocale(newLocale);
-      }, token: '',)
-      // LoginScreen(isAuth: false, onLanguageChange: (Locale newLocale) {
+      // MainScreen(isAuth: true, user: u, onLanguageChange: (Locale newLocale) {
       //   Get.updateLocale(newLocale);
-      //  },)
+      // }, token: '',)
+      LoginScreen(isAuth: false, onLanguageChange: (Locale newLocale) {
+        Get.updateLocale(newLocale);
+       },)
     );
   }
 }

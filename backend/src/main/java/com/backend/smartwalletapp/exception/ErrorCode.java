@@ -22,7 +22,7 @@ public enum ErrorCode {
     CONTRACT_NOT_FOUND(7001, "cardholder not found"),
     CONTRACT_NOT_EXISTS(7002, "cardholder not exists"),
     LOCK_UNLOCK_FAILE(7003,"lock or unlock failed"),
-    CREATE_CONTRACT_FAILE(7004,"update contract failed"),
+    CREATE_CONTRACT_FAILE(7004,"created cardHolder failed"),
     GET_CONTRACT_FAILE(7005,"get contract failed"),
     UPDATE_CONTRACT_FAILE(7004,"update contract failed"),
 

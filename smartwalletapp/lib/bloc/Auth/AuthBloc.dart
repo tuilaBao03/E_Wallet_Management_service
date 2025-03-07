@@ -19,9 +19,9 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
       AuthenRepository authenRepository = AuthenRepository();
       AuthResult result = await authenRepository.authenticate(event.password, event.username);
       if(result.code == 0){
-        ApiResult results = await userRepository.giveUserByName(event.username, result.token);
+        ApiResult results = await userRepository.giveUserByName(event.username, result.accesstoken);
         User user = results.result;
-        emit(AuthSuccess(user,result.token));
+        emit(AuthSuccess(user,result.accesstoken));
       }
       else{
         emit(AuthError(result.code.toString()));

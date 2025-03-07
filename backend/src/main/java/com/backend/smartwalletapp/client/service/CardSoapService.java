@@ -11,16 +11,13 @@ import com.backend.smartwalletapp.exception.AppException;
 import com.backend.smartwalletapp.exception.ErrorCode;
 
 import jakarta.xml.bind.JAXBElement;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CardSoapService {
     private final WebServiceTemplate webServiceTemplate;
     private String soapUrl = "http://example.com/soap-api/contracts";
-    public CardSoapService(WebServiceTemplate webServiceTemplate) {
-        this.webServiceTemplate = webServiceTemplate;
-    }
 
     @SuppressWarnings("unchecked")
     public GetCardByContractSoapResponse getCardByContractSoap( String contractId){

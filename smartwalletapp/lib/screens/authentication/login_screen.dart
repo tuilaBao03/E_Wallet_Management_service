@@ -40,6 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
       updateDate: DateTime.now(),
       status: true,
   );
+  bool _isPasswordVisible = false; // Biến trạng thái để theo dõi hiển thị mật khẩu
   @override
   void initState() {
     super.initState();
@@ -141,6 +142,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                       Column(
                                                         children: [
                                                           TextField(
+                                                            cursorColor: Theme.of(context).colorScheme.onPrimary,
                                                             controller: _usernameController,
                                                             decoration: InputDecoration(
                                                               labelText: AppLocalizations.of(context).translate("Email"),
@@ -152,9 +154,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                                             ),
                                                           ),
                                                           SizedBox(height: defaultPadding),
+                                                        
                                                           TextField(
+                                                            cursorColor: Theme.of(context).colorScheme.onPrimary,
                                                             controller: _passwordController,
-                                                            obscureText: true,
+                                                            obscureText: !_isPasswordVisible, // Ẩn/hiện mật khẩu dựa vào trạng thái
                                                             decoration: InputDecoration(
                                                               labelText: AppLocalizations.of(context).translate("Password"),
                                                               labelStyle: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
@@ -162,8 +166,20 @@ class _LoginScreenState extends State<LoginScreen> {
                                                               focusedBorder: OutlineInputBorder(
                                                                 borderSide: BorderSide(color: Theme.of(context).colorScheme.onPrimary), // Viền khi focus
                                                               ),
+                                                              suffixIcon: IconButton(
+                                                                icon: Icon(
+                                                                  _isPasswordVisible ? Icons.visibility : Icons.visibility_off, // Đổi icon theo trạng thái
+                                                                  color: Theme.of(context).colorScheme.onPrimary,
+                                                                ),
+                                                                onPressed: () {
+                                                                  setState(() {
+                                                                    _isPasswordVisible = !_isPasswordVisible; // Đảo trạng thái hiển thị
+                                                                  });
+                                                                },
+                                                              ),
                                                             ),
-                                                          ),
+                                                          ),                        
+
                                                           SizedBox(height: defaultPadding),
                                                           Row(
                                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -53,7 +53,7 @@ public class SecurityConfig {
 
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:57939")); // ⚠️ Cổng Flutter Web
+        config.setAllowedOrigins(List.of("http://localhost:57939","http://localhost:63760")); // ⚠️ Cổng Flutter Web
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS","PATCH"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         config.setAllowCredentials(true);

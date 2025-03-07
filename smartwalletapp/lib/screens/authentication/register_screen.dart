@@ -115,31 +115,31 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       Expanded( // Bọc từng Column bằng Expanded để tránh lỗi
                                         child: Column(
                                           children: [
-                                            TestFiles(editController: _usernameController, title: 'UserName',),
+                                            TextFields(editController: _usernameController, title: 'UserName',),
                                             // user name
                                             SizedBox(height: defaultPadding),
-                                            TestFiles(editController: _passwordController, title: 'Password',),
+                                            TextFields(editController: _passwordController, title: 'Password',),
                                             // password
                                             SizedBox(height: defaultPadding),
-                                            TestFiles(editController: _repassController, title: 'RePassword',),
+                                            TextFields(editController: _repassController, title: 'RePassword',),
                                             // email
                                             SizedBox(height: defaultPadding),
-                                            TestFiles(editController: _emailController, title: 'Email',),
+                                            TextFields(editController: _emailController, title: 'Email',),
                                             SizedBox(height: defaultPadding),
                                             // dia chi cong ty
-                                            TestFiles(editController: _numberPhoneController, title: 'Phone',),
+                                            TextFields(editController: _numberPhoneController, title: 'Phone',),
                                             SizedBox(height: defaultPadding),
 
-                                            TestFiles(editController: _firstnameController, title: 'firstname',),
+                                            TextFields(editController: _firstnameController, title: 'firstname',),
                                             SizedBox(height: defaultPadding),
 
-                                            TestFiles(editController: _lastnameController, title: 'lastname',),
+                                            TextFields(editController: _lastnameController, title: 'lastname',),
                                             SizedBox(height: defaultPadding),
 
-                                            TestFiles(editController: _homeAddressController, title: 'homeaddress',),
+                                            TextFields(editController: _homeAddressController, title: 'homeaddress',),
                                             SizedBox(height: defaultPadding),
 
-                                            TestFiles(editController: _companyAddressController, title: 'companyaddress',),
+                                            TextFields(editController: _companyAddressController, title: 'companyaddress',),
                                             SizedBox(height: defaultPadding),
 
 

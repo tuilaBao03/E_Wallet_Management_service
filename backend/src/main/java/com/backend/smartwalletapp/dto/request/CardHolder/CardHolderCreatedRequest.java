@@ -13,18 +13,16 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CardHolderCreatedRequest {
-    String phoneNumber;
-    String homeAddress;
-    String companyAddress;
-    String lastName;
-    String firstName;
-    String avatar;
-    String email;
-    String Reason;
-    String ClientTypeCode;
-    String InstitutionCode;
-    String Branch;
-    String ClientCategory;
-    String ProductCategory;
-    String ShortName;
+    String clientSearchMethod = "CLIENT_NUMBER"; // Thêm mặc định
+    String clientIdentifier;  // Thay phoneNumber -> clientIdentifier cho đúng SOAP
+    String reason;
+    
+    // Nhóm dữ liệu vào CreateContract_InObject
+    String branch;
+    String institutionCode;
+    String productCode;
+    String productCode2;
+    String productCode3;
+    String contractName;
+    String cbsNumber;
 }

@@ -7,8 +7,6 @@ import 'package:smartwalletapp/ApiResult.dart';
 import '../models/user.dart';
 import 'package:http/http.dart' as http;
 
-
-
 class UserRepository{
 
 
@@ -27,7 +25,7 @@ Future<ApiResult> giveUserByName(String userName, String token) async {
     int code = responseData["code"];
     String message = responseData["message"];
     if (response.statusCode == 200) {
-      User user = responseData["result"];
+      User user = User.fromJson(responseData["result"]);
       ApiResult result = ApiResult(code, message, user,0,0);
       return result;
     } else {
@@ -35,8 +33,8 @@ Future<ApiResult> giveUserByName(String userName, String token) async {
       throw Exception("Lỗi API: ${errorData["message"]}");
     }
   } catch (e) {
-    print("Lỗi kết nối: $e");
-    throw Exception("Lỗi kết nối: $e");
+    print("giveUserByName: $e");
+    throw Exception("giveUserByName: $e");
   }
 }
 

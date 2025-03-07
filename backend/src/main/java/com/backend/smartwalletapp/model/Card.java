@@ -25,5 +25,4 @@ public class Card {
     String typeCard;
     BigDecimal amount;
     BigDecimal limit;
-    
 }

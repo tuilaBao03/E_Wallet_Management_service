@@ -8,13 +8,15 @@ import 'package:http/http.dart' as http;
 
 class AuthResult {
   final int code;
-  final String token;
+  final String accesstoken;
+  final String refreshtoken;
   final bool authenticated;
-  AuthResult({required this.code, required this.token, required this.authenticated});
+  AuthResult( {required this.code, required this.accesstoken, required this.authenticated, required this.refreshtoken});
   factory AuthResult.fromJson(Map<String, dynamic> json) {
     return AuthResult(
       code: json["code"],
-      token: json["result"]["token"] ?? "",  // Lấy token từ result
+      accesstoken: json["result"]["accessToken"] ?? "",
+      refreshtoken: json["result"]["refreshToken"] ?? "",  // Lấy token từ result
       authenticated: json["result"]["authenticated"] ?? false, // Tránh lỗi null
     );
   }
@@ -35,11 +37,11 @@ class AuthenRepository{
   
     return AuthResult.fromJson(responseData);
   } catch (e) {
-    return AuthResult(code: 0, token: "null", authenticated: false);
+    return AuthResult(code: 0, accesstoken: "null", authenticated: false, refreshtoken: '');
   }
 }
 
-  Future<String> Register_MPA(User user) async{
+  Future<String> register_MPA(User user) async{
     final String apiUrl = 'http://localhost:8080/smartwalletapp/users';
 
     try {
@@ -70,8 +72,13 @@ class AuthenRepository{
         Uri.parse(apiUrl),
         headers: {
           'Content-Type': 'application/json',
-
         });
+    if(response.statusCode == 200){
+      return;
+    }
+    else{
+      throw Exception('Failed to logout');
+    }
   }
   catch(e){
     throw Exception('Exception occurred: $e');

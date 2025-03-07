@@ -9,9 +9,9 @@ import com.backend.smartwalletapp.exception.AppException;
 import com.backend.smartwalletapp.exception.ErrorCode;
 
 import jakarta.xml.bind.JAXBElement;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class TransactionSoapService {
     private final WebServiceTemplate webServiceTemplate;
     private String soapUrl = "http://example.com/soap-api/contracts";

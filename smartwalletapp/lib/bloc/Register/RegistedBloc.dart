@@ -35,7 +35,7 @@ class RegisterBloc extends Bloc<RegisterEvent,RegisterState>{
               updateDate: DateTime.now(),
               status: true,
           );
-          String mess = await authenRepository.Register_MPA(user);
+          String mess = await authenRepository.register_MPA(user);
           if(mess == "200"){
             emit(RegisterSuccess(true));
           }

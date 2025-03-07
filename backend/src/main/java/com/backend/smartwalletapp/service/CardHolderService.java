@@ -27,6 +27,7 @@ public class CardHolderService {
     public CardHolder createCardHolder(CardHolderCreatedRequest request){
         try{
             CreateCardHolderSoapRequest cardHolderSoapRequest = cardHolderMapper.toSoapRequest(request);
+            System.err.println(cardHolderSoapRequest);
             CreateCardHolderSoapResponse createCardHolderSoapResponse = soapClient.CreateCardHolder(cardHolderSoapRequest);
             return createCardHolderSoapResponse.getCardHolder();
         }
