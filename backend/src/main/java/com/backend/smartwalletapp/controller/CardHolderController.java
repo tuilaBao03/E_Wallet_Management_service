@@ -3,8 +3,8 @@ package com.backend.smartwalletapp.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.backend.smartwalletapp.dto.request.CardHolder.CardHolderCreatedRequest;
 import com.backend.smartwalletapp.dto.request.CardHolder.LockUnlockStatusCardHolderRequest;
+import com.backend.smartwalletapp.dto.request.CardHolder.CreateCardHolder.CardHolderCreatedRequest;
 import com.backend.smartwalletapp.dto.response.ApiResponse;
 import com.backend.smartwalletapp.dto.response.CardHolder.CardHolderResponse;
 import com.backend.smartwalletapp.model.CardHolder;
@@ -36,11 +36,11 @@ public class CardHolderController {
     ContractService contractService;
     @PostMapping()
     @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")
-    ApiResponse<CardHolder> createCardHolder(@RequestBody @Valid CardHolderCreatedRequest request){
-        return ApiResponse.<CardHolder>builder()
-            .result(cardHolderService.createCardHolder(request))
-            .code(200)
-            .message("cardholder success").build();
+    ApiResponse<String> createCardHolder(@RequestBody @Valid CardHolderCreatedRequest request){
+        return ApiResponse.<String>builder()
+            .result(cardHolderService.createCardHolder(request).getNewClient())
+            .code(cardHolderService.createCardHolder(request).getRetCode())
+            .message(cardHolderService.createCardHolder(request).getRetMsg()).build();
     }
 
     @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")

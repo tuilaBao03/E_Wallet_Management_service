@@ -103,6 +103,19 @@
 			<version>1.5.5.Final</version>
 			<scope>provided</scope>
 		</dependency>
+		<!-- JAXB API -->
+		<dependency>
+			<groupId>jakarta.xml.bind</groupId>
+			<artifactId>jakarta.xml.bind-api</artifactId>
+			<version>3.0.1</version>
+		</dependency>
+
+		<!-- JAXB Runtime (Cần để hoạt động) -->
+		<dependency>
+			<groupId>org.glassfish.jaxb</groupId>
+			<artifactId>jaxb-runtime</artifactId>
+			<version>3.0.1</version>
+		</dependency>
 
 		<!-- Spring Boot Starter Mail -->
 		<!-- <dependency>
@@ -129,6 +142,7 @@
 			<artifactId>spring-boot-starter-web-services</artifactId>
 		</dependency>
 	</dependencies>
+
 
 	<build>
 		<plugins>

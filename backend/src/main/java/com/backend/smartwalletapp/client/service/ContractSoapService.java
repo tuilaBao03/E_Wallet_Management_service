@@ -9,10 +9,15 @@ import com.backend.smartwalletapp.client.requests.Contract.GetContractByCardHold
 import com.backend.smartwalletapp.client.requests.Contract.GetContractBysearchSoapRequest;
 import com.backend.smartwalletapp.client.requests.Contract.LockOrUnlockContractSoapRequest;
 import com.backend.smartwalletapp.client.requests.Contract.UpdateLimitContractSoapRequest;
+import com.backend.smartwalletapp.client.requests.Contract.CreateContractLevel2.CreateContractV4_REQV2;
+import com.backend.smartwalletapp.client.requests.Contract.CreateContractV4.CreateContractV4_REQ;
 import com.backend.smartwalletapp.client.responses.Contract.GetContractByCardHolderSoapResponse;
 import com.backend.smartwalletapp.client.responses.Contract.GetContractBySearchSoapResponse;
 import com.backend.smartwalletapp.client.responses.Contract.LockOrUnLockContractSoapResponse;
 import com.backend.smartwalletapp.client.responses.Contract.UpdateLimitContractSoapResponse;
+import com.backend.smartwalletapp.client.responses.Contract.create.CreateContractV4Response;
+import com.backend.smartwalletapp.client.responses.Contract.create.CreateContractV4Result;
+import com.backend.smartwalletapp.client.responses.Contract.create.V2CreateContractV4Response;
 import com.backend.smartwalletapp.exception.AppException;
 import com.backend.smartwalletapp.exception.ErrorCode;
 import jakarta.xml.bind.JAXBElement;
@@ -50,6 +55,36 @@ public class ContractSoapService {
             webServiceTemplate.marshalSendAndReceive(fullString, request);
             return response.getValue();
         } catch (Exception e) {
+            throw new AppException(ErrorCode.GET_CONTRACT_FAILE);
+        }
+    }
+
+    public CreateContractV4Result createContract(CreateContractV4_REQ request) {
+        try {
+            System.err.println("\n ------------request CreateContractV4_REQ :---------------------\n " + request);
+            CreateContractV4Response response = (CreateContractV4Response) webServiceTemplate.marshalSendAndReceive(soapUrl, request);
+            System.err.println("\n ------------response CreateContractV4Response :-----------------\n " + response);
+            System.err.println("\n response CreateContractV4Response :\n " + response.getCreateContractV4Result());
+            CreateContractV4Result result = response.getCreateContractV4Result();
+            System.err.println("\n -----------result CreateContractV4Result :----------------------\n " + result);
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new AppException(ErrorCode.GET_CONTRACT_FAILE);
+        }
+    }
+
+    public CreateContractV4Result createContractLevel2(CreateContractV4_REQV2 request) {
+        try {
+            System.err.println("\n ------------request CreateContractV4_REQ :---------------------\n " + request);
+            V2CreateContractV4Response response = (V2CreateContractV4Response) webServiceTemplate.marshalSendAndReceive(soapUrl, request);
+            System.err.println("\n ------------response CreateContractV4Response :-----------------\n " + response);
+            System.err.println("\n response CreateContractV4Response :\n " + response.getCreateContractV4Result());
+            CreateContractV4Result result = response.getCreateContractV4Result();
+            System.err.println("\n -----------result CreateContractV4Result :----------------------\n " + result);
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
             throw new AppException(ErrorCode.GET_CONTRACT_FAILE);
         }
     }

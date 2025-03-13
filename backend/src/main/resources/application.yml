@@ -22,4 +22,5 @@ jwt:
 
 
 Way4Url:
-  ApiKey: "http://example.com/soap-api/contracts"
+  ApiKey: "http://10.145.48.222:17000/webservice_int/ws"
+

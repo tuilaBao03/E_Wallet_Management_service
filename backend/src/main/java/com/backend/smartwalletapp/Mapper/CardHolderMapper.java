@@ -1,30 +1,37 @@
 package com.backend.smartwalletapp.Mapper;
 
+import java.util.List;
+
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-
-import com.backend.smartwalletapp.client.requests.CardHolders.CreateCardHolderSoapRequest;
 import com.backend.smartwalletapp.client.requests.CardHolders.LockOrUnlockCardHolderSoapRequest;
-import com.backend.smartwalletapp.dto.request.CardHolder.CardHolderCreatedRequest;
+import com.backend.smartwalletapp.client.requests.CardHolders.create.CreateClientInObject;
+import com.backend.smartwalletapp.client.requests.CardHolders.create.CreateClientV4Body;
+import com.backend.smartwalletapp.client.requests.CardHolders.create.SetCustomDataInObject;
+import com.backend.smartwalletapp.client.requests.CardHolders.create.SoapBody;
 import com.backend.smartwalletapp.dto.request.CardHolder.LockUnlockStatusCardHolderRequest;
+import com.backend.smartwalletapp.dto.request.CardHolder.CreateCardHolder.CardHolderCreatedRequest;
+import com.backend.smartwalletapp.dto.request.CardHolder.CreateCardHolder.SetCustomDataInObjectJson;
 
 
 @Mapper(componentModel = "spring")
 public interface CardHolderMapper {
+
     CardHolderMapper INSTANCE = Mappers.getMapper(CardHolderMapper.class);
 
-    @Mapping(source = "clientSearchMethod", target = "clientSearchMethod")
-    @Mapping(source = "clientIdentifier", target = "clientIdentifier")
-    @Mapping(source = "reason", target = "reason")
-    @Mapping(source = "branch", target = "createContractInObject.branch")
-    @Mapping(source = "institutionCode", target = "createContractInObject.institutionCode")
-    @Mapping(source = "productCode", target = "createContractInObject.productCode")
-    @Mapping(source = "productCode2", target = "createContractInObject.productCode2")
-    @Mapping(source = "productCode3", target = "createContractInObject.productCode3")
-    @Mapping(source = "contractName", target = "createContractInObject.contractName")
-    @Mapping(source = "cbsNumber", target = "createContractInObject.cbsNumber")
-    CreateCardHolderSoapRequest toSoapRequest(CardHolderCreatedRequest request);
     LockOrUnlockCardHolderSoapRequest toStatusCardHolderSoapRequest(LockUnlockStatusCardHolderRequest request);
+
+    CreateClientInObject toCreateClientInObject(CardHolderCreatedRequest request);
+
+    List<SetCustomDataInObject> toSetCustomDataInObject(List<SetCustomDataInObjectJson> customData);
+
+    default CreateClientV4Body toCreateClientV4Body(CardHolderCreatedRequest request) {
+        return CreateClientV4Body.builder()
+                .reason(request.getReason())
+                .createClientInObject(toCreateClientInObject(request))
+                .setCustomDataInObjects(toSetCustomDataInObject(request.getCustomData()))
+                .build();
+    }
+
 }

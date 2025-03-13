@@ -105,7 +105,7 @@ public class AuthenticationService {
     }
 
     private String generateAccessToken(User user) {
-        return generateToken(user, 15 * 60 * 1000); // 15 phút
+        return generateToken(user,10* 15 * 60 * 1000); // 15 phút
     }
 
     private String generateRefreshToken(User user) {

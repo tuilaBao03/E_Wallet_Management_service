@@ -1,4 +1,4 @@
-package com.backend.smartwalletapp.client.requests.CardHolders;
+package com.backend.smartwalletapp.client.requests.Contract.CreateContractV4;
 
 import jakarta.xml.bind.annotation.*;
 import lombok.AccessLevel;

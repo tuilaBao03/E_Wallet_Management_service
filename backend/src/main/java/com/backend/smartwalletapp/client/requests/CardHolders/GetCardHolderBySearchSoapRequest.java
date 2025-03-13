@@ -1,5 +1,7 @@
 package com.backend.smartwalletapp.client.requests.CardHolders;
 
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.Data;
@@ -8,7 +10,8 @@ import lombok.experimental.FieldDefaults;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 
-@XmlRootElement(name = "GetUsersRequest")
+@XmlRootElement(name = "GetUsersRequest",namespace = "http://www.openwaygroup.com/wsint")
+@XmlAccessorType(XmlAccessType.FIELD)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
