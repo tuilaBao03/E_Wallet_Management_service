@@ -1,28 +1,28 @@
-// ignore_for_file: must_be_immutable
-
-
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:smartwalletapp/app/locallization/app_localizations.dart';
+import 'package:intl/intl.dart';
+import 'package:smartwalletapp/models/cardHolderData.dart';
 import 'package:smartwalletapp/models/cardholder.dart';
-
-import '../../../../constants.dart';
+import 'package:smartwalletapp/bloc/MainApp/MainAppBloc.dart';
+import 'package:smartwalletapp/bloc/MainApp/MainAppEvent.dart';
+import 'package:smartwalletapp/constants.dart';
+import 'package:smartwalletapp/app/locallization/app_localizations.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smartwalletapp/screens/main/components/classInitial.dart';
 
 class CustomerDetail extends StatefulWidget {
-  final bool isActive;
-  final bool isUpdate;
+  final String token;
+  final bool isDetail;
+  final bool isAdd;
   final String title;
-  final bool isImage;
-  final CardHolder object;
+  final CardHolder? object; // Có thể null nếu thêm mới
 
   const CustomerDetail({
     super.key,
-    required this.object,
-    required this.isImage,
+    required this.token,
+    required this.isDetail,
+    required this.isAdd,
     required this.title,
-    required this.isActive,
-    required this.isUpdate,
+    this.object, // Để null khi add mới
   });
 
   @override
@@ -30,13 +30,29 @@ class CustomerDetail extends StatefulWidget {
 }
 
 class _CustomerDetailState extends State<CustomerDetail> {
+  late CardHolder _objectInfo; // Object dùng để binding dữ liệu
+  bool isChanged = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Nếu add mới thì tạo object rỗng, còn detail thì lấy object truyền vào
+    _objectInfo = widget.object ?? emptyCardHolder;
+  }
+
+  void onChanged() {
+    setState(() {
+      isChanged = true; // Chỉ cần biết có thay đổi là đủ
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(defaultPadding),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.secondary,
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
+        borderRadius: BorderRadius.circular(10),
       ),
       child: SingleChildScrollView(
         child: Column(
@@ -45,39 +61,26 @@ class _CustomerDetailState extends State<CustomerDetail> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  AppLocalizations.of(context).translate(widget.title),
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
+                Text(AppLocalizations.of(context).translate(widget.title), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
                 Row(
                   children: [
                     IconButton(
-                      icon: Icon(Icons.save),
-                      onPressed: () {
-                        // Add your save functionality here
-                      },
+                      icon: Icon(Icons.save, color: isChanged ? Colors.blue : Colors.grey),
+                      onPressed: isChanged ? () => context.read<MainAppBloc>().add(AddCardHolderEvent(_objectInfo, widget.token)) : null,
                     ),
-                    IconButton(
-                      icon: Icon(Icons.delete),
-                      onPressed: () {
-                        // Add your delete functionality here
-                      },
-                    ),
+                    if (widget.isDetail)
+                      IconButton(icon: const Icon(Icons.delete), onPressed: () {}),
                   ],
-                ),
+                )
               ],
             ),
-            if (widget.isImage && widget.object.avatar.isNotEmpty)
-              Center(
-                child: widget.object.avatar.startsWith('http')
-                    ? Image.network(widget.object.avatar, width: 100, height: 100, fit: BoxFit.cover)
-                    : Image.asset(widget.object.avatar, width: 100, height: 100, fit: BoxFit.cover),
-              ),
             SizedBox(height: defaultPadding),
-            ObjectDetailInfor(objectInfo: widget.object),
+            ObjectDetailInfor(
+              objectInfo: _objectInfo,
+              token: widget.token,
+              isDetail: widget.isDetail,
+              onChanged: onChanged, // callback khi đổi dữ liệu
+            ),
           ],
         ),
       ),
@@ -85,139 +88,191 @@ class _CustomerDetailState extends State<CustomerDetail> {
   }
 }
 
-
 class ObjectDetailInfor extends StatefulWidget {
   final CardHolder objectInfo;
+  final String token;
+  final bool isDetail;
+  final Function() onChanged; // Không cần truyền controller ra ngoài nữa
 
-  const ObjectDetailInfor({super.key, required this.objectInfo});
+  const ObjectDetailInfor({super.key, required this.objectInfo, required this.token, required this.isDetail, required this.onChanged});
 
   @override
   State<ObjectDetailInfor> createState() => _ObjectDetailInforState();
 }
 
 class _ObjectDetailInforState extends State<ObjectDetailInfor> {
-  late TextEditingController _lastnameController;
-  late TextEditingController _firstnameController;
-  late TextEditingController _emailController;
-  late TextEditingController _homeAddressController;
-  late TextEditingController _companyAddressController;
-  late TextEditingController _numberPhoneController;
-  late TextEditingController _avatarController; // Thêm controller cho avatar URL
-
-  final ImagePicker _picker = ImagePicker();
+  late Map<String, TextEditingController> controllers;
+  List<Map<String, TextEditingController>> dynamicFields = [];
 
   @override
   void initState() {
     super.initState();
-    _initializeControllers(widget.objectInfo);
+    _initializeControllers();
   }
-  @override
-  void didUpdateWidget(covariant ObjectDetailInfor oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.objectInfo != widget.objectInfo) {
-      _initializeControllers(widget.objectInfo);
+
+  TextEditingController _buildController(String fieldName, String initialValue) {
+    final controller = TextEditingController(text: initialValue);
+    controller.addListener(() {
+      widget.objectInfo.setValueByField(fieldName, controller.text); // Gán thẳng giá trị vào object
+      widget.onChanged(); // Bắn sự kiện thay đổi
+    });
+    return controller;
+  }
+
+  void _initializeControllers() {
+    controllers = {
+      for (var field in CardHolder.getFieldNames())
+        field: _buildController(field, widget.objectInfo.getValueByField(field))
+    };
+
+    // Nếu là chi tiết thì load customData
+    if (widget.isDetail) {
+      for (var data in widget.objectInfo.customData) {
+        dynamicFields.add({
+          'tagName': TextEditingController(text: data.tagName)..addListener(() {
+            data.tagName = dynamicFields.last['tagName']!.text;
+            widget.onChanged();
+          }),
+          'tagValue': TextEditingController(text: data.tagValue)..addListener(() {
+            data.tagValue = dynamicFields.last['tagValue']!.text;
+            widget.onChanged();
+          }),
+        });
+      }
     }
   }
 
-  void _initializeControllers(CardHolder objectInfo) {
-    _lastnameController = TextEditingController(text: objectInfo.lastName);
-    _firstnameController = TextEditingController(text: objectInfo.firstName);
-    _emailController = TextEditingController(text: objectInfo.email);
-    _homeAddressController = TextEditingController(text: objectInfo.homeAddress);
-    _companyAddressController = TextEditingController(text: objectInfo.companyAddress);
-    _numberPhoneController = TextEditingController(text: objectInfo.phoneNumber);
-    _avatarController = TextEditingController(text: objectInfo.avatar); // Hiển thị đường link ảnh
-  }
-
-  Future<void> _pickImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _avatarController.text = pickedFile.path; // Cập nhật TextField với đường dẫn ảnh
+  void _addNewInputField() {
+    SetCustomDataInObjectJson newData = SetCustomDataInObjectJson(tagName: '', tagValue: '', addInfoType: 'AddInfo01');
+    widget.objectInfo.customData.add(newData);
+    setState(() {
+      dynamicFields.add({
+        'tagName': TextEditingController()..addListener(() {
+          newData.tagName = dynamicFields.last['tagName']!.text;
+          widget.onChanged();
+        }),
+        'tagValue': TextEditingController()..addListener(() {
+          newData.tagValue = dynamicFields.last['tagValue']!.text;
+          widget.onChanged();
+        }),
       });
-    }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final regexPatterns = {
+      'eMail': r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+      'mobilePhone': r'^\d{10,15}$',
+      'identityCardNumber': r'^\d+$',
+      'socialSecurityNumber': r'^\d+$'
+    };
+    final dateFields = ['birthDate'];
+
+    return Padding(
+      padding: EdgeInsets.all(defaultPadding),
+      child: Column(
+        children: [
+          ...controllers.entries.map((entry) => CustomTextField(
+                controller: entry.value,
+                title: entry.key,
+                regex: regexPatterns[entry.key],
+                isDate: dateFields.contains(entry.key),
+              )),
+          ...dynamicFields.map((map) => Row(
+                children: [
+                  Expanded(child: CustomTextField(controller: map['tagName']!, title: 'TagName')),
+                  const SizedBox(width: 10),
+                  Expanded(child: CustomTextField(controller: map['tagValue']!, title: 'TagValue')),
+                ],
+              )),
+          TextButton.icon(
+            onPressed: _addNewInputField,
+            icon: const Icon(Icons.add, color: Colors.blue),
+            label: const Text("Thêm thông tin bổ sung", style: TextStyle(color: Colors.blue)),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   void dispose() {
-    _lastnameController.dispose();
-    _firstnameController.dispose();
-    _emailController.dispose();
-    _homeAddressController.dispose();
-    _companyAddressController.dispose();
-    _numberPhoneController.dispose();
-    _avatarController.dispose(); // Giải phóng bộ nhớ
+    for (var c in controllers.values) {
+      c.dispose();
+    }
+    dynamicFields.expand((map) => map.values).forEach((c) => c.dispose());
+    super.dispose();
+  }
+}
+
+class CustomTextField extends StatefulWidget {
+  final TextEditingController controller;
+  final String title;
+  final String? regex;
+  final bool isDate;
+
+  const CustomTextField({super.key, required this.controller, required this.title, this.regex, this.isDate = false});
+
+  @override
+  State<CustomTextField> createState() => _CustomTextFieldState();
+}
+
+class _CustomTextFieldState extends State<CustomTextField> {
+  String? errorText;
+  final FocusNode _focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(() {
+      if (!_focusNode.hasFocus) {
+        // Khi mất focus thì check regex
+        if (widget.regex != null && widget.controller.text.isNotEmpty) {
+          final regExp = RegExp(widget.regex!);
+          if (!regExp.hasMatch(widget.controller.text.trim())) {
+            setState(() => errorText = 'Sai định dạng');
+          } else {
+            setState(() => errorText = null); // Hợp lệ
+          }
+        }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          SizedBox(height: defaultPadding),
-          TestFiles(editController: _lastnameController, title: 'LastName', width: double.infinity,),
-          SizedBox(height: defaultPadding),
-          TestFiles(editController: _firstnameController, title: 'FirstName', width: double.infinity,),
-          SizedBox(height: defaultPadding),
-          TestFiles(editController: _homeAddressController, title: 'HomeAddress', width: double.infinity,),
-          SizedBox(height: defaultPadding),
-          TestFiles(editController: _companyAddressController, title: 'CompanyAddress', width: double.infinity,),
-          SizedBox(height: defaultPadding),
-          TestFiles(editController: _emailController, title: 'Email', width: double.infinity,),
-          SizedBox(height: defaultPadding),
-          TestFiles(editController: _numberPhoneController, title: 'Phone', width: double.infinity,),
-          SizedBox(height: defaultPadding),
-
-          // TextField để hiển thị đường dẫn ảnh
-          Row(
-            children: [
-              TestFiles(editController: _avatarController, title: 'Avatar URL', width: Get.width/3,),
-              SizedBox(width: defaultPadding),
-              TextButton.icon(
-                style: ButtonStyle(
-                  iconColor: WidgetStateProperty.all(Colors.red),
-                ),
-                onPressed: _pickImage,
-                icon: Icon(Icons.image),
-                label: Text(AppLocalizations.of(context).translate("Choose Image"), style: TextStyle(
-                  color: Theme.of(context).colorScheme.onPrimary
-                ),),
-              ),
-            ],
-          ),
-          
-          SizedBox(height: defaultPadding),
-        ],
-      ),
-    );
-  }
-}
-
-class TestFiles extends StatelessWidget {
-  final TextEditingController editController;
-  final String title;
-  final double width; 
-
-  const TestFiles({
-    super.key,
-    required this.editController,
-    required this.title, required this.width,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: width,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: TextField(
-        controller: editController,
+        controller: widget.controller,
+        focusNode: _focusNode,
+        readOnly: widget.isDate,
+        onTap: widget.isDate
+            ? () async {
+                final picked = await showDatePicker(
+                  context: context,
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime(1900),
+                  lastDate: DateTime(2100),
+                );
+                if (picked != null) {
+                  widget.controller.text = DateFormat('yyyy-MM-dd').format(picked);
+                }
+              }
+            : null,
         decoration: InputDecoration(
-          labelText: AppLocalizations.of(context).translate(title),
-          labelStyle: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+          labelText: AppLocalizations.of(context).translate(widget.title),
+          labelStyle: const TextStyle(color: Colors.blue, fontWeight: FontWeight.w500),
           border: const OutlineInputBorder(),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Theme.of(context).colorScheme.onPrimary),
-          ),
+          focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue, width: 2)),
+          errorText: errorText,
         ),
       ),
     );

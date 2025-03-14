@@ -60,7 +60,7 @@ class _ContractListState extends State<ContractList> {
   @override
   void didUpdateWidget(covariant ContractList oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.cardHolder.cardHolderId != widget.cardHolder.cardHolderId) {
+    if (oldWidget.cardHolder.identityCardNumber != widget.cardHolder.identityCardNumber) {
       setState(() {
         _filteredContracts = widget.object;
       });

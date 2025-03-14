@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'dart:convert';
 import 'package:smartwalletapp/ApiResult.dart';
 import 'package:http/http.dart' as http;

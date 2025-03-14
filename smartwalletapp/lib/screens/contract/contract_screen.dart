@@ -75,7 +75,7 @@ class _ContractScreenState extends State<ContractScreen> {
                         objectColumnName: objectColumnNameOfContract,
                         title: 'ContractList',
                         onContract_CardList: updateContractDetail,
-                        cardHolder: selectedcardHolderInittial, isContractScreent: true, cards: MyCards, trans: demoTransactionList,),
+                        cardHolder: emptyCardHolder, isContractScreent: true, cards: MyCards, trans: demoTransactionList,),
                       if(!Responsive.isDesktop(context))
                         SizedBox(height: defaultPadding),
                       if(!Responsive.isDesktop(context) && selectContractDetail == true)

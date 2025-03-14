@@ -87,12 +87,12 @@ class _MyAppState extends State<MyApp> {
         Locale('vi', ''), // Vietnamese
       ],
       home: 
-      // MainScreen(isAuth: true, user: u, onLanguageChange: (Locale newLocale) {
-      //   Get.updateLocale(newLocale);
-      // }, token: '',)
-      LoginScreen(isAuth: false, onLanguageChange: (Locale newLocale) {
+      MainScreen(isAuth: true, user: u, onLanguageChange: (Locale newLocale) {
         Get.updateLocale(newLocale);
-       },)
+      }, token: 'eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzbWFydHdhbGxldGFwcCIsInN1YiI6ImFkbWluMSIsImV4cCI6MTc0MTkzMTc1OSwiaWF0IjoxNzQxOTIyNzU5LCJzY29wZSI6IkFETUlOIn0.dW4pQgx9hMnh0kNVjhh1QT0DSfhi0qpAgb_X-tBiIyM',)
+      // LoginScreen(isAuth: false, onLanguageChange: (Locale newLocale) {
+      //   Get.updateLocale(newLocale);
+      //  },)
     );
   }
 }

@@ -64,7 +64,6 @@ class _MainScreenState extends State<MainScreen> {
           }
           else if(state is giveCardListState){
             cards = state.cardInfo;
-            print("main_screen ${cards.length}");
           }
           else if(state is giveTransactionState){
             trans = state.trans;
@@ -122,7 +121,7 @@ class _MainScreenState extends State<MainScreen> {
       case 1:
         return DashboardScreen(isAuth: widget.isAuth, user: selectedUsers, onLanguageChange: widget.onLanguageChange, card_times: card_times,);
       case 2:
-        return CustomerScreen(isAuth: widget.isAuth, user: selectedUsers, cardHolders: cardHolders, trans: trans, cards: cards, contracts: contracts, onLanguageChange: widget.onLanguageChange);
+        return CustomerScreen(isAuth: widget.isAuth, user: selectedUsers, cardHolders: cardHolders, trans: trans, cards: cards, contracts: contracts, onLanguageChange: widget.onLanguageChange, token: widget.token,);
       case 3: 
         return ContractScreen(isAuth: widget.isAuth, user: selectedUsers,onLanguageChange: widget.onLanguageChange,);
       case 4:

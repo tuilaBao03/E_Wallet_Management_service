@@ -38,7 +38,7 @@ class CardholderRepository {
 }
 
   Future<ApiResult> createCardHolder(CardHolder cardHolder,  String token) async{
-    final String apiUrl = 'http://localhost:8080/smartwalletapp/cardHolders';
+    final String apiUrl = 'http://localhost:8080/smartwalletapp/cardholder';
 
     try {
       final response = await http.post(

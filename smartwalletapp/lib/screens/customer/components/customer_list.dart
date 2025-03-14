@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, library_private_types_in_public_api, prefer_final_fields, avoid_print, non_constant_identifier_names
+// ignore_for_file: file_names, library_private_types_in_public_api, prefer_final_fields, avoid_print, non_constant_identifier_names, sized_box_for_whitespace
 
 import 'dart:collection';
 import 'package:flutter/material.dart';
@@ -6,9 +6,11 @@ import 'package:get/get.dart';
 import 'package:smartwalletapp/app/locallization/app_localizations.dart';
 import 'package:smartwalletapp/models/cardholder.dart';
 import 'package:smartwalletapp/screens/customer/components/customer_detail.dart';
+import 'package:smartwalletapp/screens/main/components/classInitial.dart';
 import '../../../constants.dart';
 
 class CustomerList extends StatefulWidget {
+  final String token;
   final List<CardHolder> object;
   final String title;
   final HashSet<String> objectColumnName;
@@ -19,7 +21,7 @@ class CustomerList extends StatefulWidget {
     required this.object,
     required this.objectColumnName,
     required this.title,
-    required this.onCustomer_Contracts,
+    required this.onCustomer_Contracts, required this.token,
   });
 
   @override
@@ -83,10 +85,22 @@ class _CustomerListState extends State<CustomerList> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Row(
+              children: [
             Text(
               AppLocalizations.of(context).translate(widget.title),
               style: Theme.of(context).textTheme.titleMedium,
             ),
+
+            IconButton(
+              icon: Icon(Icons.add),
+              onPressed: () {
+                _showAddDialog(context, emptyCardHolder);
+              },
+            ),
+            ],
+            ),
+            
             SizedBox(height: defaultPadding),
             Row(
               children: [
@@ -170,12 +184,38 @@ class _CustomerListState extends State<CustomerList> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          content: CustomerDetail(
-            object: cardHolder,
-            isImage: true,
-            title: 'CustomerDetail',
-            isActive: true,
-            isUpdate: false,
+          content: Container(
+            width: Get.width / 2,
+            child: CustomerDetail(
+              object: cardHolder,
+              title: 'CustomerDetail',
+              isDetail: true,
+              isAdd: false, token: '',
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Icon(Icons.cancel, color: Colors.red,),
+            ),
+          ],
+        );
+      },
+    );
+  }
+  void _showAddDialog(BuildContext context, CardHolder cardHolder) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Container(
+            width: Get.width / 2,
+            child: CustomerDetail(
+              object: cardHolder,
+              title: 'CustomerAdd',
+              isDetail: false,
+              isAdd: true, token: widget.token,
+            ),
           ),
           actions: [
             TextButton(

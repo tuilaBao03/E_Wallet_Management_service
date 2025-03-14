@@ -24,6 +24,8 @@ import '../general/header.dart';
 
 class CustomerScreen extends StatefulWidget {
 
+  final String token;
+
   final List<Transaction> trans;
   final List<CardInfo> cards;
   final List<CardHolder> cardHolders;
@@ -39,7 +41,7 @@ class CustomerScreen extends StatefulWidget {
     required this.cards, 
     required this.cardHolders, 
     required this.contracts, 
-    required this.onLanguageChange});
+    required this.onLanguageChange, required this.token});
   @override
   _CustomerScreenState createState() => _CustomerScreenState();
 }
@@ -62,7 +64,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
     "Detail",
   ]);
   User selectedUser = selectedUserInittial;
-  CardHolder selectedcardHolder = selectedcardHolderInittial;
+  CardHolder selectedcardHolder = emptyCardHolder;
   CardInfo selectedCard = selectedCardInittial;
   Contract selectedContract = selectedContractInittial;
 
@@ -130,7 +132,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                                       object: widget.cardHolders,
                                       objectColumnName: objectColumnNameOfUser,
                                       title: 'cusList',
-                                      onCustomer_Contracts: updateCardHolder_contract,
+                                      onCustomer_Contracts: updateCardHolder_contract, token: widget.token,
                                     ),),
                                 if(Responsive.isDesktop(context) && SelectContractList)
                                   SizedBox(width: defaultPadding),

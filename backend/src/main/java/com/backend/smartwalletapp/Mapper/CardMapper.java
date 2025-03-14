@@ -1,5 +1,6 @@
 package com.backend.smartwalletapp.Mapper;
 
+import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
 import com.backend.smartwalletapp.client.requests.Card.create.CreateCardV3;
@@ -8,7 +9,7 @@ import com.backend.smartwalletapp.client.responses.Card.create.CreateCardV3Resul
 import com.backend.smartwalletapp.dto.request.Card.CreateCardRequest;
 import com.backend.smartwalletapp.dto.response.Card.CreateCardReponse;
 
-
+@Mapper(componentModel = "spring")
 public interface CardMapper {
 
     CardMapper INSTANCE = Mappers.getMapper(CardMapper.class);

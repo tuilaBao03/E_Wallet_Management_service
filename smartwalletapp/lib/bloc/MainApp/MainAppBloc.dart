@@ -45,7 +45,7 @@ class MainAppBloc extends Bloc<MainAppEvent, MainAppState> {
   void _giveContractListParent(giveContractListEvent event, Emitter<MainAppState> emit) async {
     try {
       List<Contract> contracts = [];
-      contracts = contractList.where((contract)=>contract.cardHolderID == event.cardHolder.cardHolderId && contract.type=="A").toList();
+      contracts = contractList.where((contract)=>contract.cardHolderID == event.cardHolder.identityCardNumber && contract.type=="A").toList();
       emit(giveContractsListState(contracts)); // Ensure a value is returned
     } catch (e) {
       print("_giveUserList $e");
@@ -92,6 +92,8 @@ class MainAppBloc extends Bloc<MainAppEvent, MainAppState> {
 
   void _createCardHolder(AddCardHolderEvent event, Emitter<MainAppState> emit) async{
     try{
+      print(event.cardHolder);
+      print(event.cardHolder.toJson());
       CardHolder cardHolder = event.cardHolder;
       CardholderRepository cardholderRepository = CardholderRepository();
       ApiResult apiResult = await cardholderRepository.createCardHolder(cardHolder, event.token);
@@ -99,6 +101,7 @@ class MainAppBloc extends Bloc<MainAppEvent, MainAppState> {
         emit(CreateCardHolderSuccessState(apiResult.messenger));
       }
       else{
+        print("apiResult.messenger");
         emit(MainAppErrorState(apiResult.messenger));
       }
       }
