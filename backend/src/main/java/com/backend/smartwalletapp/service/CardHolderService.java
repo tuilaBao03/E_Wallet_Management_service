@@ -15,6 +15,7 @@ import com.backend.smartwalletapp.client.service.CardHolderSoapService;
 import com.backend.smartwalletapp.dto.request.CardHolder.LockUnlockStatusCardHolderRequest;
 import com.backend.smartwalletapp.dto.request.CardHolder.CreateCardHolder.CardHolderCreatedRequest;
 import com.backend.smartwalletapp.dto.response.CardHolder.CardHolderResponse;
+import com.backend.smartwalletapp.dto.response.CardHolder.CreateCardHolderResponse;
 import com.backend.smartwalletapp.exception.AppException;
 import com.backend.smartwalletapp.exception.ErrorCode;
 import com.backend.smartwalletapp.model.CardHolder;
@@ -52,8 +53,9 @@ public class CardHolderService {
             throw new AppException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
-    public CreateClientV4Result createCardHolder(CardHolderCreatedRequest request) {
+    public CreateCardHolderResponse createCardHolder(CardHolderCreatedRequest request) {
         try {
+            System.err.println("==================================");
             // 1. Map dữ liệu từ request sang Body SOAP
             CreateClientV4Body createClientV4Body = cardHolderMapper.toCreateClientV4Body(request);
     
@@ -62,9 +64,13 @@ public class CardHolderService {
             CreateClientV4Response createCardHolderSoapResponse = soapClient.createCardHolder(createClientV4Body);
 
             CreateClientV4Result result = createCardHolderSoapResponse.getCreateClientV4Result();
+
+            CreateCardHolderResponse response = cardHolderMapper.toCreateCardHolderResponse(result);
+
+            System.err.println(response);
     
             // 5. Trả về kết quả cuối cùng
-            return result;
+            return response;
     
         } catch (Exception e) {
             e.printStackTrace();

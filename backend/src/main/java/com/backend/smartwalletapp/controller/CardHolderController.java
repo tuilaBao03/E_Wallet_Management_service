@@ -3,10 +3,13 @@ package com.backend.smartwalletapp.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.backend.smartwalletapp.client.responses.CardHolders.CreateClientV4Result;
 import com.backend.smartwalletapp.dto.request.CardHolder.LockUnlockStatusCardHolderRequest;
 import com.backend.smartwalletapp.dto.request.CardHolder.CreateCardHolder.CardHolderCreatedRequest;
 import com.backend.smartwalletapp.dto.response.ApiResponse;
+import com.backend.smartwalletapp.dto.response.Card.CreateCardReponse;
 import com.backend.smartwalletapp.dto.response.CardHolder.CardHolderResponse;
+import com.backend.smartwalletapp.dto.response.CardHolder.CreateCardHolderResponse;
 import com.backend.smartwalletapp.model.CardHolder;
 import com.backend.smartwalletapp.model.Contract;
 import com.backend.smartwalletapp.service.CardHolderService;
@@ -36,11 +39,14 @@ public class CardHolderController {
     ContractService contractService;
     @PostMapping()
     @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")
-    ApiResponse<String> createCardHolder(@RequestBody @Valid CardHolderCreatedRequest request){
-        return ApiResponse.<String>builder()
-            .result(cardHolderService.createCardHolder(request).getNewClient())
-            .code(cardHolderService.createCardHolder(request).getRetCode())
-            .message(cardHolderService.createCardHolder(request).getRetMsg()).build();
+    ApiResponse<CreateCardHolderResponse> createCardHolder(@RequestBody @Valid CardHolderCreatedRequest request){
+        CreateCardHolderResponse createCardHolderResponse = cardHolderService.createCardHolder(request);
+        String mess = createCardHolderResponse.getRetMsg();
+        int code = createCardHolderResponse.getRetCode();
+        return ApiResponse.<CreateCardHolderResponse>builder()
+            .result(createCardHolderResponse)
+            .code(code)
+            .message(mess).build();
     }
 
     @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")

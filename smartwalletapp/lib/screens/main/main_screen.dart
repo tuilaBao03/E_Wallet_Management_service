@@ -6,6 +6,7 @@ import 'package:smartwalletapp/bloc/MainApp/MainAppState.dart';
 import 'package:smartwalletapp/models/cardholder.dart';
 import 'package:smartwalletapp/models/contract.dart';
 import 'package:smartwalletapp/repository/dashboardRepository.dart';
+import 'package:smartwalletapp/screens/general/dialogAlert.dart';
 import 'package:smartwalletapp/screens/myprofile/myprofile_screen.dart';
 import 'package:smartwalletapp/screens/contract/contract_screen.dart';
 import 'package:smartwalletapp/screens/customer/customer_screen.dart';
@@ -99,7 +100,11 @@ class _MainScreenState extends State<MainScreen> {
     
       }, listener: (context,state){
         if(state is MainAppErrorState){
-          print(state.message);
+          InputDialog.show(
+            context,
+            title: 'Thông báo lỗi',
+            content: state.message,
+          );
         }
         else if(state is LogoutSuccess){
           Navigator.pushReplacement(
@@ -109,6 +114,13 @@ class _MainScreenState extends State<MainScreen> {
               ),
             );
 
+        }
+        else if(state is SuccessState){
+          InputDialog.show(
+            context,
+            title: 'Thông báo thành công',
+            content: state.message,
+          );
         }
       })
     );
@@ -123,7 +135,7 @@ class _MainScreenState extends State<MainScreen> {
       case 2:
         return CustomerScreen(isAuth: widget.isAuth, user: selectedUsers, cardHolders: cardHolders, trans: trans, cards: cards, contracts: contracts, onLanguageChange: widget.onLanguageChange, token: widget.token,);
       case 3: 
-        return ContractScreen(isAuth: widget.isAuth, user: selectedUsers,onLanguageChange: widget.onLanguageChange,);
+        return ContractScreen(isAuth: widget.isAuth, user: selectedUsers,onLanguageChange: widget.onLanguageChange, token:widget.token,);
       case 4:
         return MyprofileScreen(isAuth: widget.isAuth, user: selectedUsers,onLanguageChange: widget.onLanguageChange, token: widget.token,);
        // Thêm màn hình SettingScreen

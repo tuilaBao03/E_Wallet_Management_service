@@ -9,6 +9,7 @@ import 'package:smartwalletapp/models/cardholder.dart';
 import 'package:smartwalletapp/models/contract.dart';
 import 'package:smartwalletapp/models/transaction.dart';
 import 'package:smartwalletapp/screens/card/components/card_detail.dart';
+import 'package:smartwalletapp/screens/contract/components/contract_add.dart';
 // Import model CardInfo
 import 'package:smartwalletapp/screens/contract/components/contract_detail.dart';
 import 'package:smartwalletapp/screens/transaction/components/transaction_detail.dart';
@@ -24,6 +25,7 @@ class ContractList extends StatefulWidget {
   final Function(Contract) onContract_CardList;
   final CardHolder cardHolder;
   final bool isContractScreent;
+  final String token;
 
   const ContractList({
     super.key,
@@ -33,7 +35,7 @@ class ContractList extends StatefulWidget {
     required this.title,
     required this.onContract_CardList,
     required this.cardHolder,
-    required this.isContractScreent, required this.trans,
+    required this.isContractScreent, required this.trans, required this.token,
   });
 
   @override
@@ -60,7 +62,7 @@ class _ContractListState extends State<ContractList> {
   @override
   void didUpdateWidget(covariant ContractList oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.cardHolder.identityCardNumber != widget.cardHolder.identityCardNumber) {
+    if (oldWidget.cardHolder.clientNumber != widget.cardHolder.identityCardNumber) {
       setState(() {
         _filteredContracts = widget.object;
       });
@@ -90,9 +92,17 @@ class _ContractListState extends State<ContractList> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              AppLocalizations.of(context).translate(widget.title),
-              style: Theme.of(context).textTheme.titleMedium,
+            Row(
+              children: [
+                Text(
+                  AppLocalizations.of(context).translate(widget.title),
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                IconButton(
+                        icon: Icon(Icons.add, color: Colors.amber),
+                        onPressed: () => _showContractAddDialog(context, widget.token),
+                      ),
+              ],
             ),
             const SizedBox(height: 16.0),
             _buildSearchField(),
@@ -103,6 +113,7 @@ class _ContractListState extends State<ContractList> {
                       AppLocalizations.of(context).translate("There is no matching information"),
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
+
                   )
                 : _buildContractList(context),
           ],
@@ -126,7 +137,7 @@ class _ContractListState extends State<ContractList> {
             onChanged: (value) {
               setState(() {
                 _filteredContracts = widget.object
-                    .where((contract) => contract.contractID.toLowerCase().contains(value.toLowerCase()))
+                    .where((contract) => contract.clientIdentifier.toLowerCase().contains(value.toLowerCase()))
                     .toList();
               });
             },
@@ -143,12 +154,12 @@ class _ContractListState extends State<ContractList> {
       itemCount: _filteredContracts.length,
       itemBuilder: (context, index) {
         Contract contract = _filteredContracts[index];
-        bool hasChildren = contract.children.isNotEmpty;
+        bool hasChildren = contract.productCode.isNotEmpty;
 
         return Column(
           children: [
             InkWell(
-              onTap: () => _toggleExpand(contract.contractID), // Nhấn vào hợp đồng để mở rộng
+              onTap: () => _toggleExpand(contract.contractName), // Nhấn vào hợp đồng để mở rộng
               child: Container(
                 margin: EdgeInsets.symmetric(vertical: Get.height/100),
                 decoration: BoxDecoration(
@@ -156,8 +167,8 @@ class _ContractListState extends State<ContractList> {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: ListTile(
-                  title: Text(contract.note),
-                  subtitle: Text(contract.createdDate.toString()),
+                  title: Text(contract.clientSearchMethod),
+                  subtitle: Text(contract.branch.toString()),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -165,26 +176,28 @@ class _ContractListState extends State<ContractList> {
                         icon: Icon(Icons.details, color: Colors.green),
                         onPressed: () => _showContractDetailDialog(context, contract),
                       ),
+                      
+                      
                       if (hasChildren)
                         IconButton(
                           icon: Icon(
-                            _expandedContracts.contains(contract.contractID) ? Icons.expand_less : Icons.expand_more,
+                            _expandedContracts.contains(contract.contractName) ? Icons.expand_less : Icons.expand_more,
                             color: Colors.orange,
                           ),
-                          onPressed: () => _toggleExpand(contract.contractID),
+                          onPressed: () => _toggleExpand(contract.contractName),
                         ),
                     ],
                   ),
                 ),
               ),
             ),
-            if (_expandedContracts.contains(contract.contractID))
-              Padding(
-                padding: const EdgeInsets.only(left: 20.0),
-                child: Column(
-                  children: contract.children.map((child) => _buildChildContractTile(child, context)).toList(),
-                ),
-              ),
+            // if (_expandedContracts.contains(contract.institutionCode))
+            //   Padding(
+            //     padding: const EdgeInsets.only(left: 20.0),
+            //     child: Column(
+            //       children: contract.productCode.map((child) => _buildChildContractTile(child, context)).toList(),
+            //     ),
+            //   ),
           ],
         );
       },
@@ -192,96 +205,96 @@ class _ContractListState extends State<ContractList> {
   }
 
 // Widget hợp đồng con
-  Widget _buildChildContractTile(Contract child, BuildContext context) {
-    List<CardInfo> contractCards = widget.cards.where((card) => card.contractID == child.contractID).toList();
-    List<Transaction> contractTran = widget.trans.where((card) => card.contractID == child.contractID).toList();
-    bool hasCards = contractCards.isNotEmpty;
+//   Widget _buildChildContractTile(Contract child, BuildContext context) {
+//     List<CardInfo> contractCards = widget.cards.where((card) => card.contractID == child.contractID).toList();
+//     List<Transaction> contractTran = widget.trans.where((card) => card.contractID == child.contractID).toList();
+//     bool hasCards = contractCards.isNotEmpty;
 
-    return Column(
-      children: [
-        InkWell(
-          onTap: () => _toggleExpand(child.contractID), // Nhấn hợp đồng con để mở rộng danh sách card
-          child: Container(
-            margin: EdgeInsets.symmetric(vertical: Get.height/100),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.blueAccent, width: 1),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: ListTile(
-              title: Text(child.note),
-              subtitle: Text(child.createdDate.toString()),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.details, color: Colors.green),
-                    onPressed: () => _showContractDetailDialog(context, child),
-                  ),
-                  if (hasCards)
-                    IconButton(
-                      icon: Icon(
-                        _expandedContracts.contains(child.contractID) ? Icons.expand_less : Icons.expand_more,
-                        color: Colors.orange,
-                      ),
-                      onPressed: () => _toggleExpand(child.contractID),
-                    ),
-                ],
-              ),
-            ),
-          ),
-        ),
-        if (_expandedContracts.contains(child.contractID))
-          Padding(
-            padding: const EdgeInsets.only(left: 20.0),
-            child: !widget.isContractScreent? Column(
-              children: contractCards.map((card) => _buildCardTile(card, context)).toList(),
-            ) 
-            : 
-            Column(
-              children: contractTran.map((tran) => _buildTransactionTile(tran, context)).toList(),
-            ) ,
-          ),
-      ],
-    );
-  }
+//     return Column(
+//       children: [
+//         InkWell(
+//           onTap: () => _toggleExpand(child.contractID), // Nhấn hợp đồng con để mở rộng danh sách card
+//           child: Container(
+//             margin: EdgeInsets.symmetric(vertical: Get.height/100),
+//             decoration: BoxDecoration(
+//               border: Border.all(color: Colors.blueAccent, width: 1),
+//               borderRadius: BorderRadius.circular(8),
+//             ),
+//             child: ListTile(
+//               title: Text(child.note),
+//               subtitle: Text(child.createdDate.toString()),
+//               trailing: Row(
+//                 mainAxisSize: MainAxisSize.min,
+//                 children: [
+//                   IconButton(
+//                     icon: Icon(Icons.details, color: Colors.green),
+//                     onPressed: () => _showContractDetailDialog(context, child),
+//                   ),
+//                   if (hasCards)
+//                     IconButton(
+//                       icon: Icon(
+//                         _expandedContracts.contains(child.contractID) ? Icons.expand_less : Icons.expand_more,
+//                         color: Colors.orange,
+//                       ),
+//                       onPressed: () => _toggleExpand(child.contractID),
+//                     ),
+//                 ],
+//               ),
+//             ),
+//           ),
+//         ),
+//         if (_expandedContracts.contains(child.contractID))
+//           Padding(
+//             padding: const EdgeInsets.only(left: 20.0),
+//             child: !widget.isContractScreent? Column(
+//               children: contractCards.map((card) => _buildCardTile(card, context)).toList(),
+//             ) 
+//             : 
+//             Column(
+//               children: contractTran.map((tran) => _buildTransactionTile(tran, context)).toList(),
+//             ) ,
+//           ),
+//       ],
+//     );
+//   }
 
-// Widget thẻ (Card)
-  Widget _buildCardTile(CardInfo card, BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: Get.height/100),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.purple, width: 1),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: ListTile(
-        title: Text("ID: ${card.CardID}"),
-        subtitle: Text("Type: ${card.typeCard}"),
-        trailing: IconButton(
-          icon: Icon(Icons.details, color: Colors.green),
-          onPressed: () => _showCardDetailDialog(context, card),
-        ),
-      ),
-    );
-  }
+// // Widget thẻ (Card)
+//   Widget _buildCardTile(CardInfo card, BuildContext context) {
+//     return Container(
+//       margin: EdgeInsets.symmetric(vertical: Get.height/100),
+//       decoration: BoxDecoration(
+//         border: Border.all(color: Colors.purple, width: 1),
+//         borderRadius: BorderRadius.circular(8),
+//       ),
+//       child: ListTile(
+//         title: Text("ID: ${card.CardID}"),
+//         subtitle: Text("Type: ${card.typeCard}"),
+//         trailing: IconButton(
+//           icon: Icon(Icons.details, color: Colors.green),
+//           onPressed: () => _showCardDetailDialog(context, card),
+//         ),
+//       ),
+//     );
+//   }
 
-  // Widget thẻ (Card)
-  Widget _buildTransactionTile(Transaction tran, BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: Get.height/100),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.purple, width: 1),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: ListTile(
-        title: Text("ID: ${tran.transactionId}"),
-        subtitle: Text("Amount: ${tran.budget.toString()}"),
-        trailing: IconButton(
-          icon: Icon(Icons.details, color: Colors.green),
-          onPressed: () => _showTransactionDetailDialog(context, tran),
-        ),
-      ),
-    );
-  }
+//   // Widget thẻ (Card)
+//   Widget _buildTransactionTile(Transaction tran, BuildContext context) {
+  //   return Container(
+  //     margin: EdgeInsets.symmetric(vertical: Get.height/100),
+  //     decoration: BoxDecoration(
+  //       border: Border.all(color: Colors.purple, width: 1),
+  //       borderRadius: BorderRadius.circular(8),
+  //     ),
+  //     child: ListTile(
+  //       title: Text("ID: ${tran.transactionId}"),
+  //       subtitle: Text("Amount: ${tran.budget.toString()}"),
+  //       trailing: IconButton(
+  //         icon: Icon(Icons.details, color: Colors.green),
+  //         onPressed: () => _showTransactionDetailDialog(context, tran),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   void _showContractDetailDialog(BuildContext context, Contract contract) {
     showDialog(
@@ -296,6 +309,25 @@ class _ContractListState extends State<ContractList> {
             ),
           ],
         );
+      },
+    );
+  }
+    void _showContractAddDialog(BuildContext context, String token) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+            content: SizedBox(
+              width: Get.width / 2,
+              child: ContractAddScreen(token: token , isAdd: true, title: "Add contract")),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Icon(Icons.cancel, color: Colors.red),
+              ),
+            ],
+          );
+        
       },
     );
   }
@@ -332,3 +364,6 @@ class _ContractListState extends State<ContractList> {
     );
   }
 }
+
+
+

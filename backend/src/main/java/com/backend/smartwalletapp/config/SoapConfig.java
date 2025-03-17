@@ -35,10 +35,10 @@ public class SoapConfig {
             CreateClientV4Body.class,
 
             CreateContractV4_REQV2.class,
-            V2CreateContractV4Response.class,
+            V2CreateContractV4Response.class
 
-            CreateCardV3.class,
-            CreateCardV3Result.class
+            // CreateCardV3.class,
+            // CreateCardV3Result.class
         );
         System.out.println("Created marshaller____________________");
 

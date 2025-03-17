@@ -11,6 +11,14 @@ abstract class MainAppState{}
 
 class MainInitial extends MainAppState{}
 
+
+class LoadingState extends MainAppState{
+
+}
+class SuccessState extends MainAppState{
+  final String message;
+  SuccessState(this.message);
+}
 // ignore: camel_case_types
 class giveCardListState extends MainAppState{
     final List<CardInfo> cardInfo;

@@ -66,6 +66,16 @@ class AddCardHolderEvent extends MainAppEvent{
 
 }
 
+class AddContractEvent extends MainAppEvent{
+  final Contract contract;
+  final String token;
+
+  AddContractEvent(
+    this.contract, this.token
+  );
+
+}
+
 class LockOrUnLockCardEvent extends MainAppEvent{
   String token;
   CardInfo card;

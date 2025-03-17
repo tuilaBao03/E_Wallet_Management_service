@@ -46,9 +46,9 @@ class _CardListState extends State<CardList> {
     super.didUpdateWidget(oldWidget);
 
     // Nếu user thay đổi, cập nhật danh sách thẻ
-    if (oldWidget.contract.contractID != widget.contract.contractID) {
+    if (oldWidget.contract.clientIdentifier != widget.contract.clientIdentifier) {
       setState(() {
-        _filteredCardInfos = widget.object.where((trans) => trans.contractID == widget.contract.contractID)
+        _filteredCardInfos = widget.object.where((trans) => trans.contractID == widget.contract.contractName)
       .toList();
       });
     }

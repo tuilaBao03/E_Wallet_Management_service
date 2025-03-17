@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:smartwalletapp/ApiResult.dart';
 import 'package:smartwalletapp/models/cardholder.dart';
 import 'package:http/http.dart' as http;
+import 'package:smartwalletapp/response/cardHolder/cardholderResponse.dart';
 
 class CardholderRepository {
 
@@ -50,11 +51,21 @@ class CardholderRepository {
         body: jsonEncode(cardHolder.toJson()),
       );
       Map<String, dynamic> responseData = json.decode(response.body);
+      print(" RESPONSEDATA: $responseData");
+      print(" __________________________________________________");
       String message = responseData['message'];
-      int code = responseData['code'];
-      if(code == 200){
-        CardHolder cardHolders = responseData["result"];
-        ApiResult apiResult = ApiResult(code, message,cardHolders, 0, 0);
+      print(message);
+      print(" __________________________________________________");
+      int code = response.statusCode;
+      print(code);
+      print(" __________________________________________________");
+      if(code == 200 ){
+        CardHolderResponse cardHolders = CardHolderResponse.fromJson(responseData["result"]);
+        print(cardHolders);
+        print(" __________________________________________________${cardHolders.retMsg}");
+        ApiResult apiResult = ApiResult(code, cardHolders.retMsg,cardHolders, 0, 0);
+        print("________________${apiResult.message}");
+        print(" __________________________________________________");
         return(apiResult);
       }
       else{

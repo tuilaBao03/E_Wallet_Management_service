@@ -101,8 +101,8 @@ public class ContractController {
     public ApiResponse<CreateContractReponse> CreateContractV4_parent(@RequestBody @Valid ContractCreatedRequest request){
         return ApiResponse.<CreateContractReponse>builder()
         .result(contractService.createContract(request))
-        .code(contractService.createContract(request).getRetCode())
-        .message(contractService.createContract(request).getRetMsg())
+        .code(200)
+        .message("null")
         .build();
     }
 

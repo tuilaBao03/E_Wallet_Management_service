@@ -24,10 +24,11 @@ import '../general/header.dart';
 class ContractScreen extends StatefulWidget {
   
   final bool isAuth;
+  final String token;
   final User user;
   final Function(Locale) onLanguageChange;
   const ContractScreen({super.key,
-    required this.isAuth, required this.user, required this.onLanguageChange,
+    required this.isAuth, required this.user, required this.onLanguageChange, required this.token,
 
   });
 
@@ -63,6 +64,7 @@ class _ContractScreenState extends State<ContractScreen> {
           children: [
             Header(title: "Contract",user: widget.user, isAuth: widget.isAuth, onLanguageChange: widget.onLanguageChange,),
             SizedBox(height: defaultPadding),
+            
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -75,7 +77,7 @@ class _ContractScreenState extends State<ContractScreen> {
                         objectColumnName: objectColumnNameOfContract,
                         title: 'ContractList',
                         onContract_CardList: updateContractDetail,
-                        cardHolder: emptyCardHolder, isContractScreent: true, cards: MyCards, trans: demoTransactionList,),
+                        cardHolder: emptyCardHolder, isContractScreent: true, cards: MyCards, trans: demoTransactionList, token: widget.token,),
                       if(!Responsive.isDesktop(context))
                         SizedBox(height: defaultPadding),
                       if(!Responsive.isDesktop(context) && selectContractDetail == true)

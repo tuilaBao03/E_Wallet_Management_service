@@ -27,7 +27,7 @@ class _ContractDetailState extends State<ContractDetail> {
   @override
   void initState() {
     super.initState();
-    _contractStatus = widget.object.status; // Gán trạng thái ban đầu từ hợp đồng
+    _contractStatus = true; // Gán trạng thái ban đầu từ hợp đồng
   }
 
   void _toggleContractStatus() {
@@ -114,12 +114,9 @@ class _ObjectDetailInforState extends State<ObjectDetailInfor> {
           },
           children: [
 
-            _buildTableRow('Contract ID', widget.contract.contractID.toString()),
-            _buildTableRow('status', widget.contract.status.toString()),
-            _buildTableRow('note', widget.contract.note.toString()),
-            _buildTableRow('startD', widget.contract.createdDate.toString()),
-            _buildTableRow('endD', widget.contract.updatedDate.toString()),
-            _buildTableRow('ContractImageUrl', widget.contract.url)
+            _buildTableRow('Contract ID', widget.contract.clientSearchMethod.toString()),
+            _buildTableRow('status', true.toString()),
+            _buildTableRow('note', widget.contract.contractName),
           ],
         ),
       ),

@@ -145,7 +145,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                                     objectColumnName: objectColumnNameOfContract,
                                     title: "Contract",
                                     onContract_CardList: updateContract_card,
-                                    cardHolder: selectedcardHolder, isContractScreent: false, cards: MyCards, trans: [],),)
+                                    cardHolder: selectedcardHolder, isContractScreent: false, cards: MyCards, trans: [], token: widget.token,),)
                               ],
                             ),
                           SizedBox(height: defaultPadding),
@@ -155,7 +155,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                                     objectColumnName: objectColumnNameOfContract,
                                     title: "Contract",
                                     onContract_CardList: updateContract_card,
-                                    cardHolder: selectedcardHolder, isContractScreent: false, cards: MyCards, trans: [],),
+                                    cardHolder: selectedcardHolder, isContractScreent: false, cards: MyCards, trans: [], token: widget.token,),
                     ],
                   ),
                 ),

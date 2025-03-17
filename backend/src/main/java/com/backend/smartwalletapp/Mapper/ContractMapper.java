@@ -24,8 +24,8 @@ public interface ContractMapper {
         CreateContractV4_REQ request = new CreateContractV4_REQ();
 
         request.setClientSearchMethod(dto.getClientSearchMethod());
-        request.setClientIdentifier(dto.getCardHolderID());
-        request.setReason(dto.getNote());
+        request.setClientIdentifier(dto.getClientIdentifier());
+        request.setReason(dto.getReason());
         request.setSetCustomDataInObject(dto.getCustomData());
 
         CreateContractInObject contractInObject = new CreateContractInObject();

@@ -15,6 +15,8 @@ import 'package:smartwalletapp/repository/contractRepository.dart';
 import 'package:smartwalletapp/repository/dashboardRepository.dart';
 import 'package:smartwalletapp/repository/userRepository.dart';
 import 'package:smartwalletapp/repository/authRepository.dart';
+import 'package:smartwalletapp/response/cardHolder/cardholderResponse.dart';
+import 'package:smartwalletapp/response/contract/contractResponse.dart';
 
 
 class MainAppBloc extends Bloc<MainAppEvent, MainAppState> {
@@ -27,6 +29,7 @@ class MainAppBloc extends Bloc<MainAppEvent, MainAppState> {
     on<LogoutEvent>(_logout);
     on<GiveCard_TimeListEvent>(giveCard_TimeList);
     on<AddCardHolderEvent>(_createCardHolder);
+    on<AddContractEvent>(_createContract);
 
   }
 
@@ -45,7 +48,7 @@ class MainAppBloc extends Bloc<MainAppEvent, MainAppState> {
   void _giveContractListParent(giveContractListEvent event, Emitter<MainAppState> emit) async {
     try {
       List<Contract> contracts = [];
-      contracts = contractList.where((contract)=>contract.cardHolderID == event.cardHolder.identityCardNumber && contract.type=="A").toList();
+      contracts = contractList.where((contract)=>contract.clientIdentifier == event.cardHolder.identityCardNumber && contract.contractName=="A").toList();
       emit(giveContractsListState(contracts)); // Ensure a value is returned
     } catch (e) {
       print("_giveUserList $e");
@@ -56,7 +59,7 @@ class MainAppBloc extends Bloc<MainAppEvent, MainAppState> {
   void _giveCardList(giveCardListEvent event, Emitter<MainAppState> emit) async {
     try {
       List<CardInfo> cards = [];
-      cards = MyCards.where((card) => card.contractID == event.contract.contractID)
+      cards = MyCards.where((card) => card.contractID == event.contract.contractName)
       .toList();
       print("mainappbloc ${cards.length}");
       emit(giveCardListState(cards)); // Ensure a value is returned
@@ -68,7 +71,7 @@ class MainAppBloc extends Bloc<MainAppEvent, MainAppState> {
   void _giveTransactionList(giveTransactionEvent event, Emitter<MainAppState> emit) async {
     try {
       List<Transaction> trans = [];
-      trans = demoTransactionList.where((tran) => tran.contractID == event.contract.contractID).toList();
+      trans = demoTransactionList.where((tran) => tran.contractID == event.contract.contractName).toList();
       emit(giveTransactionState(trans)); // Ensure a value is returned
     } catch (e) {
       emit(MainAppErrorState('Failed to fetch transaction list'));
@@ -92,21 +95,42 @@ class MainAppBloc extends Bloc<MainAppEvent, MainAppState> {
 
   void _createCardHolder(AddCardHolderEvent event, Emitter<MainAppState> emit) async{
     try{
-      print(event.cardHolder);
-      print(event.cardHolder.toJson());
+      print("____________________________________");
       CardHolder cardHolder = event.cardHolder;
       CardholderRepository cardholderRepository = CardholderRepository();
       ApiResult apiResult = await cardholderRepository.createCardHolder(cardHolder, event.token);
-      if(apiResult.code == 200){
-        emit(CreateCardHolderSuccessState(apiResult.messenger));
+      CardHolderResponse cardHolderResponse = apiResult.result;
+      print("cardHolderResponse.retMsg:${cardHolderResponse.retMsg}");
+      print("cardHolderResponse.resultInfo:${cardHolderResponse.resultInfo}");
+      print("cardHolderResponse.retCode:${cardHolderResponse.retCode}");
+      print("____________________________________");
+      if(apiResult.code == 200 && cardHolderResponse.retCode == 0){
+        emit(CreateCardHolderSuccessState(cardHolderResponse.resultInfo));
       }
       else{
-        print("apiResult.messenger");
-        emit(MainAppErrorState(apiResult.messenger));
+        print("apiResult.message: ${apiResult.message}");
+        emit(MainAppErrorState(apiResult.message));
       }
       }
     catch (e){
       throw Exception("_createCardHolder: $e");
+    }
+  }
+  void _createContract(AddContractEvent event, Emitter<MainAppState> emit) async{
+    Contract contract = event.contract;
+    ContractRepository contractRepository = ContractRepository();
+
+    ApiResult apiResult = await contractRepository.cretateContract(contract, event.token);
+    String mess = apiResult.message;
+
+    if(apiResult.code == 0){
+      print("_________success_________");
+      CreateContractResponse contractResponse = apiResult.result;
+      emit(SuccessState(contractResponse.retMsg));
+    }
+    else{
+      print("_________false_________");
+      emit(MainAppErrorState(mess));
     }
   }
   void _logout(LogoutEvent event, Emitter<MainAppState> emit) async{
@@ -132,7 +156,7 @@ class MainAppBloc extends Bloc<MainAppEvent, MainAppState> {
     try{
         ApiResult apiResult = await cardRepository.lockOrUnLockCard(event.newStatus, event.card, event.token);
         int code = apiResult.code;
-        String message = apiResult.messenger;
+        String message = apiResult.message;
         if(code == 200){
           CardInfo cardInfo = apiResult.result;
           emit(UpdateStatusCardSuccessState(cardInfo.status));
@@ -146,25 +170,25 @@ class MainAppBloc extends Bloc<MainAppEvent, MainAppState> {
 
     }
   }
-  void LockOrUnLockContract(LockOrUnLockContractEvent event, Emitter<MainAppState> emit) async{
-    final ContractRepository contractRepository = ContractRepository();
-    try{
-        ApiResult apiResult = await contractRepository.lockOrUnLockContract(event.newStatus, event.contract, event.token);
-        int code = apiResult.code;
-        String message = apiResult.messenger;
-        if(code == 200){
-          CardInfo cardInfo = apiResult.result;
-          emit(UpdateStatusContractSuccessState(cardInfo.status));
-        }
-        else {
-          emit(MainAppErrorState(message));
-        }
-    }
-    catch(e){
-      throw Exception("_LockOrUnLockContract $e");
+  // void LockOrUnLockContract(LockOrUnLockContractEvent event, Emitter<MainAppState> emit) async{
+  //   final ContractRepository contractRepository = ContractRepository();
+  //   try{
+  //       ApiResult apiResult = await contractRepository.lockOrUnLockContract(event.newStatus, event.contract, event.token);
+  //       int code = apiResult.code;
+  //       String message = apiResult.message;
+  //       if(code == 200){
+  //         CardInfo cardInfo = apiResult.result;
+  //         emit(UpdateStatusContractSuccessState(cardInfo.status));
+  //       }
+  //       else {
+  //         emit(MainAppErrorState(message));
+  //       }
+  //   }
+  //   catch(e){
+  //     throw Exception("_LockOrUnLockContract $e");
 
-    }
-  }
+  //   }
+  // }
 
 
 } 

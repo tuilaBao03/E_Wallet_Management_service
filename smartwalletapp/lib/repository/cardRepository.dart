@@ -37,31 +37,31 @@ class CardRepository {
     }
   }
 
-  Future<ApiResult> giveCardByContract( String token, Contract contract) async {
-    String apiUrl = "http://localhost:8080/smartwalletapp//${contract.contractID}/card";
-    try {
-      final response = await http.get(
-        Uri.parse(apiUrl),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
-      Map<String, dynamic> responseData = json.decode(response.body);
-      int code = responseData["code"];
-      String message = responseData["message"];
-      if (response.statusCode == 200) {
-        CardInfo cardInfo = responseData["result"];
-        ApiResult result = ApiResult(code, message, cardInfo, 0,0);
-        return result;
-      } else {
-        Map<String, dynamic> errorData = json.decode(response.body);
-        throw Exception("Lỗi API: ${errorData["message"]}");
-      }
-    } catch (e) {
-      throw Exception("Lỗi kết nối: $e");
-    }
-  }
+  // Future<ApiResult> giveCardByContract( String token, Contract contract) async {
+  //   String apiUrl = "http://localhost:8080/smartwalletapp//${contract.contractID}/card";
+  //   try {
+  //     final response = await http.get(
+  //       Uri.parse(apiUrl),
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Authorization': 'Bearer $token',
+  //       },
+  //     );
+  //     Map<String, dynamic> responseData = json.decode(response.body);
+  //     int code = responseData["code"];
+  //     String message = responseData["message"];
+  //     if (response.statusCode == 200) {
+  //       CardInfo cardInfo = responseData["result"];
+  //       ApiResult result = ApiResult(code, message, cardInfo, 0,0);
+  //       return result;
+  //     } else {
+  //       Map<String, dynamic> errorData = json.decode(response.body);
+  //       throw Exception("Lỗi API: ${errorData["message"]}");
+  //     }
+  //   } catch (e) {
+  //     throw Exception("Lỗi kết nối: $e");
+  //   }
+  // }
   
 
 }

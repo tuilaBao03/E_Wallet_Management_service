@@ -9,10 +9,12 @@ import com.backend.smartwalletapp.client.requests.CardHolders.LockOrUnlockCardHo
 import com.backend.smartwalletapp.client.requests.CardHolders.create.CreateClientInObject;
 import com.backend.smartwalletapp.client.requests.CardHolders.create.CreateClientV4Body;
 import com.backend.smartwalletapp.client.requests.CardHolders.create.SetCustomDataInObject;
-import com.backend.smartwalletapp.client.requests.CardHolders.create.SoapBody;
+
+import com.backend.smartwalletapp.client.responses.CardHolders.CreateClientV4Result;
 import com.backend.smartwalletapp.dto.request.CardHolder.LockUnlockStatusCardHolderRequest;
 import com.backend.smartwalletapp.dto.request.CardHolder.CreateCardHolder.CardHolderCreatedRequest;
 import com.backend.smartwalletapp.dto.request.CardHolder.CreateCardHolder.SetCustomDataInObjectJson;
+import com.backend.smartwalletapp.dto.response.CardHolder.CreateCardHolderResponse;
 
 
 @Mapper(componentModel = "spring")
@@ -33,5 +35,6 @@ public interface CardHolderMapper {
                 .setCustomDataInObjects(toSetCustomDataInObject(request.getCustomData()))
                 .build();
     }
+    CreateCardHolderResponse toCreateCardHolderResponse(CreateClientV4Result response);
 
 }

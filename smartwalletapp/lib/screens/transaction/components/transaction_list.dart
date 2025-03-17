@@ -44,9 +44,9 @@ class _TransactionListState extends State<TransactionList> {
     super.didUpdateWidget(oldWidget);
 
     // Nếu user thay đổi, cập nhật danh sách thẻ
-    if (oldWidget.contract.contractID != widget.contract.contractID) {
+    if (oldWidget.contract.contractName != widget.contract.contractName) {
       setState(() {
-        _filteredTrans = widget.object.where((trans) => trans.contractID == widget.contract.contractID)
+        _filteredTrans = widget.object.where((trans) => trans.contractID == widget.contract.contractName)
       .toList();
       });
     }

@@ -1,107 +1,194 @@
 class Contract {
-  final String contractID;
-  final bool status;
-  final DateTime createdDate;
-  final DateTime updatedDate;
-  final String userID;
-  final String note;
-  final String url;
-  final String cardHolderID;
-  final String parent; // ID của hợp đồng cha
-  final String type;
-  final List<Contract> children; // Danh sách hợp đồng con
+  String reason; // map to <wsin:Reason>
+  String clientIdentifier; // map to <wsin:ClientIdentifier>
+  String clientSearchMethod; // map to <wsin:ClientSearchMethod>
+  String branch; // map to <wsin:Branch>
+  String institutionCode; // map to <wsin:InstitutionCode>
+  String productCode; // map to <wsin:ProductCode>
+  String productCode2; // map to <wsin:ProductCode2>
+  String productCode3; // map to <wsin:ProductCode3>
+  String contractName; // map to <wsin:ContractName>
+  String cbsNumber; // map to <wsin:CBSNumber>
+  String customData; // map to <wsin:CustomData>
 
   Contract({
-    required this.contractID,
-    required this.userID,
-    required this.createdDate,
-    required this.updatedDate,
-    required this.status,
-    required this.note,
-    required this.url,
-    required this.cardHolderID,
-    required this.parent,
-    required this.type,
-    List<Contract>? children, // Mặc định là danh sách rỗng
-  }) : children = children ?? []; // Mặc định là danh sách rỗng
+    required
+    this.reason,
+     required this.clientIdentifier,
+     required this.clientSearchMethod,
+     required this.branch,
+     required this.institutionCode,
+     required this.productCode,
+     required this.productCode2,
+     required this.productCode3,
+     required this.contractName,
+     required this.cbsNumber,
+     required this.customData,
+  });
 
-  // Chuyển đổi từ JSON
+  /// Parse từ JSON
   factory Contract.fromJson(Map<String, dynamic> json) {
     return Contract(
-      contractID: json['contractID'],
-      userID: json['userID'],
-      createdDate: DateTime.parse(json['createdDate']),
-      updatedDate: DateTime.parse(json['updatedDate']),
-      status: json['status'],
-      note: json['note'],
-      url: json['url'],
-      cardHolderID: json['cardHolderID'],
-      parent: json['parent'],
-      type: json['type'],
-      children: (json['children'] as List<dynamic>?)
-              ?.map((item) => Contract.fromJson(item))
-              .toList() ??
-          [],
+      reason: json['Reason'],
+      clientIdentifier: json['ClientIdentifier'],
+      clientSearchMethod: json['ClientSearchMethod'],
+      branch: json['Branch'],
+      institutionCode: json['InstitutionCode'],
+      productCode: json['ProductCode'],
+      productCode2: json['ProductCode2'],
+      productCode3: json['ProductCode3'],
+      contractName: json['ContractName'],
+      cbsNumber: json['CBSNumber'],
+      customData: json['CustomData'],
     );
   }
 
-  // Chuyển đổi thành JSON
+  /// Chuyển về JSON
   Map<String, dynamic> toJson() {
     return {
-      'contractID': contractID,
-      'userID': userID,
-      'createdDate': createdDate.toIso8601String(),
-      'updatedDate': updatedDate.toIso8601String(),
-      'status': status,
-      'note': note,
-      'url': url,
-      'cardHolderID': cardHolderID,
-      'parent': parent,
-      'type': type,
-      'children': children.map((child) => child.toJson()).toList(),
+      'Reason': reason,
+      'ClientIdentifier': clientIdentifier,
+      'ClientSearchMethod': clientSearchMethod,
+      'Branch': branch,
+      'InstitutionCode': institutionCode,
+      'ProductCode': productCode,
+      'ProductCode2': productCode2,
+      'ProductCode3': productCode3,
+      'ContractName': contractName,
+      'CBSNumber': cbsNumber,
+      'CustomData': customData,
     };
+  }
+  // Các trường contract như bạn đã khai báo
+
+  // Lấy danh sách field để tự động tạo field nhập liệu
+  static List<String> getFieldNames() {
+    return [
+      'reason',
+      'clientIdentifier',
+      'clientSearchMethod',
+      'branch',
+      'institutionCode',
+      'productCode',
+      'productCode2',
+      'productCode3',
+      'contractName',
+      'cbsNumber',
+      'customData',
+    ];
+  }
+
+  // Hàm gán giá trị cho field
+  void setValueByField(String field, String value) {
+    switch (field) {
+      case 'reason':
+        reason = value;
+        break;
+      case 'clientIdentifier':
+        clientIdentifier = value;
+        break;
+      case 'clientSearchMethod':
+        clientSearchMethod = value;
+        break;
+      case 'branch':
+        branch = value;
+        break;
+      case 'institutionCode':
+        institutionCode = value;
+        break;
+      case 'productCode':
+        productCode = value;
+        break;
+      case 'productCode2':
+        productCode2 = value;
+        break;
+      case 'productCode3':
+        productCode3 = value;
+        break;
+      case 'contractName':
+        contractName = value;
+        break;
+      case 'cbsNumber':
+        cbsNumber = value;
+        break;
+      case 'customData':
+        customData = value;
+        break;
+    }
+  }
+
+  String getValueByField(String field) {
+    switch (field) {
+      case 'reason':
+        return reason;
+      case 'clientIdentifier':
+        return clientIdentifier;
+      case 'clientSearchMethod':
+        return clientSearchMethod;
+      case 'branch':
+        return branch;
+      case 'institutionCode':
+        return institutionCode;
+      case 'productCode':
+        return productCode;
+      case 'productCode2':
+        return productCode2;
+      case 'productCode3':
+        return productCode3;
+      case 'contractName':
+        return contractName;
+      case 'cbsNumber':
+        return cbsNumber;
+      case 'customData':
+        return customData;
+      default:
+        return '';
+    }
   }
 }
 
-// Danh sách hợp đồng mẫu
+
+
+// Khởi tạo danh sách hợp đồng mẫu
 List<Contract> contractList = [
   Contract(
-    contractID: "1",
-    userID: "1",
-    createdDate: DateTime.now(),
-    updatedDate: DateTime.now(),
-    status: true,
-    note: "Hợp đồng mở thẻ ngân hàng",
-    url: "https://example.com/contracts/C12345",
-    cardHolderID: '1',
-    parent: 'null',
-    type: 'A',
-    children: [
-      Contract(
-          contractID: "2",
-          userID: "1",
-          createdDate: DateTime.now(),
-          updatedDate: DateTime.now(),
-          status: true,
-          note: "Hợp đồng phụ - mở thẻ tín dụng",
-          url: "https://example.com/contracts/C12346",
-          cardHolderID: '1',
-          parent: '1', // Liên kết với hợp đồng cha "1"
-          type: 'C',
-      ),
-      Contract(
-          contractID: "3",
-          userID: "1",
-          createdDate: DateTime.now(),
-          updatedDate: DateTime.now(),
-          status: true,
-          note: "Hợp đồng phụ - đăng ký bảo hiểm",
-          url: "https://example.com/contracts/C12347",
-          cardHolderID: '1',
-          parent: '1', // Liên kết với hợp đồng cha "1"
-          type: 'C',
-      ),
-    ]
+    reason: "Mở tài khoản mới",
+    clientIdentifier: "KH001",
+    clientSearchMethod: "ByName",
+    branch: "CN001",
+    institutionCode: "INST001",
+    productCode: "SP001",
+    productCode2: "SP002",
+    productCode3: "SP003",
+    contractName: "Hợp đồng số 1",
+    cbsNumber: "CBS001",
+    customData: "Thông tin thêm 1",
   ),
-  
+  Contract(
+    reason: "Gia hạn thẻ",
+    clientIdentifier: "KH002",
+    clientSearchMethod: "ByID",
+    branch: "CN002",
+    institutionCode: "INST002",
+    productCode: "SP004",
+    productCode2: "SP005",
+    productCode3: "SP006",
+    contractName: "Hợp đồng số 2",
+    cbsNumber: "CBS002",
+    customData: "Thông tin thêm 2",
+  ),
+  Contract(
+    reason: "Đăng ký dịch vụ mới",
+    clientIdentifier: "KH003",
+    clientSearchMethod: "ByEmail",
+    branch: "CN003",
+    institutionCode: "INST003",
+    productCode: "SP007",
+    productCode2: "SP008",
+    productCode3: "SP009",
+    contractName: "Hợp đồng số 3",
+    cbsNumber: "CBS003",
+    customData: "Thông tin thêm 3",
+  ),
 ];
+
