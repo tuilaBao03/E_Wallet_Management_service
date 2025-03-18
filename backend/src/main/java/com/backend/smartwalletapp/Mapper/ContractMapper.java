@@ -1,5 +1,8 @@
 package com.backend.smartwalletapp.Mapper;
 
+
+import java.util.List;
+
 import org.mapstruct.Mapper;
 
 import com.backend.smartwalletapp.client.requests.CardHolders.LockOrUnlockCardHolderSoapRequest;
@@ -8,10 +11,12 @@ import com.backend.smartwalletapp.client.requests.Contract.CreateContractLevel2.
 import com.backend.smartwalletapp.client.requests.Contract.CreateContractV4.CreateContractInObject;
 import com.backend.smartwalletapp.client.requests.Contract.CreateContractV4.CreateContractV4_REQ;
 import com.backend.smartwalletapp.client.responses.Contract.create.CreateContractV4Result;
+import com.backend.smartwalletapp.client.responses.Contract.get.IssContractDetailsAPIOutputV2Record;
 import com.backend.smartwalletapp.dto.request.Contract.ContractCreatedRequest;
 import com.backend.smartwalletapp.dto.request.Contract.ContractCreatedRequestLevel2;
 import com.backend.smartwalletapp.dto.request.Contract.LockUnLockContracRequest;
 import com.backend.smartwalletapp.dto.response.Contract.CreateContractReponse;
+import com.backend.smartwalletapp.dto.response.Contract.GetContract.Contract;
 
 @Mapper(componentModel = "spring")
 public interface ContractMapper {
@@ -19,6 +24,9 @@ public interface ContractMapper {
     LockOrUnlockCardHolderSoapRequest toSoapStatusRequest(LockUnLockContracRequest request);
 
     CreateContractReponse toContractReponse(CreateContractV4Result response);
+
+    Contract toContract(IssContractDetailsAPIOutputV2Record reponse);
+    List<Contract> toContractList(List<IssContractDetailsAPIOutputV2Record> list);
 
     default CreateContractV4_REQ mapToSoapRequest(ContractCreatedRequest dto) {
         CreateContractV4_REQ request = new CreateContractV4_REQ();
@@ -36,7 +44,6 @@ public interface ContractMapper {
         contractInObject.setProductCode3(dto.getProductCode3());
         contractInObject.setContractName(dto.getContractName());
         contractInObject.setCbsNumber(dto.getCbsNumber());
-
         request.setCreateContractInObject(contractInObject);
 
     
@@ -63,11 +70,13 @@ public interface ContractMapper {
         inObject.setCbsNumber(dto.getCbsNumber());
         inObject.setAddInfo01(dto.getAddInfo01());
         inObject.setAddInfo02(dto.getAddInfo02()); 
-
         request.setInObject(inObject);
 
         return request;
     }
+
+    
+
     
 
     

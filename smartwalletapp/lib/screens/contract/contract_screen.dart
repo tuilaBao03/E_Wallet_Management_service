@@ -6,15 +6,11 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:smartwalletapp/models/contract.dart';
-import 'package:smartwalletapp/models/transaction.dart';
-import 'package:smartwalletapp/responsive.dart';
-import 'package:smartwalletapp/screens/contract/components/contract_detail.dart';
 import 'package:smartwalletapp/screens/contract/components/contract_list.dart';
 import 'package:smartwalletapp/screens/main/components/classInitial.dart';
 
 
 import '../../constants.dart';
-import '../../models/card.dart';
 import '../../models/user.dart';
 import '../general/header.dart';
 
@@ -73,23 +69,10 @@ class _ContractScreenState extends State<ContractScreen> {
                   child: Column(
                     children: [
                       ContractList(
-                        object: contractList,
-                        objectColumnName: objectColumnNameOfContract,
                         title: 'ContractList',
-                        onContract_CardList: updateContractDetail,
-                        cardHolder: emptyCardHolder, isContractScreent: true, cards: MyCards, trans: demoTransactionList, token: widget.token,),
-                      if(!Responsive.isDesktop(context))
-                        SizedBox(height: defaultPadding),
-                      if(!Responsive.isDesktop(context) && selectContractDetail == true)
-                        ContractDetail(object: selectedContract, title: 'ContractDetail',)
+                        cardHolder: emptyCardHolder, isContractScreent: true, token: widget.token,),
                     ],
                   ),
-                ),
-                SizedBox(width: defaultPadding),
-                if(Responsive.isDesktop(context) && selectContractDetail == true)
-                Expanded(
-                  flex: 2,
-                  child: ContractDetail(object: selectedContract, title: 'ContractDetail',)
                 ),
               ],
             )

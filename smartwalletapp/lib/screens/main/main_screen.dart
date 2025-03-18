@@ -38,10 +38,6 @@ class _MainScreenState extends State<MainScreen> {
   late User selectedUsers; 
   int _currentTab = 1;
   List<CardHolder> cardHolders = [];
-  List<Contract> contracts = [];
-  List<Transaction> trans =[];
-  List<CardInfo> cards = [];
-  List<Card_Time> card_times = [];
   @override
   void initState() {
     super.initState();
@@ -63,20 +59,8 @@ class _MainScreenState extends State<MainScreen> {
           if(state is giveCardHolderListState){
             cardHolders = state.cardHolders;
           }
-          else if(state is giveCardListState){
-            cards = state.cardInfo;
-          }
-          else if(state is giveTransactionState){
-            trans = state.trans;
-          }
-          else if(state is giveContractsListState){
-            contracts = state.contracts;
-          }
           else if(state is UpdateUserSuccessState){
             selectedUsers = state.user;
-          }
-          else if(state is GiveCardListState) {
-            card_times = state.list;
           }
         return SafeArea(
         child: Row(
@@ -130,17 +114,18 @@ class _MainScreenState extends State<MainScreen> {
   }
   Widget _getScreen(int tab) {
     switch (tab) {
-      case 1:
-        return DashboardScreen(isAuth: widget.isAuth, user: selectedUsers, onLanguageChange: widget.onLanguageChange, card_times: card_times,);
+      // case 1:
+      //   return DashboardScreen(isAuth: widget.isAuth, user: selectedUsers, onLanguageChange: widget.onLanguageChange, card_times: card_times,);
       case 2:
-        return CustomerScreen(isAuth: widget.isAuth, user: selectedUsers, cardHolders: cardHolders, trans: trans, cards: cards, contracts: contracts, onLanguageChange: widget.onLanguageChange, token: widget.token,);
+        return CustomerScreen(isAuth: widget.isAuth, user: selectedUsers, cardHolders: cardHolders, onLanguageChange: widget.onLanguageChange, token: widget.token,);
       case 3: 
         return ContractScreen(isAuth: widget.isAuth, user: selectedUsers,onLanguageChange: widget.onLanguageChange, token:widget.token,);
       case 4:
         return MyprofileScreen(isAuth: widget.isAuth, user: selectedUsers,onLanguageChange: widget.onLanguageChange, token: widget.token,);
        // Thêm màn hình SettingScreen
       default:
-        return DashboardScreen(isAuth: widget.isAuth,user: selectedUsers, onLanguageChange: widget.onLanguageChange, card_times: card_times,);
+        // return DashboardScreen(isAuth: widget.isAuth,user: selectedUsers, onLanguageChange: widget.onLanguageChange, card_times: card_times,);
+         return CustomerScreen(isAuth: widget.isAuth, user: selectedUsers, cardHolders: cardHolders, onLanguageChange: widget.onLanguageChange, token: widget.token,);
     }
   }
 }

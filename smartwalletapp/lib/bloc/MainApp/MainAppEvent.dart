@@ -35,7 +35,7 @@ class UpdateUserInforEvent  extends MainAppEvent{
 }
 
 class UpdateCardInforEvent  extends MainAppEvent{
-  final CardInfo cardInfo;
+  final Cards cardInfo;
   final String token;
   UpdateCardInforEvent(this.cardInfo, this.token); 
 
@@ -78,7 +78,7 @@ class AddContractEvent extends MainAppEvent{
 
 class LockOrUnLockCardEvent extends MainAppEvent{
   String token;
-  CardInfo card;
+  Cards card;
   bool newStatus;
   LockOrUnLockCardEvent(this.token,this.newStatus,this.card);
 

@@ -2,15 +2,16 @@
 
 import 'dart:convert';
 
-import 'package:smartwalletapp/ApiResult.dart';
+import 'package:smartwalletapp/apiResult.dart';
 import 'package:smartwalletapp/models/card.dart';
 import 'package:smartwalletapp/models/contract.dart';
 import 'package:http/http.dart' as http;
+import 'package:smartwalletapp/models/contractV2.dart';
 
 class CardRepository {
 
-  Future<ApiResult> lockOrUnLockCard(bool newState, CardInfo card, String token) async{
-    final String apiUrl = 'http://localhost:8080/smartwalletapp/cards/${card.CardID}';
+  Future<ApiResult> lockOrUnLockCard(bool newState, Cards card, String token) async{
+    final String apiUrl = 'http://localhost:8080/smartwalletapp/cards/';
     try {
       final response = await http.post(
         Uri.parse(apiUrl),
@@ -37,31 +38,35 @@ class CardRepository {
     }
   }
 
-  // Future<ApiResult> giveCardByContract( String token, Contract contract) async {
-  //   String apiUrl = "http://localhost:8080/smartwalletapp//${contract.contractID}/card";
-  //   try {
-  //     final response = await http.get(
-  //       Uri.parse(apiUrl),
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         'Authorization': 'Bearer $token',
-  //       },
-  //     );
-  //     Map<String, dynamic> responseData = json.decode(response.body);
-  //     int code = responseData["code"];
-  //     String message = responseData["message"];
-  //     if (response.statusCode == 200) {
-  //       CardInfo cardInfo = responseData["result"];
-  //       ApiResult result = ApiResult(code, message, cardInfo, 0,0);
-  //       return result;
-  //     } else {
-  //       Map<String, dynamic> errorData = json.decode(response.body);
-  //       throw Exception("Lỗi API: ${errorData["message"]}");
-  //     }
-  //   } catch (e) {
-  //     throw Exception("Lỗi kết nối: $e");
-  //   }
-  // }
+  Future<ApiResult> giveCardByContractV2( String token, ContractV2 contractv2) async {
+    String apiUrl = "http://localhost:8080/smartwalletapp/contracts/contractV2s/cards";
+    // try {
+    //   final response = await http.post(
+    //     Uri.parse(apiUrl),
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //       'Authorization': 'Bearer $token',
+    //     },
+    //   );
+    //   Map<String, dynamic> responseData = json.decode(response.body);
+    //   int code = responseData["code"];
+    //   String message = responseData["message"];
+    //   if (response.statusCode == 200) {
+    //     Cards card = responseData["result"];
+    //     ApiResult result = ApiResult(code, message, card, 0,0);
+    //     return result;
+    //   } else {
+    //     Map<String, dynamic> errorData = json.decode(response.body);
+    //     throw Exception("Lỗi API: ${errorData["message"]}");
+    //   }
+    // } catch (e) {
+    //   throw Exception("Lỗi kết nối: $e");
+    // }
+
+    List<Cards> cards = cardsList.where((i)=>i.contractIdentifier == contractv2.liabContractIdentifier ).toList();
+    ApiResult apiResult = ApiResult(0, '',cards, 0, 0);
+    return apiResult;
+  }
   
 
 }

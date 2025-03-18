@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:smartwalletapp/models/contract.dart';
 import 'package:smartwalletapp/bloc/MainApp/MainAppBloc.dart';
 import 'package:smartwalletapp/bloc/MainApp/MainAppEvent.dart';
@@ -61,7 +60,7 @@ class _ContractAddScreenState extends State<ContractAddScreen> {
                   onPressed: isChanged
                       ? () => context.read<MainAppBloc>().add(AddContractEvent(_contractInfo, widget.token))
                       : null,
-                )
+                ),
               ],
             ),
             SizedBox(height: defaultPadding),

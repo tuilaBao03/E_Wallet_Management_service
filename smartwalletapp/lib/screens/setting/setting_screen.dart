@@ -7,7 +7,6 @@ import '../../constants.dart';
 import '../../models/user.dart';
 import '../../responsive.dart';
 import '../general/header.dart';
-import '../card/components/my_card.dart';
 import '../dashboard/components/assets_details.dart';
 
 
@@ -36,7 +35,6 @@ class SettingScreen extends StatelessWidget {
                   flex: 5,
                   child: Column(
                     children: [
-                      MyCard(),
                       SizedBox(height: defaultPadding),
                       if (Responsive.isMobile(context))
                         SizedBox(height: defaultPadding),

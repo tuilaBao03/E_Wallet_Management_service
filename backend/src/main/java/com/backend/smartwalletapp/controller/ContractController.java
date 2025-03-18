@@ -2,25 +2,21 @@ package com.backend.smartwalletapp.controller;
 import java.util.List;
 
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.backend.smartwalletapp.client.responses.Contract.get.IssContractDetailsAPIOutputV2Record;
 import com.backend.smartwalletapp.dto.request.Contract.ContractCreatedRequest;
 import com.backend.smartwalletapp.dto.request.Contract.ContractCreatedRequestLevel2;
-import com.backend.smartwalletapp.dto.request.Contract.LockUnLockContracRequest;
-import com.backend.smartwalletapp.dto.request.Contract.UpdateLimitContractRequest;
 import com.backend.smartwalletapp.dto.response.ApiResponse;
-import com.backend.smartwalletapp.dto.response.Contract.ContractResponse;
 import com.backend.smartwalletapp.dto.response.Contract.CreateContractReponse;
 import com.backend.smartwalletapp.model.Card;
-import com.backend.smartwalletapp.model.Contract;
-import com.backend.smartwalletapp.model.Transaction;
 import com.backend.smartwalletapp.service.CardSevice;
 import com.backend.smartwalletapp.service.ContractService;
-import com.backend.smartwalletapp.service.TransactionService;
 
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -35,34 +31,33 @@ import org.springframework.web.bind.annotation.PostMapping;
 @RequiredArgsConstructor
 public class ContractController {
     ContractService contractService;
-    TransactionService transactionService;
     CardSevice cardSevice;
     
-    @PatchMapping("/{id}/status")
-    @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")
-    public ApiResponse<Contract> LockUnLockContract(
-        @PathVariable String id,
-        @RequestBody @Valid LockUnLockContracRequest request){
-        return ApiResponse.<Contract>builder()
-        .result(contractService.LockUnlockContract(id, request))
-        .code(200)
-        .build();
-    }
+    // @PatchMapping("/{id}/status")
+    // @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")
+    // public ApiResponse<Contract> LockUnLockContract(
+    //     @PathVariable String id,
+    //     @RequestBody @Valid LockUnLockContracRequest request){
+    //     return ApiResponse.<Contract>builder()
+    //     .result(contractService.LockUnlockContract(id, request))
+    //     .code(200)
+    //     .build();
+    // }
 
 
 
-    @PatchMapping("/{id}/Limit")
-    @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")
-    ApiResponse<Contract> UpdateLimitContract(
-        @RequestBody @Valid UpdateLimitContractRequest request,
-        @PathVariable String id
-    ){
-        return ApiResponse.<Contract>builder()
-        .result(contractService.updateLimit(id, request.getNewLimit()))
-            .code(200)
-            .message("cardholder success").build();
+    // @PatchMapping("/{id}/Limit")
+    // @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")
+    // ApiResponse<Contract> UpdateLimitContract(
+    //     @RequestBody @Valid UpdateLimitContractRequest request,
+    //     @PathVariable String id
+    // ){
+    //     return ApiResponse.<Contract>builder()
+    //     .result(contractService.updateLimit(id, request.getNewLimit()))
+    //         .code(200)
+    //         .message("cardholder success").build();
         
-    }
+    // }
 
 
     @PatchMapping("/{id}/cards")
@@ -75,25 +70,28 @@ public class ContractController {
         .build();
     }
 
-    @PatchMapping("/{id}/transactions")
-    @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")
-    public ApiResponse<List<Transaction>> GetTransByContract(
-        @PathVariable String id){
-        return ApiResponse.<List<Transaction>>builder()
-        .result(transactionService.getTransactionByContract(id))
-        .code(200)
-        .build();
-    }
+    // @PatchMapping("/{id}/transactions")
+    // @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")
+    // public ApiResponse<List<Transaction>> GetTransByContract(
+    //     @PathVariable String id){
+    //     return ApiResponse.<List<Transaction>>builder()
+    //     .result(transactionService.getTransactionByContract(id))
+    //     .code(200)
+    //     .build();
+    // }
 
-    @PatchMapping("/{search}/{page}")
+    @GetMapping("/ByClient/{clientIdentifier}")
     @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")
-    public ApiResponse<ContractResponse> GetContractBySearchAndPage(
-        @PathVariable String search,
-        @PathVariable int page){
-        return ApiResponse.<ContractResponse>builder()
-        .result(contractService.giveContractBySearch(search, page))
-        .code(200)
-        .build();
+    public ApiResponse<List<IssContractDetailsAPIOutputV2Record>> GetContractByClient(
+        @PathVariable String clientIdentifier){
+        return contractService.GetContracts_ClientIdentifier(clientIdentifier);
+    };
+
+    @GetMapping("/ByCardNumber/{cardNumber}")
+    @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")
+    public ApiResponse<List<IssContractDetailsAPIOutputV2Record>> GetContractBy(
+        @PathVariable String cardNumber){
+        return contractService.GetContracts_ContractNumber(cardNumber);
     }
 
     @PostMapping()
@@ -114,6 +112,8 @@ public class ContractController {
         .code(200)
         .build();
     }
+
+
 
 
     

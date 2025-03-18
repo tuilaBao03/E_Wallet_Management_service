@@ -2,7 +2,7 @@
 
 import 'dart:convert';
 
-import 'package:smartwalletapp/ApiResult.dart';
+import 'package:smartwalletapp/apiResult.dart';
 import 'package:smartwalletapp/models/cardholder.dart';
 import 'package:http/http.dart' as http;
 import 'package:smartwalletapp/response/cardHolder/cardholderResponse.dart';

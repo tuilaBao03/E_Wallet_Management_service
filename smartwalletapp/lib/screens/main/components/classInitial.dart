@@ -1,6 +1,4 @@
 // ignore_for_file: file_names
-
-import 'package:smartwalletapp/constants.dart';
 import 'package:smartwalletapp/models/card.dart';
 import 'package:smartwalletapp/models/cardholder.dart';
 import 'package:smartwalletapp/models/contract.dart';
@@ -31,10 +29,10 @@ User selectedUserInittial = User(
   productCategory: "",
   languageCode: "",
   salutationSuffix: "",
-  shortName: "",
-  firstName: "",
-  lastName: "",
-  middleName: "",
+  shortName: "Ha Gia Bao",
+  firstName: "Bao",
+  lastName: "Ha",
+  middleName: "Gia",
   maritalStatusCode: "",
   socialSecurityNumber: "0",
   salutationCode: "MR",
@@ -58,32 +56,29 @@ User selectedUserInittial = User(
   identityCardDetails: "",
   clientNumber: "0",
   profession: "",
-  eMail: "",
-  addressLine1: "",
-  addressLine2: "",
-  addressLine3: "",
-  addressLine4: "",
-  city: "",
-  homePhone: "",
+  eMail: "hagiabao@gmail.com",
+  addressLine1: "thaibinh",
+  addressLine2: "thaibinh",
+  addressLine3: "thaibinh",
+  addressLine4: "thaibinh",
+  city: "thaibinh",
+  homePhone: "0888379199",
   mobilePhone: "",
   businessPhone: "",
   customData: [],
 );
 
-  CardInfo selectedCardInittial = CardInfo(
-    bankName: "",
-    balance: 1328,
-    svgSrc: "",
-    color: primaryColor,
-    CardID: '',
-    userId: '',
-    typeCard: "",
-    createdDate: DateTime.now(),
-    updateDate: DateTime.now(),
-    status: true,
-    contractID: "",
-    cardHolderId: '', limit: 0,
-  );
+  Cards selectedCardInittial = Cards(
+    contractSearchMethod: 'CONTRACT_NUMBER',
+    contractIdentifier: '',
+    productCode: 'CARD_TRAINING01',
+    productCode2: '',
+    productCode3: '',
+    cardName: '',
+    cbsNumber: '',
+    embossedFirstName: 'Phan',
+    embossedLastName: 'Hong',
+    embossedCompanyName: 'OpenWay');
   Transaction selectedTransactionInittial = Transaction(
     icon: "",
     bankName: "",

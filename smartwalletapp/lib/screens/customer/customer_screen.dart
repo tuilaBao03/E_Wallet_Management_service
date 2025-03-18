@@ -8,7 +8,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smartwalletapp/app/locallization/app_localizations.dart';
 import 'package:smartwalletapp/bloc/MainApp/MainAppBloc.dart';
 import 'package:smartwalletapp/bloc/MainApp/MainAppEvent.dart';
-import 'package:smartwalletapp/models/card.dart';
 import 'package:smartwalletapp/models/cardholder.dart';
 import 'package:smartwalletapp/models/contract.dart';
 import 'package:smartwalletapp/models/transaction.dart';
@@ -25,11 +24,7 @@ import '../general/header.dart';
 class CustomerScreen extends StatefulWidget {
 
   final String token;
-
-  final List<Transaction> trans;
-  final List<CardInfo> cards;
   final List<CardHolder> cardHolders;
-  final List<Contract> contracts;
   final bool isAuth;
   final User user;
   final Function(Locale) onLanguageChange;
@@ -37,10 +32,7 @@ class CustomerScreen extends StatefulWidget {
     super.key, 
     required this.isAuth, 
     required this.user,  
-    required this.trans, 
-    required this.cards, 
-    required this.cardHolders, 
-    required this.contracts, 
+    required this.cardHolders,  
     required this.onLanguageChange, required this.token});
   @override
   _CustomerScreenState createState() => _CustomerScreenState();
@@ -53,24 +45,8 @@ class _CustomerScreenState extends State<CustomerScreen> {
     "Detail",
     "ContractList"
   ]);
-  final HashSet<String> objectColumnNameOfContract = HashSet.from([
-    "ContractID",
-    "date",
-    "Detail",
-    "cardList",
-  ]);
-  final HashSet<String> objectColumnNameOfCard = HashSet.from([
-    "CardId",
-    "Detail",
-  ]);
   User selectedUser = selectedUserInittial;
   CardHolder selectedcardHolder = emptyCardHolder;
-  CardInfo selectedCard = selectedCardInittial;
-  Contract selectedContract = selectedContractInittial;
-
-
-  bool SelectCardList = false;
-  bool SelectTranList = false;
   bool SelectContractList = false;
 
   int page = 1;
@@ -81,21 +57,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
       context.read<MainAppBloc>().add(giveContractListEvent(cardHolder,page-1));
       selectedcardHolder  = cardHolder;
       SelectContractList = true;
-      SelectTranList = false;
-      SelectCardList = false;
     });
-  }
-  void updateContract_card(Contract contract){
-    context.read<MainAppBloc>().add(giveCardListEvent(contract));
-    selectedContract = contract;
-    SelectCardList =true;
-    SelectTranList = false;
-  }
-  void updateContract_tran(Contract contract){
-    context.read<MainAppBloc>().add(giveTransactionEvent(contract));
-    selectedContract = contract;
-    SelectCardList =false;
-    SelectTranList = true;
   }
   @override
   void initState() {
@@ -141,21 +103,15 @@ class _CustomerScreenState extends State<CustomerScreen> {
                                   flex: 1,
                                   child: 
                                   ContractList(
-                                    object: widget.contracts,
-                                    objectColumnName: objectColumnNameOfContract,
                                     title: "Contract",
-                                    onContract_CardList: updateContract_card,
-                                    cardHolder: selectedcardHolder, isContractScreent: false, cards: MyCards, trans: [], token: widget.token,),)
+                                    cardHolder: selectedcardHolder, isContractScreent: false, token: widget.token,),)
                               ],
                             ),
                           SizedBox(height: defaultPadding),
                           if(!Responsive.isDesktop(context) && SelectContractList)
                             ContractList(
-                                    object: widget.contracts,
-                                    objectColumnName: objectColumnNameOfContract,
                                     title: "Contract",
-                                    onContract_CardList: updateContract_card,
-                                    cardHolder: selectedcardHolder, isContractScreent: false, cards: MyCards, trans: [], token: widget.token,),
+                                    cardHolder: selectedcardHolder, isContractScreent: false, token: widget.token,),
                     ],
                   ),
                 ),

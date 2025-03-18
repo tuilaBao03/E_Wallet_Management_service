@@ -1,133 +1,176 @@
-// ignore_for_file: non_constant_identifier_names, deprecated_member_use
+class Cards {
+  String contractSearchMethod;
+  String contractIdentifier;
+  String productCode;
+  String productCode2;
+  String productCode3;
+  String cardName;
+  String cbsNumber;
+  String embossedFirstName;
+  String embossedLastName;
+  String embossedCompanyName;
 
-import 'package:flutter/material.dart';
-
-import '../constants.dart';
-
-class CardInfo {
-  final String svgSrc, bankName;
-  final double balance;
-  final Color color;
-  final String CardID;
-  final String userId;
-  final String cardHolderId;
-  final String typeCard;
-  final DateTime createdDate;
-  final DateTime updateDate;
-  final bool status;
-  final String contractID;
-  final double limit;
-
-  CardInfo({
-    required this.cardHolderId,
-    required this.CardID,
-    required this.userId,
-    required this.svgSrc,
-    required this.bankName,
-    required this.balance,
-    required this.color,
-    required this.typeCard,
-    required this.createdDate,
-    required this.updateDate,
-    required this.status,
-    required this.contractID,
-    required this.limit
+  Cards({
+    required this.contractSearchMethod,
+    required this.contractIdentifier,
+    required this.productCode,
+    required this.productCode2,
+    required this.productCode3,
+    required this.cardName,
+    required this.cbsNumber,
+    required this.embossedFirstName,
+    required this.embossedLastName,
+    required this.embossedCompanyName,
   });
-  /// 🔹 **Chuyển đối tượng `CardInfo` thành JSON**
+
+  /// Parse từ JSON
+  factory Cards.fromJson(Map<String, dynamic> json) {
+    return Cards(
+      contractSearchMethod: json['ContractSearchMethod'],
+      contractIdentifier: json['ContractIdentifier'],
+      productCode: json['ProductCode'],
+      productCode2: json['ProductCode2'],
+      productCode3: json['ProductCode3'],
+      cardName: json['CardName'],
+      cbsNumber: json['CBSNumber'],
+      embossedFirstName: json['EmbossedFirstName'],
+      embossedLastName: json['EmbossedLastName'],
+      embossedCompanyName: json['EmbossedCompanyName'],
+    );
+  }
+
+  /// Chuyển về JSON
   Map<String, dynamic> toJson() {
     return {
-      'cardHolderId': cardHolderId,
-      'CardID': CardID,
-      'userId': userId,
-      'svgSrc': svgSrc,
-      'bankName': bankName,
-      'balance': balance,
-      'color': color.value, // Chuyển màu thành số nguyên để lưu trữ
-      'typeCard': typeCard,
-      'createdDate': createdDate.toIso8601String(),
-      'updateDate': updateDate.toIso8601String(),
-      'status': status,
-      'contractID': contractID,
-      'limit': limit,
+      'ContractSearchMethod': contractSearchMethod,
+      'ContractIdentifier': contractIdentifier,
+      'ProductCode': productCode,
+      'ProductCode2': productCode2,
+      'ProductCode3': productCode3,
+      'CardName': cardName,
+      'CBSNumber': cbsNumber,
+      'EmbossedFirstName': embossedFirstName,
+      'EmbossedLastName': embossedLastName,
+      'EmbossedCompanyName': embossedCompanyName,
     };
   }
 
-  /// 🔹 **Chuyển JSON thành đối tượng `CardInfo`**
-  factory CardInfo.fromJson(Map<String, dynamic> json) {
-    return CardInfo(
-      cardHolderId: json['cardHolderId'],
-      CardID: json['CardID'],
-      userId: json['userId'],
-      svgSrc: json['svgSrc'],
-      bankName: json['bankName'],
-      balance: json['balance'].toDouble(),
-      color: Color(json['color']), // Chuyển số nguyên thành màu
-      typeCard: json['typeCard'],
-      createdDate: DateTime.parse(json['createdDate']),
-      updateDate: DateTime.parse(json['updateDate']),
-      status: json['status'],
-      contractID: json['contractID'],
-      limit: json['limit'].toDouble(),
-    );
+  /// Lấy danh sách field để tự động tạo field nhập liệu
+  static List<String> getFieldNames() {
+    return [
+      'contractSearchMethod',
+      'contractIdentifier',
+      'productCode',
+      'productCode2',
+      'productCode3',
+      'cardName',
+      'cbsNumber',
+      'embossedFirstName',
+      'embossedLastName',
+      'embossedCompanyName',
+    ];
+  }
+
+  /// Hàm gán giá trị cho field
+  void setValueByField(String field, String value) {
+    switch (field) {
+      case 'contractSearchMethod':
+        contractSearchMethod = value;
+        break;
+      case 'contractIdentifier':
+        contractIdentifier = value;
+        break;
+      case 'productCode':
+        productCode = value;
+        break;
+      case 'productCode2':
+        productCode2 = value;
+        break;
+      case 'productCode3':
+        productCode3 = value;
+        break;
+      case 'cardName':
+        cardName = value;
+        break;
+      case 'cbsNumber':
+        cbsNumber = value;
+        break;
+      case 'embossedFirstName':
+        embossedFirstName = value;
+        break;
+      case 'embossedLastName':
+        embossedLastName = value;
+        break;
+      case 'embossedCompanyName':
+        embossedCompanyName = value;
+        break;
+    }
+  }
+
+  /// Lấy giá trị theo field
+  String getValueByField(String field) {
+    switch (field) {
+      case 'contractSearchMethod':
+        return contractSearchMethod;
+      case 'contractIdentifier':
+        return contractIdentifier;
+      case 'productCode':
+        return productCode;
+      case 'productCode2':
+        return productCode2;
+      case 'productCode3':
+        return productCode3;
+      case 'cardName':
+        return cardName;
+      case 'cbsNumber':
+        return cbsNumber;
+      case 'embossedFirstName':
+        return embossedFirstName;
+      case 'embossedLastName':
+        return embossedLastName;
+      case 'embossedCompanyName':
+        return embossedCompanyName;
+      default:
+        return '';
+    }
   }
 }
-
-
-
-List<CardInfo> MyCards = [
-  CardInfo(
-    bankName: "ChineBank",
-    balance: 1328,
-    svgSrc: "assets/logos/xynsh-rect.svg",
-    color: primaryColor,
-    CardID: '1',
-    userId: '1',
-    typeCard: "DebitCard",
-    createdDate: DateTime.now(),
-    updateDate: DateTime.now(),
-    status: true,
-    contractID: "2", cardHolderId: '1', limit: 0,
+List<Cards> cardsList = [
+  Cards(
+    contractSearchMethod: "ByNumber",
+    contractIdentifier: "CT001",
+    productCode: "SP001",
+    productCode2: "SP002",
+    productCode3: "SP003",
+    cardName: "Thẻ tín dụng vàng",
+    cbsNumber: "CBS001",
+    embossedFirstName: "Nguyen",
+    embossedLastName: "Van A",
+    embossedCompanyName: "Công ty ABC",
   ),
-  CardInfo(
-    bankName: "ABChinaBank",
-    balance: 1328,
-    svgSrc: "assets/logos/zybank-rect.svg",
-    color: primaryColor,
-    CardID: '2',
-    userId: '1',
-    typeCard: "DebitCard",
-    createdDate: DateTime.now(),
-    updateDate: DateTime.now(),
-    status: true,
-    contractID: "2",
-    cardHolderId: '1', limit: 0,
+  Cards(
+    contractSearchMethod: "ByID",
+    contractIdentifier: "CT002",
+    productCode: "SP004",
+    productCode2: "SP005",
+    productCode3: "SP006",
+    cardName: "Thẻ ghi nợ chuẩn",
+    cbsNumber: "CBS002",
+    embossedFirstName: "Tran",
+    embossedLastName: "Thi B",
+    embossedCompanyName: "Công ty XYZ",
   ),
-  CardInfo(
-    bankName: "ABChinaBank",
-    balance: 1328,
-    svgSrc: "assets/logos/zybank-rect.svg",
-    color: primaryColor,
-    CardID: '2',
-    userId: '1',
-    typeCard: "DebitCard",
-    createdDate: DateTime.now(),
-    updateDate: DateTime.now(),
-    status: true,
-    contractID: "2",
-    cardHolderId: '1', limit: 0,
-  ),
-  CardInfo(
-    bankName: "ABChinaBank",
-    balance: 1328,
-    svgSrc: "assets/logos/zybank-rect.svg",
-    color: primaryColor,
-    CardID: '2',
-    userId: '1',
-    typeCard: "DebitCard",
-    createdDate: DateTime.now(),
-    updateDate: DateTime.now(),
-    status: true,
-    contractID: "2",
-    cardHolderId: '1', limit: 0,
+  Cards(
+    contractSearchMethod: "ByName",
+    contractIdentifier: "CT003",
+    productCode: "SP007",
+    productCode2: "SP008",
+    productCode3: "SP009",
+    cardName: "Thẻ hội viên VIP",
+    cbsNumber: "CBS003",
+    embossedFirstName: "Le",
+    embossedLastName: "Van C",
+    embossedCompanyName: "Công ty MNO",
   ),
 ];
+

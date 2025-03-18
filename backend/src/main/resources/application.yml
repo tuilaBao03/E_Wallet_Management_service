@@ -24,3 +24,12 @@ jwt:
 Way4Url:
   ApiKey: "http://10.145.48.222:17000/webservice_int/ws"
 
+# logging:
+#   level:
+#     org.springframework.oxm: DEBUG
+#     com.sun.xml.bind: DEBUG
+#     com.sun.xml.internal.bind: DEBUG
+#     org.apache.cxf.interceptor: DEBUG
+#     org.springframework.ws.client.MessageTracing:
+#       sent: TRACE
+#       received: TRACE

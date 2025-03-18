@@ -21,7 +21,7 @@ class SuccessState extends MainAppState{
 }
 // ignore: camel_case_types
 class giveCardListState extends MainAppState{
-    final List<CardInfo> cardInfo;
+    final List<Cards> cardInfo;
     giveCardListState(this.cardInfo);
 }
 
@@ -36,12 +36,6 @@ class giveCardHolderListState extends MainAppState{
   final int pageAmount;
   giveCardHolderListState(this.cardHolders, this.page, this.pageAmount);
 }
-
-class giveContractsListState extends MainAppState{
-  final List<Contract> contracts;
-  giveContractsListState(this.contracts);
-}
-
 
 class UpdateUserSuccessState extends MainAppState{
   final User user;
@@ -72,10 +66,10 @@ class UpdateLimitCardSuccessState extends MainAppState{
 class LogoutSuccess extends MainAppState{
 }
 
-class GiveCardListState extends MainAppState{
-  final List<Card_Time> list;
-  GiveCardListState(this.list);
-}
+// class GiveCardListState extends MainAppState{
+//   final List<Card_Time> list;
+//   GiveCardListState(this.list);
+// }
 class MainAppErrorState extends MainAppState{
   final String message;
   MainAppErrorState(this.message);

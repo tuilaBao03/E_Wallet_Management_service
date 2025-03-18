@@ -1,60 +1,79 @@
 package com.backend.smartwalletapp.client.service;
 
-import java.math.BigDecimal;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
 import org.springframework.ws.client.core.WebServiceTemplate;
 
-import com.backend.smartwalletapp.client.requests.Contract.GetContractByCardHolderSoapRequest;
-import com.backend.smartwalletapp.client.requests.Contract.GetContractBysearchSoapRequest;
-import com.backend.smartwalletapp.client.requests.Contract.LockOrUnlockContractSoapRequest;
-import com.backend.smartwalletapp.client.requests.Contract.UpdateLimitContractSoapRequest;
+import com.backend.smartwalletapp.client.requests.Contract.GetContractsByClientV2;
+import com.backend.smartwalletapp.client.requests.Contract.GetContractsByClientV2_ContractNumber;
 import com.backend.smartwalletapp.client.requests.Contract.CreateContractLevel2.CreateContractV4_REQV2;
 import com.backend.smartwalletapp.client.requests.Contract.CreateContractV4.CreateContractV4_REQ;
-import com.backend.smartwalletapp.client.responses.Contract.GetContractByCardHolderSoapResponse;
-import com.backend.smartwalletapp.client.responses.Contract.GetContractBySearchSoapResponse;
-import com.backend.smartwalletapp.client.responses.Contract.LockOrUnLockContractSoapResponse;
-import com.backend.smartwalletapp.client.responses.Contract.UpdateLimitContractSoapResponse;
 import com.backend.smartwalletapp.client.responses.Contract.create.CreateContractV4Response;
 import com.backend.smartwalletapp.client.responses.Contract.create.CreateContractV4Result;
 import com.backend.smartwalletapp.client.responses.Contract.create.V2CreateContractV4Response;
+import com.backend.smartwalletapp.client.responses.Contract.get.GetContractByNumberV2Response;
+import com.backend.smartwalletapp.client.responses.Contract.get.GetContractByNumberV2Result;
+import com.backend.smartwalletapp.client.responses.Contract.get.GetContractsByClientV2Response;
+import com.backend.smartwalletapp.client.responses.Contract.get.GetContractsByClientV2Result;
 import com.backend.smartwalletapp.exception.AppException;
 import com.backend.smartwalletapp.exception.ErrorCode;
 import jakarta.xml.bind.JAXBElement;
 import lombok.RequiredArgsConstructor;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service
 @RequiredArgsConstructor
 public class ContractSoapService {
+
+
+
+    private static final Logger log = LoggerFactory.getLogger(ContractSoapService.class);
     private final WebServiceTemplate webServiceTemplate;
 
     @Value("${Way4Url.ApiKey}")
     private String soapUrl;
 
-    @SuppressWarnings("unchecked")
-    public GetContractBySearchSoapResponse getContractBySearch(String search, int page) {
+
+    public GetContractsByClientV2Result getContractByClientIdentifier(String clientIdentifier) {
         String fullString = soapUrl;
-        GetContractBysearchSoapRequest request = new GetContractBysearchSoapRequest(search, page);
+        GetContractsByClientV2 request = new GetContractsByClientV2("CLIENT_NUMBER", clientIdentifier);
+        System.err.println("\n__________________________________________________________________________________________\n");
+        log.info("\nSending SOAP request to: {}\n", fullString);
+        log.info("\nRequest payload: {}\n", request);
+    
         try {
-            JAXBElement<GetContractBySearchSoapResponse> response =
-            (JAXBElement<GetContractBySearchSoapResponse>)
-            webServiceTemplate.marshalSendAndReceive(fullString, request);
-            return response.getValue();
-        } catch (Exception e) {
+            System.err.println("\n_______________________start________________\n");
+
+
+            GetContractsByClientV2Response response = (GetContractsByClientV2Response) webServiceTemplate.marshalSendAndReceive(soapUrl, request);
+            
+                System.err.println("\n_________________"+response.getResult()+"-----------------------\n");
+            
+            System.err.println("\n_______________________response________________\n");
+            log.info("Response type: {}", response.getClass().getName());
+            return response.getResult();
+        } 
+        catch (Exception e) {
+            log.error("\\n" + //
+                                "Unexpected error: {}\\n" + //
+                                                                        "", e.getMessage(), e);
             throw new AppException(ErrorCode.GET_CONTRACT_FAILE);
         }
     }
+    
 
-    @SuppressWarnings("unchecked")
-    public GetContractByCardHolderSoapResponse getContractByCardHolder(String cardHolderId) {
-        String fullString = soapUrl + "/cardHolder";
-        GetContractByCardHolderSoapRequest request = new GetContractByCardHolderSoapRequest(cardHolderId);
+
+    public GetContractByNumberV2Result getContractByContractNumber(String contractNumber) {
+        String fullString = soapUrl;
+        GetContractsByClientV2_ContractNumber request = new GetContractsByClientV2_ContractNumber(contractNumber);
         try {
-            JAXBElement<GetContractByCardHolderSoapResponse> response =
-            (JAXBElement<GetContractByCardHolderSoapResponse>)
-            webServiceTemplate.marshalSendAndReceive(fullString, request);
-            return response.getValue();
+            GetContractByNumberV2Response response = (GetContractByNumberV2Response) webServiceTemplate.marshalSendAndReceive(fullString, request);
+            return response.getResult();
         } catch (Exception e) {
+            System.err.println(e);
             throw new AppException(ErrorCode.GET_CONTRACT_FAILE);
         }
     }
@@ -89,31 +108,31 @@ public class ContractSoapService {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public UpdateLimitContractSoapResponse UpdateLimitContractByCardHolder(String contractId, BigDecimal limit) {
-        String fullString = soapUrl + "/cardHolder";
-        UpdateLimitContractSoapRequest request = new UpdateLimitContractSoapRequest(contractId, limit);
-        try {
-            JAXBElement<UpdateLimitContractSoapResponse> response =
-            (JAXBElement<UpdateLimitContractSoapResponse>)
-            webServiceTemplate.marshalSendAndReceive(fullString, request);
-            return response.getValue();
-        } catch (Exception e) {
-            throw new AppException(ErrorCode.UPDATE_CONTRACT_FAILE);
-        }
-    }
+    // @SuppressWarnings("unchecked")
+    // public UpdateLimitContractSoapResponse UpdateLimitContractByCardHolder(String contractId, BigDecimal limit) {
+    //     String fullString = soapUrl + "/cardHolder";
+    //     UpdateLimitContractSoapRequest request = new UpdateLimitContractSoapRequest(contractId, limit);
+    //     try {
+    //         JAXBElement<UpdateLimitContractSoapResponse> response =
+    //         (JAXBElement<UpdateLimitContractSoapResponse>)
+    //         webServiceTemplate.marshalSendAndReceive(fullString, request);
+    //         return response.getValue();
+    //     } catch (Exception e) {
+    //         throw new AppException(ErrorCode.UPDATE_CONTRACT_FAILE);
+    //     }
+    // }
 
-    @SuppressWarnings("unchecked")
-    public LockOrUnLockContractSoapResponse LockOrUnLockContractSoap(String contractId, boolean newstatus) {
-        String fullString = soapUrl + "/cardHolder";
-        LockOrUnlockContractSoapRequest request = new LockOrUnlockContractSoapRequest(contractId, newstatus);
-        try {
-            JAXBElement<LockOrUnLockContractSoapResponse> response =
-            (JAXBElement<LockOrUnLockContractSoapResponse>)
-            webServiceTemplate.marshalSendAndReceive(fullString, request);
-            return response.getValue();
-        } catch (Exception e) {
-            throw new AppException(ErrorCode.LOCK_UNLOCK_FAILE);
-        }
-    }
+    // @SuppressWarnings("unchecked")
+    // public LockOrUnLockContractSoapResponse LockOrUnLockContractSoap(String contractId, boolean newstatus) {
+    //     String fullString = soapUrl + "/cardHolder";
+    //     LockOrUnlockContractSoapRequest request = new LockOrUnlockContractSoapRequest(contractId, newstatus);
+    //     try {
+    //         JAXBElement<LockOrUnLockContractSoapResponse> response =
+    //         (JAXBElement<LockOrUnLockContractSoapResponse>)
+    //         webServiceTemplate.marshalSendAndReceive(fullString, request);
+    //         return response.getValue();
+    //     } catch (Exception e) {
+    //         throw new AppException(ErrorCode.LOCK_UNLOCK_FAILE);
+    //     }
+    // }
 }

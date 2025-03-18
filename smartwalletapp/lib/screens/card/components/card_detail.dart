@@ -1,167 +1,113 @@
-// ignore_for_file: must_be_immutable
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:smartwalletapp/app/locallization/app_localizations.dart';
 import 'package:smartwalletapp/models/card.dart';
+import 'package:smartwalletapp/constants.dart';
+import 'package:smartwalletapp/app/locallization/app_localizations.dart';
 
+class CardDetailScreen extends StatefulWidget {
+  final Cards cardInfo;
+  final bool isDetail;
 
-import '../../../../constants.dart';
-import '../../general/text_files.dart';
-
-class CardDetail extends StatefulWidget {
-  final String title;
-
-  final CardInfo object;
-
-  const CardDetail({
+  const CardDetailScreen({
     super.key,
-    required this.object,
-    required this.title,
+    required this.cardInfo,
+    required this.isDetail,
   });
 
   @override
-  State<CardDetail> createState() => _CardDetailState();
+  State<CardDetailScreen> createState() => _CardDetailScreenState();
 }
 
-class _CardDetailState extends State<CardDetail> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: Get.width/1.2,
-      padding: EdgeInsets.all(defaultPadding),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.secondary,
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
-      ),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  AppLocalizations.of(context).translate(widget.title),
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Row(
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.save),
-                      onPressed: () {
-                        // Add your save functionality here
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.delete),
-                      onPressed: () {
-                        // Add your delete functionality here
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            ObjectDetailInfor(objectInfo: widget.object)
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-
-class ObjectDetailInfor extends StatefulWidget {
-  final CardInfo objectInfo;
-
-  const ObjectDetailInfor({super.key, required this.objectInfo});
-
-  @override
-  State<ObjectDetailInfor> createState() => _ObjectDetailInforState();
-}
-
-class _ObjectDetailInforState extends State<ObjectDetailInfor> {
-  late TextEditingController _limitController;
-
-  final List<String> typeCardList = ["DebitCard", "CreditCard", "PrepaidCard"];
+class _CardDetailScreenState extends State<CardDetailScreen> {
+  late Map<String, TextEditingController> controllers;
+  bool isChanged = false;
 
   @override
   void initState() {
     super.initState();
-    _initializeControllers(widget.objectInfo);
+    _initializeControllers();
   }
 
-  void _initializeControllers(CardInfo objectInfo) {
-    _limitController = TextEditingController(text: objectInfo.limit.toString());
+  void _initializeControllers() {
+    controllers = {
+      for (var field in Cards.getFieldNames())
+        field: _buildController(field, widget.cardInfo.getValueByField(field))
+    };
   }
 
-    @override
-  void didUpdateWidget(covariant ObjectDetailInfor oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    // Nếu user thay đổi, cập nhật danh sách thẻ
-    if (oldWidget.objectInfo.CardID != widget.objectInfo.CardID) {
-      setState(() {
-        _initializeControllers(widget.objectInfo);
-      });
-    }
-  }
-
-  @override
-  void dispose() {
-    _limitController.dispose();
-    super.dispose();
+  TextEditingController _buildController(String fieldName, String initialValue) {
+    final controller = TextEditingController(text: initialValue);
+    controller.addListener(() {
+      widget.cardInfo.setValueByField(fieldName, controller.text);
+      setState(() => isChanged = true);
+    });
+    return controller;
   }
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          SizedBox(height: defaultPadding),
-          TestFiles(editController: _limitController, title: 'limit'),
-          SizedBox(height: defaultPadding),
-          
-          // Dropdown thay thế TextField
-          Table(
-            border: TableBorder.all(color: Theme.of(context).colorScheme.onPrimary),
-            columnWidths: const {
-              0: FlexColumnWidth(2), // Cột 1 rộng hơn
-              1: FlexColumnWidth(3), // Cột 2 rộng hơn để chứa dữ liệu
-            },
-            children: [
-              _buildTableRow('CardId', widget.objectInfo.CardID),
-              _buildTableRow('Balance', widget.objectInfo.balance.toString()),
-              _buildTableRow('TypeCard', widget.objectInfo.typeCard),
-              _buildTableRow('bankName', widget.objectInfo.bankName.toString()),
-              _buildTableRow('createdDate', widget.objectInfo.createdDate.toString()),
-              _buildTableRow('updatedDate', widget.objectInfo.updateDate.toString()),
-            ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context).translate("Card Detail")),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.save, color: isChanged ? Colors.blue : Colors.grey),
+            onPressed: isChanged ? () => _saveChanges() : null,
           ),
-
-          SizedBox(height: defaultPadding),
         ],
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(defaultPadding),
+        child: SingleChildScrollView(
+          child: Column(
+            children: controllers.entries
+                .map((entry) => CustomTextField(
+                      controller: entry.value,
+                      title: entry.key,
+                    ))
+                .toList(),
+          ),
+        ),
       ),
     );
   }
-  TableRow _buildTableRow(String field, String value) {
-    return TableRow(
-      decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary),
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-              AppLocalizations.of(context).translate(field)
-              , style: TextStyle( color: Theme.of(context).colorScheme.onPrimary)),
+
+  void _saveChanges() {
+    // Xử lý lưu thông tin thẻ
+    setState(() => isChanged = false);
+  }
+
+  @override
+  void dispose() {
+    for (var controller in controllers.values) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+}
+
+class CustomTextField extends StatelessWidget {
+  final TextEditingController controller;
+  final String title;
+
+  const CustomTextField({
+    super.key,
+    required this.controller,
+    required this.title,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: TextField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: AppLocalizations.of(context).translate(title),
+          border: const OutlineInputBorder(),
+          focusedBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.blue, width: 2)),
         ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(value,style: TextStyle( color: Theme.of(context).colorScheme.onPrimary)),
-        ),
-      ],
+      ),
     );
   }
 }

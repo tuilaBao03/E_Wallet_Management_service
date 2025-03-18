@@ -2,14 +2,11 @@ package com.backend.smartwalletapp.client.service;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.ws.client.core.WebServiceTemplate;
-import org.springframework.ws.soap.SoapElement;
 import org.springframework.ws.soap.client.SoapFaultClientException;
-import org.springframework.ws.wsdl.wsdl11.provider.SoapProvider;
 
 import com.backend.smartwalletapp.client.requests.CardHolders.GetCardHolderBySearchSoapRequest;
 import com.backend.smartwalletapp.client.requests.CardHolders.LockOrUnlockCardHolderSoapRequest;
 import com.backend.smartwalletapp.client.requests.CardHolders.create.CreateClientV4Body;
-import com.backend.smartwalletapp.client.requests.CardHolders.create.SoapEnvelope;
 import com.backend.smartwalletapp.client.responses.CardHolders.GetCardHolderBySearchResponse;
 import com.backend.smartwalletapp.client.responses.CardHolders.LockOrUnlockCardHolderSoapResponse;
 import com.backend.smartwalletapp.client.responses.CardHolders.createRes.CreateClientV4Response;

@@ -1,18 +1,14 @@
 // ignore_for_file: avoid_print, file_names, non_constant_identifier_names
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:smartwalletapp/ApiResult.dart';
+import 'package:smartwalletapp/apiResult.dart';
 import 'package:smartwalletapp/bloc/MainApp/MainAppEvent.dart';
 import 'package:smartwalletapp/bloc/MainApp/MainAppState.dart';
-import 'package:smartwalletapp/models/card.dart';
 import 'package:smartwalletapp/models/cardholder.dart';
 import 'package:smartwalletapp/models/contract.dart';
-import 'package:smartwalletapp/models/transaction.dart';
 import 'package:smartwalletapp/models/user.dart';
 import 'package:smartwalletapp/repository/cardHolderRepository.dart';
-import 'package:smartwalletapp/repository/cardRepository.dart';
 import 'package:smartwalletapp/repository/contractRepository.dart';
-import 'package:smartwalletapp/repository/dashboardRepository.dart';
 import 'package:smartwalletapp/repository/userRepository.dart';
 import 'package:smartwalletapp/repository/authRepository.dart';
 import 'package:smartwalletapp/response/cardHolder/cardholderResponse.dart';
@@ -22,12 +18,9 @@ import 'package:smartwalletapp/response/contract/contractResponse.dart';
 class MainAppBloc extends Bloc<MainAppEvent, MainAppState> {
   MainAppBloc() : super(MainInitial()) {
     on<initializationEvent>(_giveCardHolderList);
-    on<giveContractListEvent>(_giveContractListParent);
-    on<giveCardListEvent>(_giveCardList);
-    on<giveTransactionEvent>(_giveTransactionList);
     on<UpdateUserInforEvent>(_updatedUserInfor);
     on<LogoutEvent>(_logout);
-    on<GiveCard_TimeListEvent>(giveCard_TimeList);
+    // on<GiveCard_TimeListEvent>(giveCard_TimeList);
     on<AddCardHolderEvent>(_createCardHolder);
     on<AddContractEvent>(_createContract);
 
@@ -42,40 +35,6 @@ class MainAppBloc extends Bloc<MainAppEvent, MainAppState> {
     } catch (e) {
       print("_giveUserList $e");
       emit(MainAppErrorState('Failed to fetch user list')); // Ensure an exception is thrown
-    }
-  }
-
-  void _giveContractListParent(giveContractListEvent event, Emitter<MainAppState> emit) async {
-    try {
-      List<Contract> contracts = [];
-      contracts = contractList.where((contract)=>contract.clientIdentifier == event.cardHolder.identityCardNumber && contract.contractName=="A").toList();
-      emit(giveContractsListState(contracts)); // Ensure a value is returned
-    } catch (e) {
-      print("_giveUserList $e");
-      emit(MainAppErrorState('Failed to fetch user list')); // Ensure an exception is thrown
-    }
-  }
-
-  void _giveCardList(giveCardListEvent event, Emitter<MainAppState> emit) async {
-    try {
-      List<CardInfo> cards = [];
-      cards = MyCards.where((card) => card.contractID == event.contract.contractName)
-      .toList();
-      print("mainappbloc ${cards.length}");
-      emit(giveCardListState(cards)); // Ensure a value is returned
-    } catch (e) {
-      emit(MainAppErrorState('Failed to fetch card list'));// Ensure an exception is thrown
-    }
-  }
-  
-  void _giveTransactionList(giveTransactionEvent event, Emitter<MainAppState> emit) async {
-    try {
-      List<Transaction> trans = [];
-      trans = demoTransactionList.where((tran) => tran.contractID == event.contract.contractName).toList();
-      emit(giveTransactionState(trans)); // Ensure a value is returned
-    } catch (e) {
-      emit(MainAppErrorState('Failed to fetch transaction list'));
-       // Ensure an exception is thrown
     }
   }
 
@@ -140,36 +99,36 @@ class MainAppBloc extends Bloc<MainAppEvent, MainAppState> {
       LogoutSuccess()
     );
   }
-  void giveCard_TimeList(GiveCard_TimeListEvent event, Emitter<MainAppState> emit) async{
-    final DashboardRepository dashboardRepository = DashboardRepository();
-    List<Card_Time> list = [];
-    try{
-      list =  await dashboardRepository.getCardCountEachDay(event.start, event.end);
-      emit(GiveCardListState(list));
-    }
-    catch(e){
-      print("GiveCard_TimeList $e");
-    }
+  // void giveCard_TimeList(GiveCard_TimeListEvent event, Emitter<MainAppState> emit) async{
+  //   final DashboardRepository dashboardRepository = DashboardRepository();
+  //   List<Card_Time> list = [];
+  //   try{
+  //     list =  await dashboardRepository.getCardCountEachDay(event.start, event.end);
+  //     emit(GiveCardListState(list));
+  //   }
+  //   catch(e){
+  //     print("GiveCard_TimeList $e");
+  //   }
   }
-  void LockOrUnLockCard(LockOrUnLockCardEvent event, Emitter<MainAppState> emit) async{
-    final CardRepository cardRepository = CardRepository();
-    try{
-        ApiResult apiResult = await cardRepository.lockOrUnLockCard(event.newStatus, event.card, event.token);
-        int code = apiResult.code;
-        String message = apiResult.message;
-        if(code == 200){
-          CardInfo cardInfo = apiResult.result;
-          emit(UpdateStatusCardSuccessState(cardInfo.status));
-        }
-        else {
-          emit(MainAppErrorState(message));
-        }
-    }
-    catch(e){
-      throw Exception("_LockOrUnLockCard $e");
+  // void LockOrUnLockCard(LockOrUnLockCardEvent event, Emitter<MainAppState> emit) async{
+  //   final CardRepository cardRepository = CardRepository();
+  //   try{
+  //       ApiResult apiResult = await cardRepository.lockOrUnLockCard(event.newStatus, event.card, event.token);
+  //       int code = apiResult.code;
+  //       String message = apiResult.message;
+  //       if(code == 200){
+  //         Cards cardInfo = apiResult.result;
+  //         emit(UpdateStatusCardSuccessState(cardInfo.status));
+  //       }
+  //       else {
+  //         emit(MainAppErrorState(message));
+  //       }
+  //   }
+  //   catch(e){
+  //     throw Exception("_LockOrUnLockCard $e");
 
-    }
-  }
+  //   }
+  // }
   // void LockOrUnLockContract(LockOrUnLockContractEvent event, Emitter<MainAppState> emit) async{
   //   final ContractRepository contractRepository = ContractRepository();
   //   try{
@@ -191,6 +150,6 @@ class MainAppBloc extends Bloc<MainAppEvent, MainAppState> {
   // }
 
 
-} 
+
 
 

@@ -27,4 +27,7 @@ public interface CardMapper {
     }
 
     CreateCardReponse maptoCreateCardReponse(CreateCardV3Result response);
+
+
+
 }
