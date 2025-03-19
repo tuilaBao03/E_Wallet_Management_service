@@ -3,9 +3,9 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:smartwalletapp/models/cardHolderData.dart';
+import 'package:smartwalletapp/models/card_holder_data.dart';
 
-class CardHolder {
+class CreateCardHolderRequest {
   String reason;
   String institutionCode;
   String branch;
@@ -53,7 +53,7 @@ class CardHolder {
   String businessPhone;
   List<SetCustomDataInObjectJson> customData;
 
-  CardHolder({
+  CreateCardHolderRequest({
     required this.reason,
     required this.institutionCode,
     required this.branch,
@@ -102,8 +102,8 @@ class CardHolder {
     required this.customData,
   });
 
-  factory CardHolder.fromJson(Map<String, dynamic> json) {
-    return CardHolder(
+  factory CreateCardHolderRequest.fromJson(Map<String, dynamic> json) {
+    return CreateCardHolderRequest(
       reason: json['reason'],
       institutionCode: json['institutionCode'],
       branch: json['branch'],
@@ -418,8 +418,8 @@ String formatDate(String input) {
 }
 
 }
-extension CardHolderCopyWithFromControllers on CardHolder {
-  CardHolder copyWith({
+extension CardHolderCopyWithFromControllers on CreateCardHolderRequest {
+  CreateCardHolderRequest copyWith({
     String? reason,
     int? institutionCode,
     int? branch,
@@ -467,7 +467,7 @@ extension CardHolderCopyWithFromControllers on CardHolder {
     String? businessPhone,
     List<SetCustomDataInObjectJson>? customData,
   }) {
-    return CardHolder(
+    return CreateCardHolderRequest(
       reason: reason ?? this.reason,
       institutionCode: this.institutionCode,
       branch: this.branch,
@@ -517,8 +517,8 @@ extension CardHolderCopyWithFromControllers on CardHolder {
     );
   }
 }
-extension CardHolderCopyWith on CardHolder {
-  CardHolder copyWithFromControllers(
+extension CardHolderCopyWith on CreateCardHolderRequest {
+  CreateCardHolderRequest copyWithFromControllers(
     Map<String, TextEditingController> controllers,
     List<Map<String, TextEditingController>> dynamicFields,
   ) {
@@ -593,7 +593,7 @@ extension CardHolderCopyWith on CardHolder {
     );
   }
 }
-extension CardHolderExtensions on CardHolder {
+extension CardHolderExtensions on CreateCardHolderRequest {
   String getValueByField(String fieldName) {
     switch (fieldName) {
       case 'reason':
@@ -695,8 +695,8 @@ extension CardHolderExtensions on CardHolder {
 
 
 
-List<CardHolder> demoCardHoldersList = [
-  CardHolder(
+List<CreateCardHolderRequest> demoCardHoldersList = [
+  CreateCardHolderRequest(
     reason: 'New Account Opening',
     institutionCode: "1001",
     branch: "2001",
@@ -747,7 +747,7 @@ List<CardHolder> demoCardHoldersList = [
       SetCustomDataInObjectJson(addInfoType: 'Type2', tagName: 'Tag2', tagValue: 'Value2'),
     ],
   ),
-  CardHolder(
+  CreateCardHolderRequest(
     reason: 'Upgrade Account',
     institutionCode: "1002",
     branch: "2002",

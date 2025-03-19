@@ -8,12 +8,13 @@ import 'package:smartwalletapp/app/locallization/app_localizations.dart';
 import 'package:smartwalletapp/bloc/Contract/ContractBloc.dart';
 import 'package:smartwalletapp/bloc/Contract/ContractEvent.dart';
 import 'package:smartwalletapp/bloc/Contract/ContractState.dart';
-import 'package:smartwalletapp/models/card.dart';
-import 'package:smartwalletapp/models/cardholder.dart';
-import 'package:smartwalletapp/models/contract.dart';
-import 'package:smartwalletapp/models/contractV2.dart';
-import 'package:smartwalletapp/screens/card/components/card_detail.dart';
-import 'package:smartwalletapp/screens/contract/components/contract_add_detail.dart';
+import 'package:smartwalletapp/models/create_card_request.dart';
+import 'package:smartwalletapp/models/create_cardholder_request.dart';
+import 'package:smartwalletapp/models/create_contract_request.dart';
+import 'package:smartwalletapp/models/create_contractV2_request.dart';
+import 'package:smartwalletapp/response/contract/give_contract_response.dart';
+import 'package:smartwalletapp/screens/card/components/add_card.dart';
+import 'package:smartwalletapp/screens/contract/components/add_contract.dart';
 // Import model CardInfo
 import 'package:smartwalletapp/screens/general/dialogAlert.dart';
 import 'package:smartwalletapp/screens/main/components/classInitial.dart';
@@ -22,7 +23,7 @@ import '../../../constants.dart';
 
 class ContractList extends StatefulWidget { // Danh sách thẻ truyền vào
   final String title;
-  final CardHolder cardHolder;
+  final CreateCardHolderRequest cardHolder;
   final bool isContractScreent;
   final String token;
 
@@ -40,9 +41,9 @@ class ContractList extends StatefulWidget { // Danh sách thẻ truyền vào
 class _ContractListState extends State<ContractList> {
   final TextEditingController _searchController = TextEditingController();
   final Set<String> _expandedContracts = {}; // Lưu trạng thái mở rộng của hợp đồng
-  List<Contract> contracts = [];
-  List<ContractV2> contractV2s = [];
-  List<Cards> cards = [];
+  List<GiveContractResponse> contracts = [];
+  List<CreateContractV2Request> contractV2s = [];
+  List<Card> cards = [];
   final Set<String> _expandedContractV2s = {};
 
   @override
@@ -185,7 +186,7 @@ class _ContractListState extends State<ContractList> {
     );
   }
 
-  Widget _buildContractV2Tile(ContractV2 contractV2) {
+  Widget _buildContractV2Tile(CreateContractV2Request contractV2) {
     return Column(
       children: [
         ListTile(
@@ -213,7 +214,7 @@ class _ContractListState extends State<ContractList> {
       ],
     );
   }
-  void _showContractDetailDialog(BuildContext context, Contract contract) {
+  void _showContractDetailDialog(BuildContext context, CreateContractRequest contract) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -248,12 +249,12 @@ class _ContractListState extends State<ContractList> {
       },
     );
   }
-  void _showCardDetailDialog(BuildContext context, Cards card) {
+  void _showCardDetailDialog(BuildContext context, CreateCardRequest card) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          content: CardDetailScreen(cardInfo: card, isDetail: false),
+          content: AddCardScreen(cardInfo: card, isDetail: false),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
@@ -269,7 +270,7 @@ class _ContractListState extends State<ContractList> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          content: CardDetailScreen(cardInfo: selectedCardInittial, isDetail: false),
+          content: AddCardScreen(cardInfo: selectedCardInittial, isDetail: false),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),

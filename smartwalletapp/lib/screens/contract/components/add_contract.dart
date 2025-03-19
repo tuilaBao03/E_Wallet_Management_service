@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smartwalletapp/models/contract.dart';
+import 'package:smartwalletapp/models/create_contract_request.dart';
 import 'package:smartwalletapp/bloc/MainApp/MainAppBloc.dart';
 import 'package:smartwalletapp/bloc/MainApp/MainAppEvent.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,7 +11,7 @@ class ContractAddScreen extends StatefulWidget {
   final String token;
   final bool isAdd;
   final String title;
-  final Contract? object;
+  final CreateContractRequest? object;
 
   const ContractAddScreen({
     super.key,
@@ -26,7 +26,7 @@ class ContractAddScreen extends StatefulWidget {
 }
 
 class _ContractAddScreenState extends State<ContractAddScreen> {
-  late Contract _contractInfo;
+  late CreateContractRequest _contractInfo;
   bool isChanged = false;
 
   @override
@@ -77,7 +77,7 @@ class _ContractAddScreenState extends State<ContractAddScreen> {
 }
 
 class ContractDetailInfo extends StatefulWidget {
-  final Contract contractInfo;
+  final CreateContractRequest contractInfo;
   final bool isDetail;
   final Function() onChanged;
 
@@ -112,7 +112,7 @@ class _ContractDetailInfoState extends State<ContractDetailInfo> {
 
   void _initializeControllers() {
     controllers = {
-      for (var field in Contract.getFieldNames())
+      for (var field in CreateContractRequest.getFieldNames())
         field: _buildController(field, widget.contractInfo.getValueByField(field))
     };
   }

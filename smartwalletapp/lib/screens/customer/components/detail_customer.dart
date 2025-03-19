@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:smartwalletapp/models/cardHolderData.dart';
-import 'package:smartwalletapp/models/cardholder.dart';
+import 'package:smartwalletapp/models/card_holder_data.dart';
+import 'package:smartwalletapp/models/create_cardholder_request.dart';
 import 'package:smartwalletapp/bloc/MainApp/MainAppBloc.dart';
 import 'package:smartwalletapp/bloc/MainApp/MainAppEvent.dart';
 import 'package:smartwalletapp/constants.dart';
@@ -9,14 +9,14 @@ import 'package:smartwalletapp/app/locallization/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smartwalletapp/screens/main/components/classInitial.dart';
 
-class CustomerDetail extends StatefulWidget {
+class DetailCustomer extends StatefulWidget {
   final String token;
   final bool isDetail;
   final bool isAdd;
   final String title;
-  final CardHolder? object; // Có thể null nếu thêm mới
+  final CreateCardHolderRequest? object; // Có thể null nếu thêm mới
 
-  const CustomerDetail({
+  const DetailCustomer({
     super.key,
     required this.token,
     required this.isDetail,
@@ -26,11 +26,11 @@ class CustomerDetail extends StatefulWidget {
   });
 
   @override
-  State<CustomerDetail> createState() => _CustomerDetailState();
+  State<DetailCustomer> createState() => _DetailCustomerState();
 }
 
-class _CustomerDetailState extends State<CustomerDetail> {
-  late CardHolder _objectInfo; // Object dùng để binding dữ liệu
+class _DetailCustomerState extends State<DetailCustomer> {
+  late CreateCardHolderRequest _objectInfo; // Object dùng để binding dữ liệu
   bool isChanged = false;
 
   @override
@@ -89,7 +89,7 @@ class _CustomerDetailState extends State<CustomerDetail> {
 }
 
 class ObjectDetailInfor extends StatefulWidget {
-  final CardHolder objectInfo;
+  final CreateCardHolderRequest objectInfo;
   final String token;
   final bool isDetail;
   final Function() onChanged; // Không cần truyền controller ra ngoài nữa
@@ -121,7 +121,7 @@ class _ObjectDetailInforState extends State<ObjectDetailInfor> {
 
   void _initializeControllers() {
     controllers = {
-      for (var field in CardHolder.getFieldNames())
+      for (var field in CreateCardHolderRequest.getFieldNames())
         field: _buildController(field, widget.objectInfo.getValueByField(field))
     };
 

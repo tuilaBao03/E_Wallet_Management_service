@@ -1,4 +1,4 @@
-package com.backend.smartwalletapp.client.requests.Contract;
+package com.backend.smartwalletapp.client.requests.Contract.Get;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @XmlAccessorType(XmlAccessType.FIELD) 
-public class GetContractsByClientV2_ContractNumber {
+public class GetContractByNumberV2_REQ {
     @XmlElement(name = "ContractNumber")
     String contractNumber;
 }

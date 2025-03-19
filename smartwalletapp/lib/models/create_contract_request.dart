@@ -1,4 +1,4 @@
-class Contract {
+class CreateContractRequest {
   String reason; // map to <wsin:Reason>
   String clientIdentifier; // map to <wsin:ClientIdentifier>
   String clientSearchMethod; // map to <wsin:ClientSearchMethod>
@@ -11,7 +11,7 @@ class Contract {
   String cbsNumber; // map to <wsin:CBSNumber>
   String customData; // map to <wsin:CustomData>
 
-  Contract({
+  CreateContractRequest({
     required
     this.reason,
      required this.clientIdentifier,
@@ -27,8 +27,8 @@ class Contract {
   });
 
   /// Parse từ JSON
-  factory Contract.fromJson(Map<String, dynamic> json) {
-    return Contract(
+  factory CreateContractRequest.fromJson(Map<String, dynamic> json) {
+    return CreateContractRequest(
       reason: json['Reason'],
       clientIdentifier: json['ClientIdentifier'],
       clientSearchMethod: json['ClientSearchMethod'],
@@ -150,8 +150,8 @@ class Contract {
 
 
 // Khởi tạo danh sách hợp đồng mẫu
-List<Contract> contractList = [
-  Contract(
+List<CreateContractRequest> contractList = [
+  CreateContractRequest(
     reason: "Mở tài khoản mới",
     clientIdentifier: "KH001",
     clientSearchMethod: "ByName",
@@ -164,7 +164,7 @@ List<Contract> contractList = [
     cbsNumber: "CBS001",
     customData: "Thông tin thêm 1",
   ),
-  Contract(
+  CreateContractRequest(
     reason: "Gia hạn thẻ",
     clientIdentifier: "KH002",
     clientSearchMethod: "ByID",
@@ -177,7 +177,7 @@ List<Contract> contractList = [
     cbsNumber: "CBS002",
     customData: "Thông tin thêm 2",
   ),
-  Contract(
+  CreateContractRequest(
     reason: "Đăng ký dịch vụ mới",
     clientIdentifier: "KH003",
     clientSearchMethod: "ByEmail",

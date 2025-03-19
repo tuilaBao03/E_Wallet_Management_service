@@ -10,10 +10,10 @@ import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 import com.backend.smartwalletapp.client.interceptor.SoapClientLoggingInterceptor;
 import com.backend.smartwalletapp.client.requests.Card.create.CreateCardV3;
 import com.backend.smartwalletapp.client.requests.CardHolders.create.CreateClientV4Body;
-import com.backend.smartwalletapp.client.requests.Contract.GetContractsByClientV2;
-import com.backend.smartwalletapp.client.requests.Contract.GetContractsByClientV2_ContractNumber;
 import com.backend.smartwalletapp.client.requests.Contract.CreateContractLevel2.CreateContractV4_REQV2;
 import com.backend.smartwalletapp.client.requests.Contract.CreateContractV4.CreateContractV4_REQ;
+import com.backend.smartwalletapp.client.requests.Contract.Get.GetContractByNumberV2_REQ;
+import com.backend.smartwalletapp.client.requests.Contract.Get.GetContractsByClientV2_REQ;
 import com.backend.smartwalletapp.client.responses.Card.create.CreateCardV3Result;
 import com.backend.smartwalletapp.client.responses.CardHolders.createRes.CreateClientV4Response;
 import com.backend.smartwalletapp.client.responses.Contract.create.CreateContractV4Response;
@@ -46,11 +46,11 @@ public class SoapConfig {
             // CreateCardV3.class,
             // CreateCardV3Result.class
 
-            GetContractsByClientV2.class,
+            GetContractsByClientV2_REQ.class,
             GetContractsByClientV2Response.class,
 
             
-            GetContractsByClientV2_ContractNumber.class,
+            GetContractByNumberV2_REQ.class,
             GetContractByNumberV2Response.class
             
         );

@@ -1,4 +1,4 @@
-class ContractV2 {
+class CreateContractV2Request {
   String branch;
   String institutionCode;
   String contractName;
@@ -14,7 +14,7 @@ class ContractV2 {
   String productCode2;
   String productCode3;
 
-  ContractV2({
+  CreateContractV2Request({
     required this.branch,
     required this.institutionCode,
     required this.contractName,
@@ -32,8 +32,8 @@ class ContractV2 {
   });
 
   /// Parse từ JSON
-  factory ContractV2.fromJson(Map<String, dynamic> json) {
-    return ContractV2(
+  factory CreateContractV2Request.fromJson(Map<String, dynamic> json) {
+    return CreateContractV2Request(
       branch: json['Branch'],
       institutionCode: json['InstitutionCode'],
       contractName: json['ContractName'],
@@ -176,8 +176,8 @@ class ContractV2 {
   }
 }
 
-List<ContractV2> contractV2List = [
-  ContractV2(
+List<CreateContractV2Request> contractV2List = [
+  CreateContractV2Request(
     branch: "CN001",
     institutionCode: "INST001",
     contractName: "Hợp đồng bảo hiểm A",
@@ -193,7 +193,7 @@ List<ContractV2> contractV2List = [
     productCode2: "SP002",
     productCode3: "SP003",
   ),
-  ContractV2(
+  CreateContractV2Request(
     branch: "CN002",
     institutionCode: "INST002",
     contractName: "Hợp đồng vay B",
@@ -209,7 +209,7 @@ List<ContractV2> contractV2List = [
     productCode2: "SP005",
     productCode3: "SP006",
   ),
-  ContractV2(
+  CreateContractV2Request(
     branch: "CN003",
     institutionCode: "INST003",
     contractName: "Hợp đồng dịch vụ C",

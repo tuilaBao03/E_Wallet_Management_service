@@ -3,14 +3,14 @@
 import 'dart:convert';
 
 import 'package:smartwalletapp/apiResult.dart';
-import 'package:smartwalletapp/models/card.dart';
-import 'package:smartwalletapp/models/contract.dart';
+import 'package:smartwalletapp/models/create_card_request.dart';
+import 'package:smartwalletapp/models/create_contract_request.dart';
 import 'package:http/http.dart' as http;
-import 'package:smartwalletapp/models/contractV2.dart';
+import 'package:smartwalletapp/models/create_contractV2_request.dart';
 
 class CardRepository {
 
-  Future<ApiResult> lockOrUnLockCard(bool newState, Cards card, String token) async{
+  Future<ApiResult> lockOrUnLockCard(bool newState, CreateCardRequest card, String token) async{
     final String apiUrl = 'http://localhost:8080/smartwalletapp/cards/';
     try {
       final response = await http.post(
@@ -26,7 +26,7 @@ class CardRepository {
       String message = responseData['message'];
       int code = responseData['code'];
       if(code == 200){
-        Contract contract = responseData["result"];
+        CreateContractRequest contract = responseData["result"];
         ApiResult apiResult = ApiResult(code, message,contract, 0, 0);
         return(apiResult);
       }
@@ -38,7 +38,7 @@ class CardRepository {
     }
   }
 
-  Future<ApiResult> giveCardByContractV2( String token, ContractV2 contractv2) async {
+  Future<ApiResult> giveCardByContractV2( String token, CreateContractV2Request contractv2) async {
     String apiUrl = "http://localhost:8080/smartwalletapp/contracts/contractV2s/cards";
     // try {
     //   final response = await http.post(
@@ -63,7 +63,7 @@ class CardRepository {
     //   throw Exception("Lỗi kết nối: $e");
     // }
 
-    List<Cards> cards = cardsList.where((i)=>i.contractIdentifier == contractv2.liabContractIdentifier ).toList();
+    List<CreateCardRequest> cards = cardsList.where((i)=>i.contractIdentifier == contractv2.liabContractIdentifier ).toList();
     ApiResult apiResult = ApiResult(0, '',cards, 0, 0);
     return apiResult;
   }

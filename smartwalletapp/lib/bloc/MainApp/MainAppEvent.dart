@@ -1,7 +1,7 @@
 // ignore_for_file: camel_case_types, file_names
-import 'package:smartwalletapp/models/card.dart';
-import 'package:smartwalletapp/models/cardholder.dart';
-import 'package:smartwalletapp/models/contract.dart';
+import 'package:smartwalletapp/models/create_card_request.dart';
+import 'package:smartwalletapp/models/create_cardholder_request.dart';
+import 'package:smartwalletapp/models/create_contract_request.dart';
 import 'package:smartwalletapp/models/user.dart';
 
 abstract class MainAppEvent{}
@@ -12,18 +12,18 @@ class initializationEvent extends MainAppEvent{
 }
 
 class giveContractListEvent extends MainAppEvent{
-    final CardHolder cardHolder;
+    final CreateCardHolderRequest cardHolder;
     final int page;
     giveContractListEvent(this.cardHolder, this.page);
 }
 
 class giveCardListEvent extends MainAppEvent{
-    final Contract contract;
+    final CreateContractRequest contract;
     giveCardListEvent(this.contract);
 }
 
 class giveTransactionEvent extends MainAppEvent{
-  final Contract contract;
+  final CreateContractRequest contract;
 
   giveTransactionEvent(this.contract,);
 }
@@ -35,7 +35,7 @@ class UpdateUserInforEvent  extends MainAppEvent{
 }
 
 class UpdateCardInforEvent  extends MainAppEvent{
-  final Cards cardInfo;
+  final CreateCardRequest cardInfo;
   final String token;
   UpdateCardInforEvent(this.cardInfo, this.token); 
 
@@ -57,7 +57,7 @@ class UpdateNewLimitCardEvent  extends MainAppEvent{
 
 // create 
 class AddCardHolderEvent extends MainAppEvent{
-  final CardHolder cardHolder;
+  final CreateCardHolderRequest cardHolder;
   final String token;
 
   AddCardHolderEvent(
@@ -67,7 +67,7 @@ class AddCardHolderEvent extends MainAppEvent{
 }
 
 class AddContractEvent extends MainAppEvent{
-  final Contract contract;
+  final CreateContractRequest contract;
   final String token;
 
   AddContractEvent(
@@ -78,7 +78,7 @@ class AddContractEvent extends MainAppEvent{
 
 class LockOrUnLockCardEvent extends MainAppEvent{
   String token;
-  Cards card;
+  CreateCardRequest card;
   bool newStatus;
   LockOrUnLockCardEvent(this.token,this.newStatus,this.card);
 
@@ -87,7 +87,7 @@ class LockOrUnLockCardEvent extends MainAppEvent{
 class LockOrUnLockContractEvent extends MainAppEvent{
   String token;
   bool newStatus;
-  Contract contract;
+  CreateContractRequest contract;
   LockOrUnLockContractEvent(this.token, this.newStatus,this.contract);
 }
 

@@ -1,8 +1,7 @@
 // ignore_for_file: file_names
-import 'package:smartwalletapp/models/card.dart';
-import 'package:smartwalletapp/models/cardholder.dart';
-import 'package:smartwalletapp/models/contract.dart';
-import 'package:smartwalletapp/models/transaction.dart';
+import 'package:smartwalletapp/models/create_card_request.dart';
+import 'package:smartwalletapp/models/create_cardholder_request.dart';
+import 'package:smartwalletapp/models/create_contract_request.dart';
 import 'package:smartwalletapp/models/user.dart';
 
 User selectedUserInittial = User(
@@ -19,7 +18,7 @@ User selectedUserInittial = User(
     updateDate: DateTime.now(),
     status: true,
   );
-  final CardHolder emptyCardHolder = CardHolder(
+  final CreateCardHolderRequest emptyCardHolder = CreateCardHolderRequest(
   reason: "Create lient",
   institutionCode: "9999",
   branch: "9999",
@@ -68,7 +67,7 @@ User selectedUserInittial = User(
   customData: [],
 );
 
-  Cards selectedCardInittial = Cards(
+  CreateCardRequest selectedCardInittial = CreateCardRequest(
     contractSearchMethod: 'CONTRACT_NUMBER',
     contractIdentifier: '',
     productCode: 'CARD_TRAINING01',
@@ -79,17 +78,8 @@ User selectedUserInittial = User(
     embossedFirstName: 'Phan',
     embossedLastName: 'Hong',
     embossedCompanyName: 'OpenWay');
-  Transaction selectedTransactionInittial = Transaction(
-    icon: "",
-    bankName: "",
-    date: DateTime.now(),
-    budget: "",
-    typeMoney:"",
-    typeTransaction: 0, 
-    transactionId: '', contractID: '', note: ''
-  );
-  Contract selectedContractInittial = 
-  Contract(
+  CreateContractRequest selectedContractInittial = 
+  CreateContractRequest(
     reason: "to test",
     branch: "9999",
     institutionCode: "9999",

@@ -8,9 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smartwalletapp/app/locallization/app_localizations.dart';
 import 'package:smartwalletapp/bloc/MainApp/MainAppBloc.dart';
 import 'package:smartwalletapp/bloc/MainApp/MainAppEvent.dart';
-import 'package:smartwalletapp/models/cardholder.dart';
-import 'package:smartwalletapp/models/contract.dart';
-import 'package:smartwalletapp/models/transaction.dart';
+import 'package:smartwalletapp/models/create_cardholder_request.dart';
 import 'package:smartwalletapp/screens/contract/components/contract_list.dart';
 import 'package:smartwalletapp/screens/customer/components/customer_list.dart';
 import 'package:smartwalletapp/screens/main/components/classInitial.dart';
@@ -24,7 +22,7 @@ import '../general/header.dart';
 class CustomerScreen extends StatefulWidget {
 
   final String token;
-  final List<CardHolder> cardHolders;
+  final List<CreateCardHolderRequest> cardHolders;
   final bool isAuth;
   final User user;
   final Function(Locale) onLanguageChange;
@@ -46,13 +44,13 @@ class _CustomerScreenState extends State<CustomerScreen> {
     "ContractList"
   ]);
   User selectedUser = selectedUserInittial;
-  CardHolder selectedcardHolder = emptyCardHolder;
+  CreateCardHolderRequest selectedcardHolder = emptyCardHolder;
   bool SelectContractList = false;
 
   int page = 1;
   int pageAmount = 1;
 
-  void updateCardHolder_contract(CardHolder cardHolder) {
+  void updateCardHolder_contract(CreateCardHolderRequest cardHolder) {
     setState(() {
       context.read<MainAppBloc>().add(giveContractListEvent(cardHolder,page-1));
       selectedcardHolder  = cardHolder;

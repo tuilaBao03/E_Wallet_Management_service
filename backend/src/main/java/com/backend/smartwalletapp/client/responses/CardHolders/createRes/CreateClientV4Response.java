@@ -1,9 +1,6 @@
 package com.backend.smartwalletapp.client.responses.CardHolders.createRes;
 
 
-import com.backend.smartwalletapp.client.responses.CardHolders.CreateClientV4Result;
-
-
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;

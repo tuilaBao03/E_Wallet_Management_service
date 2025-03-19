@@ -1,6 +1,6 @@
-import 'package:smartwalletapp/models/card.dart';
-import 'package:smartwalletapp/models/contract.dart';
-import 'package:smartwalletapp/models/contractV2.dart';
+import 'package:smartwalletapp/models/create_card_request.dart';
+import 'package:smartwalletapp/models/create_contractV2_request.dart';
+import 'package:smartwalletapp/response/contract/give_contract_response.dart';
 
 abstract class ContractState {}
 
@@ -14,9 +14,9 @@ class ContractLoadingState extends ContractState{
 }
 
 class ContractLoadedState extends ContractState{
-  final List<Contract> contracts;
-  final List<ContractV2> contractsV2s;
-  final List<Cards> cards;
+  final List<GiveContractResponse> contracts;
+  final List<CreateContractV2Request> contractsV2s;
+  final List<CreateCardRequest> cards;
 
   ContractLoadedState(this.contracts,this.contractsV2s, this.cards);
 }

@@ -1,16 +1,30 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/smartwalletapp
-    username: admin
-    password: admin
-    driver-class-name: org.postgresql.Driver
+    postgres:
+      url: jdbc:postgresql://localhost:5432/smartwalletapp
+      username: admin
+      password: admin
+      driver-class-name: org.postgresql.Driver
+    oracle:
+      url: jdbc:oracle:thin:@localhost:1521/XEPDB1
+      username: oracle_user
+      password: oracle_pass
+      driver-class-name: oracle.jdbc.OracleDriver
   jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
+    postgres:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+        ddl-auto: update
+      show-sql: true
+      properties:
+        hibernate:
+          dialect: org.hibernate.dialect.PostgreSQLDialect
+    oracle:
+      hibernate:
+        ddl-auto: update
+      show-sql: true
+      properties:
+        hibernate:
+          dialect: org.hibernate.dialect.Oracle12cDialect
   security:
     user:
       name: admin

@@ -5,13 +5,10 @@ import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-import com.backend.smartwalletapp.client.requests.CardHolders.LockOrUnlockCardHolderSoapRequest;
 import com.backend.smartwalletapp.client.requests.CardHolders.create.CreateClientInObject;
 import com.backend.smartwalletapp.client.requests.CardHolders.create.CreateClientV4Body;
 import com.backend.smartwalletapp.client.requests.CardHolders.create.SetCustomDataInObject;
-
-import com.backend.smartwalletapp.client.responses.CardHolders.CreateClientV4Result;
-import com.backend.smartwalletapp.dto.request.CardHolder.LockUnlockStatusCardHolderRequest;
+import com.backend.smartwalletapp.client.responses.CardHolders.createRes.CreateClientV4Result;
 import com.backend.smartwalletapp.dto.request.CardHolder.CreateCardHolder.CardHolderCreatedRequest;
 import com.backend.smartwalletapp.dto.request.CardHolder.CreateCardHolder.SetCustomDataInObjectJson;
 import com.backend.smartwalletapp.dto.response.CardHolder.CreateCardHolderResponse;
@@ -21,8 +18,6 @@ import com.backend.smartwalletapp.dto.response.CardHolder.CreateCardHolderRespon
 public interface CardHolderMapper {
 
     CardHolderMapper INSTANCE = Mappers.getMapper(CardHolderMapper.class);
-
-    LockOrUnlockCardHolderSoapRequest toStatusCardHolderSoapRequest(LockUnlockStatusCardHolderRequest request);
 
     CreateClientInObject toCreateClientInObject(CardHolderCreatedRequest request);
 

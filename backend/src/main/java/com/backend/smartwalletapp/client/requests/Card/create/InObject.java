@@ -17,14 +17,14 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 
 public class InObject {
 
-    @XmlElement(name = "CardName")
+    @XmlElement(name = "CardName",namespace = "http://www.openwaygroup.com/wsint")
     String cardName;
-    @XmlElement(name = "CBSNumber")
+    @XmlElement(name = "CBSNumber",namespace = "http://www.openwaygroup.com/wsint")
     String  cbsNumber;
-    @XmlElement(name = "EmbossedFirstName")
+    @XmlElement(name = "EmbossedFirstName",namespace = "http://www.openwaygroup.com/wsint")
     String  embossedFirstName;
-    @XmlElement(name = "EmbossedLastName")
+    @XmlElement(name = "EmbossedLastName",namespace = "http://www.openwaygroup.com/wsint")
     String  embossedLastName;
-    @XmlElement(name = "EmbossedCompanyName")
+    @XmlElement(name = "EmbossedCompanyName",namespace = "http://www.openwaygroup.com/wsint")
     String  embossedCompanyName;
 }

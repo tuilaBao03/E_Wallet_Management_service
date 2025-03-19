@@ -5,10 +5,10 @@ import org.springframework.stereotype.Service;
 
 import org.springframework.ws.client.core.WebServiceTemplate;
 
-import com.backend.smartwalletapp.client.requests.Contract.GetContractsByClientV2;
-import com.backend.smartwalletapp.client.requests.Contract.GetContractsByClientV2_ContractNumber;
 import com.backend.smartwalletapp.client.requests.Contract.CreateContractLevel2.CreateContractV4_REQV2;
 import com.backend.smartwalletapp.client.requests.Contract.CreateContractV4.CreateContractV4_REQ;
+import com.backend.smartwalletapp.client.requests.Contract.Get.GetContractByNumberV2_REQ;
+import com.backend.smartwalletapp.client.requests.Contract.Get.GetContractsByClientV2_REQ;
 import com.backend.smartwalletapp.client.responses.Contract.create.CreateContractV4Response;
 import com.backend.smartwalletapp.client.responses.Contract.create.CreateContractV4Result;
 import com.backend.smartwalletapp.client.responses.Contract.create.V2CreateContractV4Response;
@@ -39,7 +39,7 @@ public class ContractSoapService {
 
     public GetContractsByClientV2Result getContractByClientIdentifier(String clientIdentifier) {
         String fullString = soapUrl;
-        GetContractsByClientV2 request = new GetContractsByClientV2("CLIENT_NUMBER", clientIdentifier);
+        GetContractsByClientV2_REQ request = new GetContractsByClientV2_REQ("CLIENT_NUMBER", clientIdentifier);
         System.err.println("\n__________________________________________________________________________________________\n");
         log.info("\nSending SOAP request to: {}\n", fullString);
         log.info("\nRequest payload: {}\n", request);
@@ -68,7 +68,7 @@ public class ContractSoapService {
 
     public GetContractByNumberV2Result getContractByContractNumber(String contractNumber) {
         String fullString = soapUrl;
-        GetContractsByClientV2_ContractNumber request = new GetContractsByClientV2_ContractNumber(contractNumber);
+        GetContractByNumberV2_REQ request = new GetContractByNumberV2_REQ(contractNumber);
         try {
             GetContractByNumberV2Response response = (GetContractByNumberV2Response) webServiceTemplate.marshalSendAndReceive(fullString, request);
             return response.getResult();

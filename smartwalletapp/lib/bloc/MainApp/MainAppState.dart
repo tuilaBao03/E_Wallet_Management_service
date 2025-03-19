@@ -1,11 +1,7 @@
 // ignore_for_file: file_names, camel_case_types, duplicate_ignore
-import 'package:smartwalletapp/models/card.dart';
-import 'package:smartwalletapp/models/cardholder.dart';
-import 'package:smartwalletapp/models/contract.dart';
-import 'package:smartwalletapp/models/transaction.dart';
+import 'package:smartwalletapp/models/create_card_request.dart';
+import 'package:smartwalletapp/models/create_cardholder_request.dart';
 import 'package:smartwalletapp/models/user.dart';
-
-import '../../repository/dashboardRepository.dart';
 
 abstract class MainAppState{}
 
@@ -21,17 +17,12 @@ class SuccessState extends MainAppState{
 }
 // ignore: camel_case_types
 class giveCardListState extends MainAppState{
-    final List<Cards> cardInfo;
+    final List<CreateCardRequest> cardInfo;
     giveCardListState(this.cardInfo);
 }
 
-class giveTransactionState extends MainAppState{
-  final List<Transaction> trans;
-  giveTransactionState(this.trans);
-}
-
 class giveCardHolderListState extends MainAppState{
-  final List<CardHolder> cardHolders;
+  final List<CreateCardHolderRequest> cardHolders;
   final int page;
   final int pageAmount;
   giveCardHolderListState(this.cardHolders, this.page, this.pageAmount);
@@ -46,7 +37,7 @@ class CreateCardHolderSuccessState extends MainAppState{
   CreateCardHolderSuccessState(this.message);
 }
 class UpdateCardHolderSuccessState extends MainAppState{
-  final CardHolder cardHolder;
+  final CreateCardHolderRequest cardHolder;
   UpdateCardHolderSuccessState(this.cardHolder);
 }
 

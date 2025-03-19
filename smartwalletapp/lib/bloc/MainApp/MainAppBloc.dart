@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smartwalletapp/apiResult.dart';
 import 'package:smartwalletapp/bloc/MainApp/MainAppEvent.dart';
 import 'package:smartwalletapp/bloc/MainApp/MainAppState.dart';
-import 'package:smartwalletapp/models/cardholder.dart';
-import 'package:smartwalletapp/models/contract.dart';
+import 'package:smartwalletapp/models/create_cardholder_request.dart';
+import 'package:smartwalletapp/models/create_contract_request.dart';
 import 'package:smartwalletapp/models/user.dart';
 import 'package:smartwalletapp/repository/cardHolderRepository.dart';
 import 'package:smartwalletapp/repository/contractRepository.dart';
@@ -28,7 +28,7 @@ class MainAppBloc extends Bloc<MainAppEvent, MainAppState> {
 
   void _giveCardHolderList(initializationEvent event, Emitter<MainAppState> emit) async {
     try {
-      List<CardHolder> cardHolders = [];
+      List<CreateCardHolderRequest> cardHolders = [];
       cardHolders = demoCardHoldersList;
       print(cardHolders.length);
       emit(giveCardHolderListState(cardHolders,1,1)); // Ensure a value is returned
@@ -55,7 +55,7 @@ class MainAppBloc extends Bloc<MainAppEvent, MainAppState> {
   void _createCardHolder(AddCardHolderEvent event, Emitter<MainAppState> emit) async{
     try{
       print("____________________________________");
-      CardHolder cardHolder = event.cardHolder;
+      CreateCardHolderRequest cardHolder = event.cardHolder;
       CardholderRepository cardholderRepository = CardholderRepository();
       ApiResult apiResult = await cardholderRepository.createCardHolder(cardHolder, event.token);
       CardHolderResponse cardHolderResponse = apiResult.result;
@@ -76,7 +76,7 @@ class MainAppBloc extends Bloc<MainAppEvent, MainAppState> {
     }
   }
   void _createContract(AddContractEvent event, Emitter<MainAppState> emit) async{
-    Contract contract = event.contract;
+    CreateContractRequest contract = event.contract;
     ContractRepository contractRepository = ContractRepository();
 
     ApiResult apiResult = await contractRepository.cretateContract(contract, event.token);

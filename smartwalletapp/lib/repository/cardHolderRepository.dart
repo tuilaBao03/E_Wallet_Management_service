@@ -3,7 +3,7 @@
 import 'dart:convert';
 
 import 'package:smartwalletapp/apiResult.dart';
-import 'package:smartwalletapp/models/cardholder.dart';
+import 'package:smartwalletapp/models/create_cardholder_request.dart';
 import 'package:http/http.dart' as http;
 import 'package:smartwalletapp/response/cardHolder/cardholderResponse.dart';
 
@@ -24,7 +24,7 @@ class CardholderRepository {
     int code = responseData["code"];
     String message = responseData["message"];
     if (response.statusCode == 200) {
-      List<CardHolder> cardHolders = responseData["result"]["list"];
+      List<CreateCardHolderRequest> cardHolders = responseData["result"]["list"];
       int page = responseData["result"]["page"];
       int pageAmount = responseData["result"]["amount"];
       ApiResult result = ApiResult(code, message, cardHolders, page,pageAmount);
@@ -38,7 +38,7 @@ class CardholderRepository {
   }
 }
 
-  Future<ApiResult> createCardHolder(CardHolder cardHolder,  String token) async{
+  Future<ApiResult> createCardHolder(CreateCardHolderRequest cardHolder,  String token) async{
     final String apiUrl = 'http://localhost:8080/smartwalletapp/cardholder';
 
     try {

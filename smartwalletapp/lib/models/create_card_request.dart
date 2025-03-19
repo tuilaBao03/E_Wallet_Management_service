@@ -1,4 +1,4 @@
-class Cards {
+class CreateCardRequest {
   String contractSearchMethod;
   String contractIdentifier;
   String productCode;
@@ -10,7 +10,7 @@ class Cards {
   String embossedLastName;
   String embossedCompanyName;
 
-  Cards({
+  CreateCardRequest({
     required this.contractSearchMethod,
     required this.contractIdentifier,
     required this.productCode,
@@ -24,8 +24,8 @@ class Cards {
   });
 
   /// Parse từ JSON
-  factory Cards.fromJson(Map<String, dynamic> json) {
-    return Cards(
+  factory CreateCardRequest.fromJson(Map<String, dynamic> json) {
+    return CreateCardRequest(
       contractSearchMethod: json['ContractSearchMethod'],
       contractIdentifier: json['ContractIdentifier'],
       productCode: json['ProductCode'],
@@ -135,8 +135,8 @@ class Cards {
     }
   }
 }
-List<Cards> cardsList = [
-  Cards(
+List<CreateCardRequest> cardsList = [
+  CreateCardRequest(
     contractSearchMethod: "ByNumber",
     contractIdentifier: "CT001",
     productCode: "SP001",
@@ -148,7 +148,7 @@ List<Cards> cardsList = [
     embossedLastName: "Van A",
     embossedCompanyName: "Công ty ABC",
   ),
-  Cards(
+  CreateCardRequest(
     contractSearchMethod: "ByID",
     contractIdentifier: "CT002",
     productCode: "SP004",
@@ -160,7 +160,7 @@ List<Cards> cardsList = [
     embossedLastName: "Thi B",
     embossedCompanyName: "Công ty XYZ",
   ),
-  Cards(
+  CreateCardRequest(
     contractSearchMethod: "ByName",
     contractIdentifier: "CT003",
     productCode: "SP007",

@@ -1,4 +1,4 @@
-package com.backend.smartwalletapp.client.requests.Contract;
+package com.backend.smartwalletapp.client.requests.Contract.Get;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @XmlAccessorType(XmlAccessType.FIELD)  // Thêm dòng này
-public class GetContractsByClientV2 {
+public class GetContractsByClientV2_REQ {
     @XmlElement(name = "ClientSearchMethod")
     String clientSearchMethod;
     @XmlElement(name = "ClientIdentifier")

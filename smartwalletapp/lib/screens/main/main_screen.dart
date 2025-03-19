@@ -3,18 +3,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smartwalletapp/bloc/MainApp/MainAppBloc.dart';
 import 'package:smartwalletapp/bloc/MainApp/MainAppEvent.dart';
 import 'package:smartwalletapp/bloc/MainApp/MainAppState.dart';
-import 'package:smartwalletapp/models/cardholder.dart';
-import 'package:smartwalletapp/models/contract.dart';
+import 'package:smartwalletapp/models/create_cardholder_request.dart';
+import 'package:smartwalletapp/models/create_contract_request.dart';
 import 'package:smartwalletapp/repository/dashboardRepository.dart';
 import 'package:smartwalletapp/screens/general/dialogAlert.dart';
 import 'package:smartwalletapp/screens/myprofile/myprofile_screen.dart';
 import 'package:smartwalletapp/screens/contract/contract_screen.dart';
 import 'package:smartwalletapp/screens/customer/customer_screen.dart';
-import 'package:smartwalletapp/models/transaction.dart';
 import '../../controllers/menu_app_controller.dart';
-import 'package:smartwalletapp/models/card.dart';
+import 'package:smartwalletapp/models/create_card_request.dart';
 import 'package:smartwalletapp/models/user.dart';
-import '../transaction/transaction_screen.dart';
 import '../authentication/register_screen.dart';
 import '../authentication/login_screen.dart';
 import '../dashboard/dashboard_screen.dart';
@@ -37,7 +35,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   late User selectedUsers; 
   int _currentTab = 1;
-  List<CardHolder> cardHolders = [];
+  List<CreateCardHolderRequest> cardHolders = [];
   @override
   void initState() {
     super.initState();

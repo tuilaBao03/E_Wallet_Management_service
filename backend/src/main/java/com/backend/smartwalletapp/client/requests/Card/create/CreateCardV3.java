@@ -20,15 +20,15 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 public class CreateCardV3 {
-    @XmlElement(name = "ContractSearchMethod")
+    @XmlElement(name = "ContractSearchMethod",namespace = "http://www.openwaygroup.com/wsint")
     String contractSearchMethod;
-    @XmlElement(name = "ContractIdentifier")
+    @XmlElement(name = "ContractIdentifier",namespace = "http://www.openwaygroup.com/wsint")
     String contractIdentifier;
-    @XmlElement(name = "ProductCode")
+    @XmlElement(name = "ProductCode",namespace = "http://www.openwaygroup.com/wsint")
     String productCode;
-    @XmlElement(name = "ProductCode2")
+    @XmlElement(name = "ProductCode2",namespace = "http://www.openwaygroup.com/wsint")
     String productCode2;
-    @XmlElement(name = "ProductCode3")
+    @XmlElement(name = "ProductCode3",namespace = "http://www.openwaygroup.com/wsint")
     String productCode3;
 
     @XmlElement(name = "InObject", namespace = "http://www.openwaygroup.com/wsint")

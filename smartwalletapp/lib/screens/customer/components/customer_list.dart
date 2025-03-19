@@ -4,17 +4,17 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:smartwalletapp/app/locallization/app_localizations.dart';
-import 'package:smartwalletapp/models/cardholder.dart';
-import 'package:smartwalletapp/screens/customer/components/customer_detail.dart';
+import 'package:smartwalletapp/models/create_cardholder_request.dart';
+import 'package:smartwalletapp/screens/customer/components/add_customer.dart';
 import 'package:smartwalletapp/screens/main/components/classInitial.dart';
 import '../../../constants.dart';
 
 class CustomerList extends StatefulWidget {
   final String token;
-  final List<CardHolder> object;
+  final List<CreateCardHolderRequest> object;
   final String title;
   final HashSet<String> objectColumnName;
-  final Function(CardHolder) onCustomer_Contracts;
+  final Function(CreateCardHolderRequest) onCustomer_Contracts;
 
   const CustomerList({
     super.key,
@@ -31,7 +31,7 @@ class CustomerList extends StatefulWidget {
 class _CustomerListState extends State<CustomerList> {
 
   final TextEditingController _searchController = TextEditingController();
-  List<CardHolder> _filteredCardHolder = [];
+  List<CreateCardHolderRequest> _filteredCardHolder = [];
 
   @override
   void initState() {
@@ -158,7 +158,7 @@ class _CustomerListState extends State<CustomerList> {
     );
   }
 
-  DataRow _buildDataRow(CardHolder cardHolder, BuildContext context) {
+  DataRow _buildDataRow(CreateCardHolderRequest cardHolder, BuildContext context) {
     return DataRow(
       cells: [
         DataCell(Text(cardHolder.firstName)),
@@ -179,14 +179,14 @@ class _CustomerListState extends State<CustomerList> {
     );
   }
 
-  void _showDetailDialog(BuildContext context, CardHolder cardHolder) {
+  void _showDetailDialog(BuildContext context, CreateCardHolderRequest cardHolder) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           content: Container(
             width: Get.width / 2,
-            child: CustomerDetail(
+            child: AddCustomer(
               object: cardHolder,
               title: 'CustomerDetail',
               isDetail: true,
@@ -203,14 +203,14 @@ class _CustomerListState extends State<CustomerList> {
       },
     );
   }
-  void _showAddDialog(BuildContext context, CardHolder cardHolder) {
+  void _showAddDialog(BuildContext context, CreateCardHolderRequest cardHolder) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           content: Container(
             width: Get.width / 2,
-            child: CustomerDetail(
+            child: AddCustomer(
               object: cardHolder,
               title: 'CustomerAdd',
               isDetail: false,

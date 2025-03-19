@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:smartwalletapp/models/card.dart';
+import 'package:smartwalletapp/models/create_card_request.dart';
 import 'package:smartwalletapp/constants.dart';
 import 'package:smartwalletapp/app/locallization/app_localizations.dart';
 
-class CardDetailScreen extends StatefulWidget {
-  final Cards cardInfo;
+class DetailCardScreen extends StatefulWidget {
+  final CreateCardRequest cardInfo;
   final bool isDetail;
 
-  const CardDetailScreen({
+  const DetailCardScreen({
     super.key,
     required this.cardInfo,
     required this.isDetail,
   });
 
   @override
-  State<CardDetailScreen> createState() => _CardDetailScreenState();
+  State<DetailCardScreen> createState() => _DetailCardScreenState();
 }
 
-class _CardDetailScreenState extends State<CardDetailScreen> {
+class _DetailCardScreenState extends State<DetailCardScreen> {
   late Map<String, TextEditingController> controllers;
   bool isChanged = false;
 
@@ -29,7 +29,7 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
 
   void _initializeControllers() {
     controllers = {
-      for (var field in Cards.getFieldNames())
+      for (var field in CreateCardRequest.getFieldNames())
         field: _buildController(field, widget.cardInfo.getValueByField(field))
     };
   }

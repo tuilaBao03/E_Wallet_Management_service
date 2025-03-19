@@ -5,7 +5,7 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
-import 'package:smartwalletapp/models/contract.dart';
+import 'package:smartwalletapp/models/create_contract_request.dart';
 import 'package:smartwalletapp/screens/contract/components/contract_list.dart';
 import 'package:smartwalletapp/screens/main/components/classInitial.dart';
 
@@ -41,10 +41,10 @@ class _ContractScreenState extends State<ContractScreen> {
     "TranList"
   ]);
 
-  Contract selectedContract = selectedContractInittial;
+  CreateContractRequest selectedContract = selectedContractInittial;
   bool selectContractDetail = false;
 
-  void updateContractDetail(Contract contract){
+  void updateContractDetail(CreateContractRequest contract){
    setState(() {
      selectedContract = contract;
      selectContractDetail = true;
