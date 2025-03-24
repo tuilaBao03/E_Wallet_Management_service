@@ -12,7 +12,7 @@ import 'package:smartwalletapp/repository/contractRepository.dart';
 import 'package:smartwalletapp/repository/userRepository.dart';
 import 'package:smartwalletapp/repository/authRepository.dart';
 import 'package:smartwalletapp/response/cardHolder/cardholderResponse.dart';
-import 'package:smartwalletapp/response/contract/contractResponse.dart';
+import 'package:smartwalletapp/response/contract/create_contract_reponse.dart';
 
 
 class MainAppBloc extends Bloc<MainAppEvent, MainAppState> {
@@ -56,7 +56,7 @@ class MainAppBloc extends Bloc<MainAppEvent, MainAppState> {
     try{
       print("____________________________________");
       CreateCardHolderRequest cardHolder = event.cardHolder;
-      CardholderRepository cardholderRepository = CardholderRepository();
+      CardHolderRepository cardholderRepository = CardHolderRepository();
       ApiResult apiResult = await cardholderRepository.createCardHolder(cardHolder, event.token);
       CardHolderResponse cardHolderResponse = apiResult.result;
       print("cardHolderResponse.retMsg:${cardHolderResponse.retMsg}");
@@ -79,7 +79,7 @@ class MainAppBloc extends Bloc<MainAppEvent, MainAppState> {
     CreateContractRequest contract = event.contract;
     ContractRepository contractRepository = ContractRepository();
 
-    ApiResult apiResult = await contractRepository.cretateContract(contract, event.token);
+    ApiResult apiResult = await contractRepository.createdLibContract(contract, event.token);
     String mess = apiResult.message;
 
     if(apiResult.code == 0){

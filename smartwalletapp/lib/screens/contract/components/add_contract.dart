@@ -1,42 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smartwalletapp/models/create_contract_request.dart';
 import 'package:smartwalletapp/bloc/MainApp/MainAppBloc.dart';
 import 'package:smartwalletapp/bloc/MainApp/MainAppEvent.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smartwalletapp/constants.dart';
 import 'package:smartwalletapp/app/locallization/app_localizations.dart';
 import 'package:smartwalletapp/screens/main/components/classInitial.dart';
 
-class ContractAddScreen extends StatefulWidget {
+class ContractFormScreen extends StatefulWidget {
   final String token;
-  final bool isAdd;
   final String title;
-  final CreateContractRequest? object;
 
-  const ContractAddScreen({
+  const ContractFormScreen({
     super.key,
     required this.token,
-    required this.isAdd,
-    required this.title,
-    this.object,
+    required this.title
   });
 
   @override
-  State<ContractAddScreen> createState() => _ContractAddScreenState();
+  State<ContractFormScreen> createState() => _ContractFormScreenState();
 }
 
-class _ContractAddScreenState extends State<ContractAddScreen> {
-  late CreateContractRequest _contractInfo;
-  bool isChanged = false;
+class _ContractFormScreenState extends State<ContractFormScreen> {
+  late CreateContractRequest _contract;
+  bool _isEdited = false;
 
   @override
   void initState() {
     super.initState();
-    _contractInfo = widget.object ?? selectedContractInittial;
+    _contract = selectedContractInittial;
   }
 
-  void onChanged() {
-    setState(() => isChanged = true);
+  void _markAsEdited() {
+    setState(() => _isEdited = true);
+  }
+
+  void _saveContract() {
+    context.read<MainAppBloc>().add(AddContractEvent(_contract, widget.token));
   }
 
   @override
@@ -47,53 +47,46 @@ class _ContractAddScreenState extends State<ContractAddScreen> {
         color: Theme.of(context).colorScheme.secondary,
         borderRadius: BorderRadius.circular(10),
       ),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(AppLocalizations.of(context).translate(widget.title), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
-                IconButton(
-                  icon: Icon(Icons.save, color: isChanged ? Colors.blue : Colors.grey),
-                  onPressed: isChanged
-                      ? () => context.read<MainAppBloc>().add(AddContractEvent(_contractInfo, widget.token))
-                      : null,
-                ),
-              ],
-            ),
-            SizedBox(height: defaultPadding),
-            ContractDetailInfo(
-              contractInfo: _contractInfo,
-              isDetail: !widget.isAdd,
-              onChanged: onChanged,
-            ),
-          ],
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(AppLocalizations.of(context).translate(widget.title),
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+              IconButton(
+                icon: Icon(Icons.save, color: _isEdited ? Colors.blue : Colors.grey),
+                onPressed: _isEdited ? _saveContract : null,
+              ),
+            ],
+          ),
+          SizedBox(height: defaultPadding),
+        ],
       ),
     );
   }
 }
 
-class ContractDetailInfo extends StatefulWidget {
-  final CreateContractRequest contractInfo;
-  final bool isDetail;
-  final Function() onChanged;
+class ContractFormFields extends StatefulWidget {
+  final CreateContractRequest contract;
+  final bool isReadOnly;
+  final VoidCallback onEdited;
 
-  const ContractDetailInfo({
+  const ContractFormFields({
     super.key,
-    required this.contractInfo,
-    required this.isDetail,
-    required this.onChanged,
+    required this.contract,
+    required this.isReadOnly,
+    required this.onEdited,
   });
 
   @override
-  State<ContractDetailInfo> createState() => _ContractDetailInfoState();
+  State<ContractFormFields> createState() => _ContractFormFieldsState();
 }
 
-class _ContractDetailInfoState extends State<ContractDetailInfo> {
-  late Map<String, TextEditingController> controllers;
+class _ContractFormFieldsState extends State<ContractFormFields> {
+  late Map<String, TextEditingController> _controllers;
 
   @override
   void initState() {
@@ -101,77 +94,88 @@ class _ContractDetailInfoState extends State<ContractDetailInfo> {
     _initializeControllers();
   }
 
-  TextEditingController _buildController(String fieldName, String initialValue) {
-    final controller = TextEditingController(text: initialValue);
-    controller.addListener(() {
-      widget.contractInfo.setValueByField(fieldName, controller.text);
-      widget.onChanged();
-    });
-    return controller;
-  }
-
   void _initializeControllers() {
-    controllers = {
+    _controllers = {
       for (var field in CreateContractRequest.getFieldNames())
-        field: _buildController(field, widget.contractInfo.getValueByField(field))
+        field: TextEditingController(text: widget.contract.getValueByField(field))
+          ..addListener(() {
+            widget.contract.setValueByField(field, _controllers[field]!.text);
+            widget.onEdited();
+          })
     };
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(defaultPadding),
-      child: Column(
-        children: [
-          ...controllers.entries.map((entry) => CustomTextField(
-                controller: entry.value,
-                title: entry.key,
-              )),
-        ],
-      ),
-    );
-  }
-
-  @override
   void dispose() {
-    for (var controller in controllers.values) {
+    for (var controller in _controllers.values) {
       controller.dispose();
     }
     super.dispose();
   }
+
+  @override
+  Widget build(BuildContext context) {
+    final fields = _controllers.entries.toList();
+
+    return Padding(
+      padding: EdgeInsets.all(defaultPadding),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              // Cột 1
+              Expanded(
+                child: Column(
+                  children: fields.sublist(0, fields.length ~/ 2).map((entry) => CustomTextField(
+                        controller: entry.value,
+                        label: entry.key,
+                        isReadOnly: widget.isReadOnly,
+                      )).toList(),
+                ),
+              ),
+              SizedBox(width: defaultPadding),
+              // Cột 2
+              Expanded(
+                child: Column(
+                  children: fields.sublist(fields.length ~/ 2).map((entry) => CustomTextField(
+                        controller: entry.value,
+                        label: entry.key,
+                        isReadOnly: widget.isReadOnly,
+                      )).toList(),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 }
 
-class CustomTextField extends StatefulWidget {
+class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
-  final String title;
+  final String label;
+  final bool isReadOnly;
 
   const CustomTextField({
     super.key,
     required this.controller,
-    required this.title,
+    required this.label,
+    required this.isReadOnly,
   });
-
-  @override
-  State<CustomTextField> createState() => _CustomTextFieldState();
-}
-
-class _CustomTextFieldState extends State<CustomTextField> {
-  String? errorText;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: TextField(
-        controller: widget.controller,
+        controller: controller,
+        readOnly: isReadOnly,
         decoration: InputDecoration(
-          labelText: AppLocalizations.of(context).translate(widget.title),
-          labelStyle: TextStyle(
-            color: Theme.of(context).colorScheme.onPrimary
-          ),
+          labelText: AppLocalizations.of(context).translate(label),
+          labelStyle: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
           border: const OutlineInputBorder(),
           focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue, width: 2)),
-          errorText: errorText,
         ),
       ),
     );

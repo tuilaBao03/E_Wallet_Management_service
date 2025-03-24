@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class ContractListResponse {
-    Contract contract;
-    List<Contract> contracts;
+    int page;
+    int pageAmount;
+    List<ContractBySearchAndPage> contracts;
 }

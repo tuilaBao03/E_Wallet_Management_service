@@ -1,7 +1,10 @@
 package com.backend.smartwalletapp.service;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Service;
 
 import com.backend.smartwalletapp.Mapper.ContractMapper;
@@ -12,12 +15,11 @@ import com.backend.smartwalletapp.client.responses.Contract.get.GetContractByNum
 import com.backend.smartwalletapp.client.responses.Contract.get.GetContractsByClientV2Result;
 import com.backend.smartwalletapp.client.responses.Contract.get.IssContractDetailsAPIOutputV2Record;
 import com.backend.smartwalletapp.client.service.ContractSoapService;
-import com.backend.smartwalletapp.config.ApplicationInitConfig;
 import com.backend.smartwalletapp.dto.request.Contract.ContractCreatedRequest;
 import com.backend.smartwalletapp.dto.request.Contract.ContractCreatedRequestLevel2;
 import com.backend.smartwalletapp.dto.response.ApiResponse;
 import com.backend.smartwalletapp.dto.response.Contract.CreateContractReponse;
-import com.backend.smartwalletapp.dto.response.Contract.GetContract.Contract;
+import com.backend.smartwalletapp.dto.response.Contract.GetContract.ContractBySearchAndPage;
 import com.backend.smartwalletapp.dto.response.Contract.GetContract.ContractListResponse;
 import com.backend.smartwalletapp.exception.AppException;
 import com.backend.smartwalletapp.exception.ErrorCode;
@@ -31,69 +33,97 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class ContractService {
-
-    private final ApplicationRunner applicationRunner;
-
-    private final ApplicationInitConfig applicationInitConfig;
-
-
-
     ContractSoapService contractSoapService;
     ContractMapper contractMapper;
-
-
-
-
-
-    // public Contract LockUnlockContract(String id,LockUnLockContracRequest request){
-    //     try {
-    //         LockOrUnLockContractSoapResponse lockOrUnlockCardHolderSoapResponse 
-    //         = contractSoapService.LockOrUnLockContractSoap(id, request.isNewStatus());
-            
-    //         return lockOrUnlockCardHolderSoapResponse.getContract();
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //         throw new AppException(ErrorCode.LOCK_UNLOCK_FAILE);
-    //     }
-    // }
-
-    // public List<Contract> giveContractByCardHolder(String cardHolderId){
-    //     try {
-    //         GetContractByCardHolderSoapResponse getContractByCardHolderSoapResponse
-    //         = contractSoapService.getContractByCardHolder(cardHolderId);
-    //         return getContractByCardHolderSoapResponse.getContracts();
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //         throw new AppException(ErrorCode.GET_CONTRACT_FAILE);
-    //     }
-    // }
+    CardHolderService cardHolderService;
+    public List<ContractListResponse> giveContractBySearchAndPage(String search, int page) {
     
-    // public ContractResponse giveContractBySearch(String search, int page){
-    //     try {
-    //         GetContractBySearchSoapResponse getContractBySearchSoapResponse
-    //         = contractSoapService.getContractBySearch(search, page);
-    //         List<Contract> contracts = getContractBySearchSoapResponse.getContracts();
-    //         int pages = getContractBySearchSoapResponse.getPage();
-    //         int pageAmount = getContractBySearchSoapResponse.getPageAmount();
+        String query = """
+            SELECT CONTRACT_NUMBER, BRANCH, SERVICE_GROUP, CONTRACT_NAME, CONTRACT_LEVEL, 
+                BILLING_CONTRACT, PARENT_PRODUCT, PRODUCT, LIAB_CONTRACT 
+            FROM ACNT_CONTRACT
+        """;
 
-    //         ContractResponse contractResponse = new ContractResponse(pages, pageAmount,contracts);
-    //         return contractResponse;
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //         throw new AppException(ErrorCode.GET_CONTRACT_FAILE);
-    //     }
-    // }
-    // public Contract updateLimit(String contractId, BigDecimal newLimit){
-    //     try {
-    //         UpdateLimitContractSoapResponse updateLimitContractSoapResponse
-    //         = contractSoapService.UpdateLimitContractByCardHolder(contractId, newLimit);
-    //         Contract contract = updateLimitContractSoapResponse.getContract();
-    //         return contract;
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //         throw new AppException(ErrorCode.GET_CONTRACT_FAILE);
-    //     }
-    // }
+        try (Connection connection = cardHolderService.openConnection();
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet resultSet = statement.executeQuery()) {
+
+            List<ContractBySearchAndPage> allContracts = new ArrayList<>();
+
+            while (resultSet.next()) {
+                ContractBySearchAndPage contract = new ContractBySearchAndPage();
+                contract.setCONTRACT_NUMBER(resultSet.getString("CONTRACT_NUMBER"));
+                contract.setBRANCH(resultSet.getString("BRANCH"));
+                contract.setSERVICE_GROUP(resultSet.getString("SERVICE_GROUP"));
+                contract.setCONTRACT_NAME(resultSet.getString("CONTRACT_NAME"));
+                contract.setCONTRACT_LEVEL(resultSet.getString("CONTRACT_LEVEL"));
+                contract.setBILLING_CONTRACT(resultSet.getString("BILLING_CONTRACT"));
+                contract.setPARENT_PRODUCT(resultSet.getString("PARENT_PRODUCT"));
+                contract.setPRODUCT(resultSet.getString("PRODUCT"));
+                contract.setLIAB_CONTRACT(resultSet.getString("LIAB_CONTRACT"));
+                allContracts.add(contract);
+            }
+
+            // Chia danh sách theo CONTRACT_LEVEL
+            List<ContractBySearchAndPage> libContracts = allContracts.stream()
+                    .filter(c -> ".".equals(c.getCONTRACT_LEVEL()))
+                    .toList();
+
+            List<ContractBySearchAndPage> issueContracts = allContracts.stream()
+                    .filter(c -> c.getCONTRACT_LEVEL() != null && c.getCONTRACT_LEVEL().matches("^\\.[0-9]+\\.$"))
+                    .toList();
+
+            List<ContractBySearchAndPage> cardContracts = allContracts.stream()
+                    .filter(c -> c.getCONTRACT_LEVEL() == null || !c.getCONTRACT_LEVEL().matches("^\\.[0-9]+\\.$"))
+                    .toList();
+
+            // Gán danh sách cards cho issueContracts
+            issueContracts.forEach(issue -> issue.setContracts(
+                    cardContracts.stream()
+                            .filter(card -> card.getPARENT_PRODUCT() != null && card.getPARENT_PRODUCT().equals(issue.getPRODUCT()))
+                            .toList()
+            ));
+
+            // Gán danh sách issueContracts cho libContracts
+            libContracts.forEach(lib -> lib.setContracts(
+                    issueContracts.stream()
+                            .filter(issue -> issue.getLIAB_CONTRACT() != null && issue.getLIAB_CONTRACT().equals(lib.getBILLING_CONTRACT()))
+                            .toList()
+            ));
+
+            // Lọc danh sách theo search
+            List<ContractBySearchAndPage> searchAndPages = libContracts.stream()
+                    .filter(c -> c.getCONTRACT_NAME().toLowerCase().contains(search.toLowerCase()))
+                    .toList();
+
+            // ✅ Áp dụng phân trang
+            int pageSize = 10;
+            int totalRecords = searchAndPages.size();
+            int totalPages = (int) Math.ceil((double) totalRecords / pageSize);
+            int fromIndex = (page - 1) * pageSize;
+            int toIndex = Math.min(fromIndex + pageSize, totalRecords);
+
+            List<ContractBySearchAndPage> paginatedContracts = new ArrayList<>();
+            if (fromIndex < totalRecords) {
+                paginatedContracts = searchAndPages.subList(fromIndex, toIndex);
+            }
+
+            // Tạo danh sách trả về
+            List<ContractListResponse> responseList = new ArrayList<>();
+            ContractListResponse response = new ContractListResponse();
+            response.setPage(page);
+            response.setPageAmount(totalPages);
+            response.setContracts(paginatedContracts);
+            responseList.add(response);
+
+            return responseList;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new AppException(ErrorCode.GET_CONTRACT_FAILE);
+        }
+    }
+
     public CreateContractReponse createContract(ContractCreatedRequest request){
         try {
             CreateContractV4_REQ req = contractMapper.mapToSoapRequest(request);
@@ -118,14 +148,13 @@ public class ContractService {
             throw new AppException(ErrorCode.CREATE_CONTRACT_FAILE);
         }
     }
-
     public ApiResponse<List<IssContractDetailsAPIOutputV2Record>> GetContracts_ContractNumber(String contractNumber){
         try{
             GetContractByNumberV2Result response = contractSoapService.getContractByContractNumber(contractNumber);
             int code = response.getRetCode();
             String mess = response.getResultInfo();
-
             List<IssContractDetailsAPIOutputV2Record> contract = response.getOutObject().getContractRecords();
+
             return ApiResponse.<List<IssContractDetailsAPIOutputV2Record>>builder()
             .result(contract)
             .code(code)
@@ -137,26 +166,126 @@ public class ContractService {
             throw new AppException(ErrorCode.GET_CONTRACT_FAILE);
         }
     }
-    public ApiResponse<List<IssContractDetailsAPIOutputV2Record>> GetContracts_ClientIdentifier(String ClientIdentifier){
-        try{
+    public ApiResponse<List<IssContractDetailsAPIOutputV2Record>> GetContracts_ClientIdentifier(String ClientIdentifier) {
+        try {
+            // Gọi SOAP API để lấy danh sách hợp đồng
             GetContractsByClientV2Result response = contractSoapService.getContractByClientIdentifier(ClientIdentifier);
             int code = response.getRetCode();
             String mess = response.getResultInfo();
-
-            List<IssContractDetailsAPIOutputV2Record> contract = response.getOutObject().getContractRecords();
-
-
-
+            List<IssContractDetailsAPIOutputV2Record> allContracts = response.getOutObject().getContractRecords();
+    
+            // Phân loại hợp đồng
+            List<IssContractDetailsAPIOutputV2Record> libContracts = allContracts.stream()
+                    .filter(c -> ".".equals(c.getContractLevel()))
+                    .toList();
+    
+            List<IssContractDetailsAPIOutputV2Record> issueContracts = allContracts.stream()
+                    .filter(c -> c.getContractLevel() != null && c.getContractLevel().matches("^\\.[0-9]+\\.$"))
+                    .toList();
+    
+            List<IssContractDetailsAPIOutputV2Record> cardContracts = allContracts.stream()
+                    .filter(c -> c.getContractLevel() == null || !c.getContractLevel().matches("^\\.[0-9]+\\.$"))
+                    .toList();
+    
+            // Gán danh sách cardContracts cho issueContracts
+            issueContracts.forEach(issue -> issue.setContract(
+                    cardContracts.stream()
+                            .filter(card -> card.getParentProduct() != null && card.getParentProduct().equals(issue.getProduct()))
+                            .toList()
+            ));
+    
+            // Gán danh sách issueContracts cho libContracts
+            libContracts.forEach(lib -> lib.setContract(
+                    issueContracts.stream()
+                            .filter(issue -> issue.getLiabilityContract()!= null && issue.getLiabilityContract().equals(lib.getBillingContract()))
+                            .toList()
+            ));
             return ApiResponse.<List<IssContractDetailsAPIOutputV2Record>>builder()
-            .result(contract)
-            .code(code)
-            .message(mess).build();
-        }
-        catch(Exception e){
-            System.err.println("\n____________ 06112003_______________\n");
+                    .result(libContracts)
+                    .code(code)
+                    .message(mess)
+                    .build();
+    
+        } catch (Exception e) {
             e.printStackTrace();
             throw new AppException(ErrorCode.GET_CONTRACT_FAILE);
         }
     }
+    
 
 }
+
+
+//     public List<ContractBySearchAndPage> giveContractBySearchAndPage(String search, int page) {
+    
+//     String query = """
+//         SELECT CONTRACT_NUMBER, BRANCH, SERVICE_GROUP, CONTRACT_NAME, CONTRACT_LEVEL, 
+//                BILLING_CONTRACT, PARENT_PRODUCT, PRODUCT, LIAB_CONTRACT 
+//         FROM ACNT_CONTRACT
+//     """;
+
+//     try (Connection connection = cardHolderService.openConnection();
+//          PreparedStatement statement = connection.prepareStatement(query);
+//          ResultSet resultSet = statement.executeQuery()) {
+
+//         List<ContractBySearchAndPage> allContracts = new ArrayList<>();
+
+//         while (resultSet.next()) {
+//             ContractBySearchAndPage contract = new ContractBySearchAndPage();
+//             contract.setCONTRACT_NUMBER(resultSet.getString("CONTRACT_NUMBER"));
+//             contract.setBRANCH(resultSet.getString("BRANCH"));
+//             contract.setSERVICE_GROUP(resultSet.getString("SERVICE_GROUP"));
+//             contract.setCONTRACT_NAME(resultSet.getString("CONTRACT_NAME"));
+//             contract.setCONTRACT_LEVEL(resultSet.getString("CONTRACT_LEVEL"));
+//             contract.setBILLING_CONTRACT(resultSet.getString("BILLING_CONTRACT"));
+//             contract.setPARENT_PRODUCT(resultSet.getString("PARENT_PRODUCT"));
+//             contract.setPRODUCT(resultSet.getString("PRODUCT"));
+//             contract.setLIAB_CONTRACT(resultSet.getString("LIAB_CONTRACT"));
+//             allContracts.add(contract);
+//         }
+
+//         // Chia danh sách bằng Stream API
+//         List<ContractBySearchAndPage> libContracts = allContracts.stream()
+//                 .filter(c -> ".".equals(c.getCONTRACT_LEVEL()))
+//                 .toList();
+
+//         List<ContractBySearchAndPage> issueContracts = allContracts.stream()
+//                 .filter(c -> c.getCONTRACT_LEVEL() != null && c.getCONTRACT_LEVEL().matches("^\\.[0-9]+\\.$"))
+//                 .toList();
+
+//         List<ContractBySearchAndPage> cardContracts = allContracts.stream()
+//                 .filter(c -> c.getCONTRACT_LEVEL() == null || !c.getCONTRACT_LEVEL().matches("^\\.[0-9]+\\.$"))
+//                 .toList();
+
+//         // Gán danh sách cards cho issueContracts
+//         issueContracts.forEach(issue -> issue.setContracts(
+//                 cardContracts.stream()
+//                         .filter(card -> card.getPARENT_PRODUCT() != null && card.getPARENT_PRODUCT().equals(issue.getPRODUCT()))
+//                         .toList()
+//         ));
+
+//         // Gán danh sách issueContracts cho libContracts
+//         libContracts.forEach(lib -> lib.setContracts(
+//                 issueContracts.stream()
+//                         .filter(issue -> issue.getLIAB_CONTRACT() != null && issue.getLIAB_CONTRACT().equals(lib.getBILLING_CONTRACT()))
+//                         .toList()
+//         ));
+
+//         List<ContractBySearchAndPage> searchAndPages = new ArrayList<>();
+
+//         for(int i=0;i<libContracts.size();i++){
+//             if (libContracts.get(i).getCONTRACT_NAME().toLowerCase().contains(search.toLowerCase())) {
+//                 searchAndPages.add(libContracts.get(i));
+//             }
+//         }
+
+        
+        
+
+//         return libContracts;
+
+//     } catch (Exception e) {
+//         e.printStackTrace();
+//         throw new AppException(ErrorCode.GET_CONTRACT_FAILE);
+//     }
+// }

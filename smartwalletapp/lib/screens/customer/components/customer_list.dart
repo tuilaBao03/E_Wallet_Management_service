@@ -2,26 +2,31 @@
 
 import 'dart:collection';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:smartwalletapp/app/locallization/app_localizations.dart';
+import 'package:smartwalletapp/bloc/CardHolder/card_holder_bloc.dart';
+import 'package:smartwalletapp/bloc/CardHolder/card_holder_event.dart';
 import 'package:smartwalletapp/models/create_cardholder_request.dart';
+import 'package:smartwalletapp/response/cardHolder/getCardHolderResponse.dart';
 import 'package:smartwalletapp/screens/customer/components/add_customer.dart';
+import 'package:smartwalletapp/screens/customer/components/detail_customer.dart';
 import 'package:smartwalletapp/screens/main/components/classInitial.dart';
 import '../../../constants.dart';
 
 class CustomerList extends StatefulWidget {
   final String token;
-  final List<CreateCardHolderRequest> object;
+  final List<GetCardHolderResponse> cardholders;
   final String title;
-  final HashSet<String> objectColumnName;
-  final Function(CreateCardHolderRequest) onCustomer_Contracts;
+  final bool showContractList;
+  final int page;
+  final String search;
 
   const CustomerList({
     super.key,
-    required this.object,
-    required this.objectColumnName,
+    required this.cardholders,
     required this.title,
-    required this.onCustomer_Contracts, required this.token,
+    required this.token, required this.showContractList, required this.page, required this.search,
   });
 
   @override
@@ -31,26 +36,34 @@ class CustomerList extends StatefulWidget {
 class _CustomerListState extends State<CustomerList> {
 
   final TextEditingController _searchController = TextEditingController();
-  List<CreateCardHolderRequest> _filteredCardHolder = [];
+  List<GetCardHolderResponse> _filteredCardHolder = [];
+  final HashSet<String> objectColumnNameOfUser = HashSet.from([
+    "FirstName",
+    "LastName",
+    "Detail",
+    "ContractList"
+  ]);
+  
+
 
   @override
   void initState() {
     super.initState();
-    _filteredCardHolder = widget.object;
+    _filteredCardHolder = widget.cardholders;
     print("${_filteredCardHolder.length}");
   }
 
-  @override
-  void didUpdateWidget(covariant CustomerList oldWidget) {
-    super.didUpdateWidget(oldWidget);
+  // @override
+  // void didUpdateWidget(covariant CustomerList oldWidget) {
+  //   super.didUpdateWidget(oldWidget);
 
-    // Nếu user thay đổi, cập nhật danh sách thẻ
-    if (oldWidget.object.length != widget.object.length) {
-      setState(() {
-        _filteredCardHolder = widget.object;
-      });
-    }
-  }
+  //   // Nếu user thay đổi, cập nhật danh sách thẻ
+  //   if (oldWidget.object.length != widget.object.length) {
+  //     setState(() {
+  //       _filteredCardHolder = widget.object;
+  //     });
+  //   }
+  // }
 
   @override
   void dispose() {
@@ -59,17 +72,7 @@ class _CustomerListState extends State<CustomerList> {
   }
 
   void _searchUser() {
-    String query = _searchController.text.trim().toLowerCase();
-    if (query.isEmpty) {
-      setState(() => _filteredCardHolder = widget.object);
-      return;
-    }
-    setState(() {
-      _filteredCardHolder = widget.object.where((user) {
-        return user.firstName.toLowerCase().contains(query) ||
-               user.lastName.toLowerCase().contains(query);
-      }).toList();
-    });
+    
   }
 
   @override
@@ -95,7 +98,7 @@ class _CustomerListState extends State<CustomerList> {
             IconButton(
               icon: Icon(Icons.add),
               onPressed: () {
-                _showAddDialog(context, emptyCardHolder);
+                _showAddDialog(context, emptyCardHolder_ADD);
               },
             ),
             ],
@@ -113,7 +116,6 @@ class _CustomerListState extends State<CustomerList> {
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
-                    onChanged: (_) => _searchUser(),
                     onSubmitted: (_) => _searchUser(),
                   ),
                 ),
@@ -136,7 +138,7 @@ class _CustomerListState extends State<CustomerList> {
                     width: double.infinity,
                     child: DataTable(
                       columnSpacing: defaultPadding,
-                      columns: widget.objectColumnName
+                      columns: objectColumnNameOfUser
                           .map(
                             (name) => DataColumn(
                               label: Text(
@@ -158,7 +160,7 @@ class _CustomerListState extends State<CustomerList> {
     );
   }
 
-  DataRow _buildDataRow(CreateCardHolderRequest cardHolder, BuildContext context) {
+  DataRow _buildDataRow(GetCardHolderResponse cardHolder, BuildContext context) {
     return DataRow(
       cells: [
         DataCell(Text(cardHolder.firstName)),
@@ -172,26 +174,23 @@ class _CustomerListState extends State<CustomerList> {
         DataCell(
           IconButton(
             icon: const Icon(Icons.content_paste_search_outlined, color: Colors.blueAccent),
-            onPressed: () => widget.onCustomer_Contracts(cardHolder),
+            onPressed: (){
+              context.read<CardHolderBloc>().add(CardHolderInitialEvent(widget.token, widget.search, widget.page, widget.showContractList == true ? false : true,cardHolder ));
+            },
           ),
         ),
       ],
     );
   }
 
-  void _showDetailDialog(BuildContext context, CreateCardHolderRequest cardHolder) {
+  void _showDetailDialog(BuildContext context, GetCardHolderResponse cardHolder) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           content: Container(
             width: Get.width / 2,
-            child: AddCustomer(
-              object: cardHolder,
-              title: 'CustomerDetail',
-              isDetail: true,
-              isAdd: false, token: '',
-            ),
+            child: DetailCustomer(object: cardHolder,title: "Card Holder Detail",)
           ),
           actions: [
             TextButton(

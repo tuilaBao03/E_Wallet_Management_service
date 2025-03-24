@@ -18,7 +18,7 @@ User selectedUserInittial = User(
     updateDate: DateTime.now(),
     status: true,
   );
-  final CreateCardHolderRequest emptyCardHolder = CreateCardHolderRequest(
+  final CreateCardHolderRequest emptyCardHolder_ADD = CreateCardHolderRequest(
   reason: "Create lient",
   institutionCode: "9999",
   branch: "9999",
@@ -78,8 +78,7 @@ User selectedUserInittial = User(
     embossedFirstName: 'Phan',
     embossedLastName: 'Hong',
     embossedCompanyName: 'OpenWay');
-  CreateContractRequest selectedContractInittial = 
-  CreateContractRequest(
+  CreateContractRequest selectedContractInittial = CreateContractRequest(
     reason: "to test",
     branch: "9999",
     institutionCode: "9999",
@@ -92,3 +91,4 @@ User selectedUserInittial = User(
     clientIdentifier: "",
     clientSearchMethod: "CLIENT_NUMBER",
   );
+  

@@ -3,6 +3,7 @@ import 'package:smartwalletapp/models/create_card_request.dart';
 import 'package:smartwalletapp/models/create_cardholder_request.dart';
 import 'package:smartwalletapp/models/create_contract_request.dart';
 import 'package:smartwalletapp/models/user.dart';
+import 'package:smartwalletapp/response/cardHolder/getCardHolderResponse.dart';
 
 abstract class MainAppEvent{}
 
@@ -12,14 +13,9 @@ class initializationEvent extends MainAppEvent{
 }
 
 class giveContractListEvent extends MainAppEvent{
-    final CreateCardHolderRequest cardHolder;
+    final GetCardHolderResponse cardHolder;
     final int page;
     giveContractListEvent(this.cardHolder, this.page);
-}
-
-class giveCardListEvent extends MainAppEvent{
-    final CreateContractRequest contract;
-    giveCardListEvent(this.contract);
 }
 
 class giveTransactionEvent extends MainAppEvent{

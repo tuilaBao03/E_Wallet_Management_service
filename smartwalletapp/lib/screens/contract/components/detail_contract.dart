@@ -1,177 +1,140 @@
 import 'package:flutter/material.dart';
-import 'package:smartwalletapp/models/create_contract_request.dart';
-import 'package:smartwalletapp/bloc/MainApp/MainAppBloc.dart';
-import 'package:smartwalletapp/bloc/MainApp/MainAppEvent.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smartwalletapp/constants.dart';
-import 'package:smartwalletapp/app/locallization/app_localizations.dart';
-import 'package:smartwalletapp/screens/main/components/classInitial.dart';
+import 'package:smartwalletapp/response/contract/get_contract_response.dart';
 
-class ContractAddScreen extends StatefulWidget {
-  final String token;
-  final bool isAdd;
-  final String title;
-  final CreateContractRequest? object;
+class ContractDetailScreen extends StatelessWidget {
+  final GetContractResponse contractInfo;
 
-  const ContractAddScreen({
-    super.key,
-    required this.token,
-    required this.isAdd,
-    required this.title,
-    this.object,
-  });
-
-  @override
-  State<ContractAddScreen> createState() => _ContractAddScreenState();
-}
-
-class _ContractAddScreenState extends State<ContractAddScreen> {
-  late CreateContractRequest _contractInfo;
-  bool isChanged = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _contractInfo = widget.object ?? selectedContractInittial;
-  }
-
-  void onChanged() {
-    setState(() => isChanged = true);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(defaultPadding),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.secondary,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(AppLocalizations.of(context).translate(widget.title), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
-                IconButton(
-                  icon: Icon(Icons.save, color: isChanged ? Colors.blue : Colors.grey),
-                  onPressed: isChanged
-                      ? () => context.read<MainAppBloc>().add(AddContractEvent(_contractInfo, widget.token))
-                      : null,
-                ),
-              ],
-            ),
-            SizedBox(height: defaultPadding),
-            ContractDetailInfo(
-              contractInfo: _contractInfo,
-              isDetail: !widget.isAdd,
-              onChanged: onChanged,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class ContractDetailInfo extends StatefulWidget {
-  final CreateContractRequest contractInfo;
-  final bool isDetail;
-  final Function() onChanged;
-
-  const ContractDetailInfo({
+  const ContractDetailScreen({
     super.key,
     required this.contractInfo,
-    required this.isDetail,
-    required this.onChanged,
   });
 
-  @override
-  State<ContractDetailInfo> createState() => _ContractDetailInfoState();
-}
-
-class _ContractDetailInfoState extends State<ContractDetailInfo> {
-  late Map<String, TextEditingController> controllers;
-
-  @override
-  void initState() {
-    super.initState();
-    _initializeControllers();
-  }
-
-  TextEditingController _buildController(String fieldName, String initialValue) {
-    final controller = TextEditingController(text: initialValue);
-    controller.addListener(() {
-      widget.contractInfo.setValueByField(fieldName, controller.text);
-      widget.onChanged();
-    });
-    return controller;
-  }
-
-  void _initializeControllers() {
-    controllers = {
-      for (var field in CreateContractRequest.getFieldNames())
-        field: _buildController(field, widget.contractInfo.getValueByField(field))
-    };
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildInfoField(String label, String? value) {
     return Padding(
-      padding: EdgeInsets.all(defaultPadding),
-      child: Column(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ...controllers.entries.map((entry) => CustomTextField(
-                controller: entry.value,
-                title: entry.key,
-              )),
+          Expanded(
+            flex: 2,
+            child: Text(label, style: const TextStyle(fontWeight: FontWeight.w600)),
+          ),
+          Expanded(
+            flex: 3,
+            child: Text(value ?? "-", style: const TextStyle(color: Colors.black87)),
+          ),
         ],
       ),
     );
   }
 
-  @override
-  void dispose() {
-    for (var controller in controllers.values) {
-      controller.dispose();
+  Widget _buildTwoColumnLayout(List<Widget> children) {
+    List<Widget> leftColumn = [];
+    List<Widget> rightColumn = [];
+
+    for (int i = 0; i < children.length; i++) {
+      if (i.isEven) {
+        leftColumn.add(children[i]);
+      } else {
+        rightColumn.add(children[i]);
+      }
     }
-    super.dispose();
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(child: Column(children: leftColumn)),
+        const SizedBox(width: 20),
+        Expanded(child: Column(children: rightColumn)),
+      ],
+    );
   }
-}
-
-class CustomTextField extends StatefulWidget {
-  final TextEditingController controller;
-  final String title;
-
-  const CustomTextField({
-    super.key,
-    required this.controller,
-    required this.title,
-  });
-
-  @override
-  State<CustomTextField> createState() => _CustomTextFieldState();
-}
-
-class _CustomTextFieldState extends State<CustomTextField> {
-  String? errorText;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: TextField(
-        controller: widget.controller,
-        decoration: InputDecoration(
-          labelText: AppLocalizations.of(context).translate(widget.title),
-          labelStyle: TextStyle(
-            color: Theme.of(context).colorScheme.onPrimary
-          ),
-          border: const OutlineInputBorder(),
-          focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue, width: 2)),
-          errorText: errorText,
+      padding: EdgeInsets.all(defaultPadding),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Chi tiết hợp đồng", style: Theme.of(context).textTheme.titleLarge),
+            const SizedBox(height: 16),
+
+            _buildTwoColumnLayout([
+              _buildInfoField("Mã hợp đồng", contractInfo.id),
+              _buildInfoField("Số hợp đồng", contractInfo.contractNumber),
+              _buildInfoField("Số hợp đồng an toàn", contractInfo.safeContractNumber),
+              _buildInfoField("Tên hợp đồng", contractInfo.contractName),
+              _buildInfoField("Trạng thái", contractInfo.status),
+              _buildInfoField("Mã trạng thái", contractInfo.statusCode),
+              _buildInfoField("Loại hợp đồng", contractInfo.contractCategory),
+              _buildInfoField("Phân loại hợp đồng", contractInfo.contractSubtype),
+            ]),
+
+            const Divider(height: 32),
+
+            _buildTwoColumnLayout([
+              _buildInfoField("Khách hàng", contractInfo.client),
+              _buildInfoField("Tên đầy đủ", contractInfo.clientFullName),
+              _buildInfoField("Danh mục khách hàng", contractInfo.clientCategory),
+              _buildInfoField("Loại khách hàng", contractInfo.clientType),
+              _buildInfoField("Số CBS", contractInfo.cbsNumber),
+            ]),
+
+            const Divider(height: 32),
+
+            _buildTwoColumnLayout([
+              _buildInfoField("Sản phẩm chính", contractInfo.mainProductCorrected),
+              _buildInfoField("Mã sản phẩm chính", contractInfo.mainProductCode),
+              _buildInfoField("Sản phẩm", contractInfo.product),
+              _buildInfoField("Mã sản phẩm", contractInfo.productCode),
+              _buildInfoField("Danh mục sản phẩm", contractInfo.productCategory),
+              _buildInfoField("Danh mục sản phẩm sửa đổi", contractInfo.redefinedProductCategory),
+              _buildInfoField("Loại báo cáo", contractInfo.reportType),
+            ]),
+
+            const Divider(height: 32),
+
+            _buildTwoColumnLayout([
+              _buildInfoField("Tiền tệ", contractInfo.currency),
+              _buildInfoField("Số dư khả dụng", contractInfo.available?.toString()),
+              _buildInfoField("Số dư hiện tại", contractInfo.balance?.toString()),
+              _buildInfoField("Hạn mức tín dụng", contractInfo.creditLimit?.toString()),
+              _buildInfoField("Hạn mức bổ sung", contractInfo.addLimit?.toString()),
+              _buildInfoField("Tiền bị chặn", contractInfo.blocked?.toString()),
+              _buildInfoField("Tổng nợ đến hạn", contractInfo.totalDue?.toString()),
+              _buildInfoField("Nợ quá hạn", contractInfo.pastDue?.toString()),
+              _buildInfoField("Hạn mức bảo lãnh", contractInfo.shadowAuthLimit?.toString()),
+            ]),
+
+            const Divider(height: 32),
+
+            _buildTwoColumnLayout([
+              _buildInfoField("Hợp đồng thanh toán", contractInfo.billingContract),
+              _buildInfoField("Hợp đồng cấp trên", contractInfo.topContract),
+              _buildInfoField("Cấp hợp đồng", contractInfo.contractLevel),
+              _buildInfoField("Kiểm tra sử dụng", contractInfo.checkUsage),
+            ]),
+
+            const Divider(height: 32),
+
+            _buildTwoColumnLayout([
+              _buildInfoField("Ngày mở", contractInfo.openDate),
+              _buildInfoField("Ngày sửa đổi", contractInfo.amendmentDate),
+              _buildInfoField("Ngày hóa đơn cuối", contractInfo.lastBillingDate),
+              _buildInfoField("Ngày hóa đơn tiếp theo", contractInfo.nextBillingDate),
+              _buildInfoField("Ngày hoạt động cuối", contractInfo.lastActivityDate),
+              _buildInfoField("Ngày áp dụng cuối", contractInfo.lastApplicationDate),
+              _buildInfoField("Nhân viên áp dụng cuối", contractInfo.lastApplicationOfficer),
+              _buildInfoField("Trạng thái áp dụng cuối", contractInfo.lastApplicationStatus),
+              _buildInfoField("Sẵn sàng", contractInfo.ready),
+              _buildInfoField("Số ngày nợ quá hạn", contractInfo.pastDueDays?.toString()),
+            ]),
+
+            const SizedBox(height: 20),
+          ],
         ),
       ),
     );

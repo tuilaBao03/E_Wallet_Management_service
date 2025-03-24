@@ -54,10 +54,8 @@ class _MainScreenState extends State<MainScreen> {
       }, isAuth: widget.isAuth,),
       body: BlocConsumer<MainAppBloc,MainAppState>(
         builder: (context,state){
-          if(state is giveCardHolderListState){
-            cardHolders = state.cardHolders;
-          }
-          else if(state is UpdateUserSuccessState){
+        
+          if(state is UpdateUserSuccessState){
             selectedUsers = state.user;
           }
         return SafeArea(
@@ -82,7 +80,7 @@ class _MainScreenState extends State<MainScreen> {
     
       }, listener: (context,state){
         if(state is MainAppErrorState){
-          InputDialog.show(
+          InputDialog.showError(
             context,
             title: 'Thông báo lỗi',
             content: state.message,
@@ -98,7 +96,7 @@ class _MainScreenState extends State<MainScreen> {
 
         }
         else if(state is SuccessState){
-          InputDialog.show(
+          InputDialog.showSuccess(
             context,
             title: 'Thông báo thành công',
             content: state.message,
@@ -115,7 +113,7 @@ class _MainScreenState extends State<MainScreen> {
       // case 1:
       //   return DashboardScreen(isAuth: widget.isAuth, user: selectedUsers, onLanguageChange: widget.onLanguageChange, card_times: card_times,);
       case 2:
-        return CustomerScreen(isAuth: widget.isAuth, user: selectedUsers, cardHolders: cardHolders, onLanguageChange: widget.onLanguageChange, token: widget.token,);
+        return CustomerScreen(isAuth: widget.isAuth, user: selectedUsers, onLanguageChange: widget.onLanguageChange, token: widget.token,);
       case 3: 
         return ContractScreen(isAuth: widget.isAuth, user: selectedUsers,onLanguageChange: widget.onLanguageChange, token:widget.token,);
       case 4:
@@ -123,7 +121,7 @@ class _MainScreenState extends State<MainScreen> {
        // Thêm màn hình SettingScreen
       default:
         // return DashboardScreen(isAuth: widget.isAuth,user: selectedUsers, onLanguageChange: widget.onLanguageChange, card_times: card_times,);
-         return CustomerScreen(isAuth: widget.isAuth, user: selectedUsers, cardHolders: cardHolders, onLanguageChange: widget.onLanguageChange, token: widget.token,);
+         return CustomerScreen(isAuth: widget.isAuth, user: selectedUsers, onLanguageChange: widget.onLanguageChange, token: widget.token,);
     }
   }
 }

@@ -6,15 +6,21 @@ import org.springframework.web.bind.annotation.RestController;
 import com.backend.smartwalletapp.dto.request.CardHolder.CreateCardHolder.CardHolderCreatedRequest;
 import com.backend.smartwalletapp.dto.response.ApiResponse;
 import com.backend.smartwalletapp.dto.response.CardHolder.CreateCardHolderResponse;
+import com.backend.smartwalletapp.dto.response.CardHolder.GetCardHolder.CardHolderByPageAndSearch;
+import com.backend.smartwalletapp.dto.response.CardHolder.GetCardHolder.GetCardHolderResponse;
 import com.backend.smartwalletapp.service.CardHolderService;
 
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.List;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -36,6 +42,20 @@ public class CardHolderController {
             .code(code)
             .message(mess).build();
     }
+    @GetMapping("/{search}/{page}")
+    @PreAuthorize("hasRole(T(com.example.constants.Roles).USER.name()) or hasRole(T(com.example.constants.Roles).ADMIN.name())")
+    public ApiResponse<CardHolderByPageAndSearch> getAllCardHolder(@PathVariable String search, @PathVariable int page) {
+        CardHolderByPageAndSearch cardHolderResponse = cardHolderService.getCardHolders(page, search);
+        return ApiResponse.<CardHolderByPageAndSearch>builder()
+            .result(cardHolderResponse)
+            .code(200)
+            .message("ok")
+            .build();
+    }
+
+
+
+    
 
 
 

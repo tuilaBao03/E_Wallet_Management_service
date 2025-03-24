@@ -7,13 +7,13 @@ import 'package:smartwalletapp/constants.dart';
 import 'package:smartwalletapp/app/locallization/app_localizations.dart';
 import 'package:smartwalletapp/screens/main/components/classInitial.dart';
 
-class ContractAddScreen extends StatefulWidget {
+class ContractEditScreen extends StatefulWidget {
   final String token;
   final bool isAdd;
   final String title;
   final CreateContractRequest? object;
 
-  const ContractAddScreen({
+  const ContractEditScreen({
     super.key,
     required this.token,
     required this.isAdd,
@@ -22,10 +22,10 @@ class ContractAddScreen extends StatefulWidget {
   });
 
   @override
-  State<ContractAddScreen> createState() => _ContractAddScreenState();
+  State<ContractEditScreen> createState() => _ContractEditScreenState();
 }
 
-class _ContractAddScreenState extends State<ContractAddScreen> {
+class _ContractEditScreenState extends State<ContractEditScreen> {
   late CreateContractRequest _contractInfo;
   bool isChanged = false;
 

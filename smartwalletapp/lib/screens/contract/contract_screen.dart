@@ -5,8 +5,17 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smartwalletapp/app/locallization/app_localizations.dart';
+import 'package:smartwalletapp/bloc/Contract/ContractBloc.dart';
+import 'package:smartwalletapp/bloc/Contract/ContractEvent.dart';
+import 'package:smartwalletapp/bloc/Contract/ContractState.dart';
 import 'package:smartwalletapp/models/create_contract_request.dart';
+import 'package:smartwalletapp/response/cardHolder/getCardHolderResponse.dart';
+import 'package:smartwalletapp/response/contract/get_contract_response.dart';
 import 'package:smartwalletapp/screens/contract/components/contract_list.dart';
+import 'package:smartwalletapp/screens/general/dialogAlert.dart';
+import 'package:smartwalletapp/screens/general/paginationWidget.dart';
 import 'package:smartwalletapp/screens/main/components/classInitial.dart';
 
 
@@ -25,7 +34,6 @@ class ContractScreen extends StatefulWidget {
   final Function(Locale) onLanguageChange;
   const ContractScreen({super.key,
     required this.isAuth, required this.user, required this.onLanguageChange, required this.token,
-
   });
 
   @override
@@ -33,52 +41,101 @@ class ContractScreen extends StatefulWidget {
 }
 
 class _ContractScreenState extends State<ContractScreen> {
-  final HashSet<String> objectColumnNameOfContract = HashSet.from([
-    "ContractID",
-    "date",
-    "Detail",
-    "cardList",
-    "TranList"
-  ]);
+  @override
+  void initState() {
+    context.read<ContractBloc>().add(ContractInitialEvent(widget.token,1,""));
+  }
 
   CreateContractRequest selectedContract = selectedContractInittial;
-  bool selectContractDetail = false;
-
-  void updateContractDetail(CreateContractRequest contract){
-   setState(() {
-     selectedContract = contract;
-     selectContractDetail = true;
-   });
-  }
+  final TextEditingController _searchController = TextEditingController();
+  List<GetContractResponse> libContract = [];
+  int page = 1;
+  int pageAmount = 1;
+  String search = "";
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: SingleChildScrollView(
-        primary: false,
-        padding: EdgeInsets.all(defaultPadding),
-        child: Column(
-          children: [
-            Header(title: "Contract",user: widget.user, isAuth: widget.isAuth, onLanguageChange: widget.onLanguageChange,),
-            SizedBox(height: defaultPadding),
-            
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: Column(
+    return BlocConsumer<ContractBloc,ContractState>(
+      builder: (context,state){
+        if(state is ContractLoadingState){
+          return Center(child: CircularProgressIndicator(),);
+        }
+        else if(state is ContractLoadedState){
+          libContract = state.libContracts;
+          page = state.page;
+          pageAmount = state.pageAmount;
+          return SafeArea(
+            child: SingleChildScrollView(
+              primary: false,
+              padding: EdgeInsets.all(defaultPadding),
+              child: Column(
+                children: [
+                  Header(title: "Contract",user: widget.user, isAuth: widget.isAuth, onLanguageChange: widget.onLanguageChange,),
+                  SizedBox(height: defaultPadding),
+                  
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ContractList(
-                        title: 'ContractList',
-                        cardHolder: emptyCardHolder, isContractScreent: true, token: widget.token,),
+                      Expanded(
+                        flex: 1,
+                        child: Column(
+                          children: [
+                          TextField(
+                          controller: _searchController,
+                          decoration: InputDecoration(
+                            hintText: AppLocalizations.of(context).translate("Finding by ContractName"),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                          onChanged: (value) {
+                            setState(() {
+                              search = _searchController.text;
+                            });
+                            context.read<ContractBloc>().add(ContractInitialEvent(widget.token,1,search));
+                          },
+                        ),
+                            ContractList(
+                              title: 'ContractList',
+                              contracts: libContract, isContractScreent: true, token: widget.token, page: 1,
+                            ),
+                            PaginationWidget(page: page,amountPage: pageAmount, onPageChanged: (int page){
+                              context.read<ContractBloc>().add(ContractInitialEvent(widget.token,page,search));
+                            },),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
-                ),
-              ],
-            )
-          ],
-        ),
-      ),
-    );
-  }
+                  
+                ],
+              ),
+              
+            ),
+
+            
+          );
+        
+        }
+        return Center(child: CircularProgressIndicator(),);
+
+      },
+      listener: (context,state){
+        if(state is ContractErrorState){
+          InputDialog.showError(
+            context,
+            title: 'Error',
+            content: state.mess,
+          );
+        }
+        else if(state is ContractSuccessState){
+          InputDialog.showSuccess(
+            context,
+            title: 'Success',
+            content: state.mess,
+          );
+        }
+      });
+    
+    
+    }
 }

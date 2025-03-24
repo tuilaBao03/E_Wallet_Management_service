@@ -37,7 +37,7 @@ class _AddCustomerState extends State<AddCustomer> {
   void initState() {
     super.initState();
     // Nếu add mới thì tạo object rỗng, còn detail thì lấy object truyền vào
-    _objectInfo = widget.object ?? emptyCardHolder;
+    _objectInfo = widget.object ?? emptyCardHolder_ADD;
   }
 
   void onChanged() {

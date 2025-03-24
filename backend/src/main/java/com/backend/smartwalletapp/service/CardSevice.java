@@ -40,8 +40,6 @@ public class CardSevice {
             throw new AppException(ErrorCode.GET_CARD_FAILLE);
         }
     }
-
-
     public Card LockUnlockCard(String contractId, LockOrUnLockCardRequest request){
         try {
             LockOrUnLockCardSoapResponse response = cardSoapService.LockOrUnLock(contractId, request.isNewStatus());

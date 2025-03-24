@@ -1,5 +1,7 @@
 package com.backend.smartwalletapp.client.responses.Contract.get;
 
+import java.util.List;
+
 import jakarta.xml.bind.annotation.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -177,5 +179,32 @@ public class IssContractDetailsAPIOutputV2Record {
 
     @XmlElement(name = "MainProductCode",namespace = "http://www.openwaygroup.com/wsint")
     private String mainProductCode;
+
+    @XmlElement(name = "ParentProduct", namespace = "http://www.openwaygroup.com/wsint")
+    private String parentProduct;
+
+    @XmlElement(name = "ParentContract", namespace = "http://www.openwaygroup.com/wsint")
+    private String parentContract;
+
+    @XmlElement(name = "LiabilityCategory", namespace = "http://www.openwaygroup.com/wsint")
+    private String liabilityCategory;
+
+    @XmlElement(name = "LiabilityContract", namespace = "http://www.openwaygroup.com/wsint")
+    private String liabilityContract;
+
+    @XmlElement(name = "AddInfo01", namespace = "http://www.openwaygroup.com/wsint")
+    private String addInfo01;
+
+    @XmlElement(name = "AddInfo02", namespace = "http://www.openwaygroup.com/wsint")
+    private String addInfo02;
+
+    @XmlElement(name = "BehaviourType", namespace = "http://www.openwaygroup.com/wsint")
+    private String behaviourType;
+
+    @XmlElement(name = "ParentProductCode", namespace = "http://www.openwaygroup.com/wsint")
+    private String parentProductCode;
+
+
+    List<IssContractDetailsAPIOutputV2Record> contract;
 }
 

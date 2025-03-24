@@ -7,7 +7,7 @@ import 'package:smartwalletapp/models/create_cardholder_request.dart';
 import 'package:http/http.dart' as http;
 import 'package:smartwalletapp/response/cardHolder/cardholderResponse.dart';
 
-class CardholderRepository {
+class CardHolderRepository {
 
   Future<ApiResult> giveCardHolderBySearchAndPage(String search, int page, String token) async {
   String apiUrl = "http://localhost:8080/smartwalletapp/cardHolders/{$page}/{$search}";

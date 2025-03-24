@@ -1,4 +1,4 @@
-class GiveContractResponse {
+class GetContractResponse {
   String? institution;
   String? branch;
   String? clientCategory;
@@ -51,9 +51,10 @@ class GiveContractResponse {
   String? clientFullName;
   String? productCode;
   String? mainProductCode;
+  List<GetContractResponse> contracts;
 
   // Constructor
-  GiveContractResponse({
+  GetContractResponse({
     this.institution,
     this.branch,
     this.clientCategory,
@@ -106,11 +107,12 @@ class GiveContractResponse {
     this.clientFullName,
     this.productCode,
     this.mainProductCode,
+    this.contracts = const [],
   });
 
   // Tạo đối tượng từ JSON
-  factory GiveContractResponse.fromJson(Map<String, dynamic> json) {
-    return GiveContractResponse(
+  factory GetContractResponse.fromJson(Map<String, dynamic> json) {
+    return GetContractResponse(
       institution: json['Institution'],
       branch: json['Branch'],
       clientCategory: json['ClientCategory'],
@@ -163,6 +165,7 @@ class GiveContractResponse {
       clientFullName: json['ClientFullName'],
       productCode: json['ProductCode'],
       mainProductCode: json['MainProductCode'],
+      contracts: (json['Contracts'] as List?)?.map((e) => GetContractResponse.fromJson(e)).toList() ?? [],
     );
   }
 }

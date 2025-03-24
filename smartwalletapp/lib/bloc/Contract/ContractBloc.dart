@@ -3,9 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smartwalletapp/apiResult.dart';
 import 'package:smartwalletapp/bloc/Contract/ContractEvent.dart';
 import 'package:smartwalletapp/bloc/Contract/ContractState.dart';
-import 'package:smartwalletapp/models/create_contract_request.dart';
 import 'package:smartwalletapp/repository/contractRepository.dart';
-import 'package:smartwalletapp/response/contract/give_contract_response.dart';
+import 'package:smartwalletapp/response/contract/get_contract_response.dart';
 
 class ContractBloc extends Bloc<ContractEvent,ContractState> {
   ContractBloc(): super(ContractInitialState()){
@@ -16,32 +15,25 @@ class ContractBloc extends Bloc<ContractEvent,ContractState> {
     try {
       ContractRepository contractRepository = ContractRepository();
       emit(ContractLoadingState());
-      ApiResult apiResult = await contractRepository.giveContractByCLient(event.cardHolder.identityCardNumber, event.token);
+      String search = event.searchText.toLowerCase().trim();
+      ApiResult apiResult = await contractRepository.giveAllByCLient(event.token, event.page, search);
       if(apiResult.code == 0){
-        List<GiveContractResponse> contractList = apiResult.result;
+
+        List<GetContractResponse> contracts = apiResult.result;
+        int page = apiResult.page;
+        int pageAmount = apiResult.pageAmount;
+        emit(ContractLoadedState(contracts,page,pageAmount)); 
+      }else{
+        emit(ContractErrorState(apiResult.message));
       }
-      
-      
-      emit(ContractLoadedState(contractList,[],[])); // Ensure a value is returned
+      // Ensure a value is returned
     } catch (e) {
-      print("_giveUserList $e");
-      emit(ContractErrorState('Failed to contract list')); // Ensure an exception is thrown
+      throw Exception("_giveUserList $e");
+      // Ensure an exception is thrown
     }
   }
-  void _giveListContract(GiveContractBySearch event, Emitter<ContractState> emit) async {
-    try {
-      emit(ContractLoadingState());
-      List<CreateContractRequest> contracts = [];
 
-      contracts = contractList.where((contract)=>contract.clientIdentifier == event.cardHolder.identityCardNumber
-       && contract.contractName.toLowerCase().contains(event.searchText.toLowerCase())).toList();
-
-      emit(ContractLoadedState([],[],[])); // Ensure a value is returned
-    } catch (e) {
-      print("_giveUserList $e");
-      emit(ContractErrorState('Failed to contract list')); // Ensure an exception is thrown
-    }
-  }
+  
   }
 
 
