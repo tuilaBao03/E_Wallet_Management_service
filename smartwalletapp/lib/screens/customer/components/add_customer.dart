@@ -13,16 +13,14 @@ class AddCustomer extends StatefulWidget {
   final String token;
   final bool isDetail;
   final bool isAdd;
-  final String title;
-  final CreateCardHolderRequest? object; // Có thể null nếu thêm mới
+  final String title; // Có thể null nếu thêm mới
 
   const AddCustomer({
     super.key,
     required this.token,
     required this.isDetail,
     required this.isAdd,
-    required this.title,
-    this.object, // Để null khi add mới
+    required this.title,// Để null khi add mới
   });
 
   @override
@@ -37,7 +35,7 @@ class _AddCustomerState extends State<AddCustomer> {
   void initState() {
     super.initState();
     // Nếu add mới thì tạo object rỗng, còn detail thì lấy object truyền vào
-    _objectInfo = widget.object ?? emptyCardHolder_ADD;
+    _objectInfo = emptyCardHolder_ADD;
   }
 
   void onChanged() {
@@ -90,7 +88,7 @@ class ObjectDetailInfor extends StatefulWidget {
   final CreateCardHolderRequest objectInfo;
   final String token;
   final bool isDetail;
-  final Function() onChanged; // Không cần truyền controller ra ngoài nữa
+  final Function() onChanged;
 
   const ObjectDetailInfor({super.key, required this.objectInfo, required this.token, required this.isDetail, required this.onChanged});
 
@@ -108,75 +106,43 @@ class _ObjectDetailInforState extends State<ObjectDetailInfor> {
     _initializeControllers();
   }
 
-  TextEditingController _buildController(String fieldName, String initialValue) {
-    final controller = TextEditingController(text: initialValue);
-    controller.addListener(() {
-      widget.objectInfo.setValueByField(fieldName, controller.text); // Gán thẳng giá trị vào object
-      widget.onChanged(); // Bắn sự kiện thay đổi
-    });
-    return controller;
-  }
-
   void _initializeControllers() {
     controllers = {
       for (var field in CreateCardHolderRequest.getFieldNames())
         field: _buildController(field, widget.objectInfo.getValueByField(field))
     };
-
-    // Nếu là chi tiết thì load customData
-    if (widget.isDetail) {
-      for (var data in widget.objectInfo.customData) {
-        dynamicFields.add({
-          'tagName': TextEditingController(text: data.tagName)..addListener(() {
-            data.tagName = dynamicFields.last['tagName']!.text;
-            widget.onChanged();
-          }),
-          'tagValue': TextEditingController(text: data.tagValue)..addListener(() {
-            data.tagValue = dynamicFields.last['tagValue']!.text;
-            widget.onChanged();
-          }),
-        });
-      }
-    }
   }
 
-  void _addNewInputField() {
-    SetCustomDataInObjectJson newData = SetCustomDataInObjectJson(tagName: '', tagValue: '', addInfoType: 'AddInfo01');
-    widget.objectInfo.customData.add(newData);
-    setState(() {
-      dynamicFields.add({
-        'tagName': TextEditingController()..addListener(() {
-          newData.tagName = dynamicFields.last['tagName']!.text;
-          widget.onChanged();
-        }),
-        'tagValue': TextEditingController()..addListener(() {
-          newData.tagValue = dynamicFields.last['tagValue']!.text;
-          widget.onChanged();
-        }),
-      });
+  TextEditingController _buildController(String fieldName, String initialValue) {
+    final controller = TextEditingController(text: initialValue);
+    controller.addListener(() {
+      widget.objectInfo.setValueByField(fieldName, controller.text);
+      widget.onChanged();
     });
+    return controller;
   }
 
   @override
   Widget build(BuildContext context) {
-    final regexPatterns = {
-      'eMail': r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-      'mobilePhone': r'^\d{10,15}$',
-      'identityCardNumber': r'^\d+$',
-      'socialSecurityNumber': r'^\d+$'
-    };
-    final dateFields = ['birthDate'];
+    final column1 = ["reason", "institutionCode", "branch", "clientTypeCode", "clientCategory", "serviceGroup", "productCategory", "languageCode", "salutationCode", "salutationSuffix", "shortName", "firstName", "lastName", "middleName", "maritalStatusCode", "gender"];
+    final column2 = ["socialSecurityNumber", "birthDate", "birthPlace", "birthName", "citizenship", "taxBracket", "individualTaxpayerNumber", "secretPhrase", "identityCardType", "identityCardNumber", "identityCardDetails", "clientNumber", "profession"];
+    final column3 = ["companyName", "trademark", "department", "embossedTitleCode", "embossedFirstName", "embossedLastName", "embossedCompanyName", "eMail", "addressLine1", "addressLine2", "addressLine3", "addressLine4", "city", "homePhone", "mobilePhone", "businessPhone"];
 
     return Padding(
       padding: EdgeInsets.all(defaultPadding),
       child: Column(
         children: [
-          ...controllers.entries.map((entry) => CustomTextField(
-                controller: entry.value,
-                title: entry.key,
-                regex: regexPatterns[entry.key],
-                isDate: dateFields.contains(entry.key),
-              )),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(child: Column(children: column1.map((field) => CustomTextField(controller: controllers[field]!, title: field)).toList())),
+              const SizedBox(width: 10),
+              Expanded(child: Column(children: column2.map((field) => CustomTextField(controller: controllers[field]!, title: field)).toList())),
+              const SizedBox(width: 10),
+              Expanded(child: Column(children: column3.map((field) => CustomTextField(controller: controllers[field]!, title: field)).toList())),
+            ],
+          ),
+          const SizedBox(height: 10),
           ...dynamicFields.map((map) => Row(
                 children: [
                   Expanded(child: CustomTextField(controller: map['tagName']!, title: 'TagName')),
@@ -185,7 +151,7 @@ class _ObjectDetailInforState extends State<ObjectDetailInfor> {
                 ],
               )),
           TextButton.icon(
-            onPressed: _addNewInputField,
+            onPressed: () {},
             icon: const Icon(Icons.add, color: Colors.blue),
             label: const Text("Thêm thông tin bổ sung", style: TextStyle(color: Colors.blue)),
           ),
@@ -193,17 +159,7 @@ class _ObjectDetailInforState extends State<ObjectDetailInfor> {
       ),
     );
   }
-
-  @override
-  void dispose() {
-    for (var c in controllers.values) {
-      c.dispose();
-    }
-    dynamicFields.expand((map) => map.values).forEach((c) => c.dispose());
-    super.dispose();
-  }
 }
-
 class CustomTextField extends StatefulWidget {
   final TextEditingController controller;
   final String title;

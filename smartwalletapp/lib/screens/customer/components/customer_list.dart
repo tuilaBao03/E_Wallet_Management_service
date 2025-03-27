@@ -145,10 +145,12 @@ class _CustomerListState extends State<CustomerList> {
   DataRow _buildDataRow(GetCardHolderResponse cardHolder, BuildContext context) {
     return DataRow(
       cells: [
-        DataCell(Text(cardHolder.firstName)),
-        DataCell(Text(cardHolder.lastName)),
+        DataCell(Text(cardHolder.firstName,
+        overflow: TextOverflow.ellipsis, // Hiển thị "..."
+        maxLines: 1,)), // Giới hạn số dòng)),
+        DataCell(Text(cardHolder.lastName,overflow: TextOverflow.ellipsis, // Hiển thị "..."
+        maxLines: 1,)),
         DataCell(Text(cardHolder.clientNumber)),
-        DataCell(Text(cardHolder.socialNumber)),
         DataCell(
           Row(children: [
             IconButton(
@@ -202,9 +204,8 @@ class _CustomerListState extends State<CustomerList> {
       builder: (BuildContext context) {
         return AlertDialog(
           content: Container(
-            width: Get.width / 2,
+            width: Get.width/1.2,
             child: AddCustomer(
-              object: cardHolder,
               title: 'CustomerAdd',
               isDetail: false,
               isAdd: true, token: widget.token,

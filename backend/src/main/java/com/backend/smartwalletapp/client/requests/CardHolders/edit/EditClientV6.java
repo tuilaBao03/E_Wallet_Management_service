@@ -24,8 +24,8 @@ public class EditClientV6 {
     private String reason;
 
     @XmlElement(name = "EditClient_InObject", namespace = "http://www.openwaygroup.com/wsint")
-    private EditClient_InObject editClientInObject;
+    private EditClient_InObject_EditV6 editClientInObject;
 
     @XmlElement(name = "SetCustomData_InObject", namespace = "http://www.openwaygroup.com/wsint")
-    private SetCustomData_InObject setCustomData_InObject;
+    private SetCustomData_InObject_EditV6 setCustomData_InObject;
 }

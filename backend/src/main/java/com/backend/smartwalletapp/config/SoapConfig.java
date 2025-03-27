@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
-
 import com.backend.smartwalletapp.client.interceptor.SoapClientLoggingInterceptor;
 import com.backend.smartwalletapp.client.requests.Card.create.CreateCardV3;
 import com.backend.smartwalletapp.client.requests.CardHolders.create.CreateClientV4Body;
@@ -22,9 +21,6 @@ import com.backend.smartwalletapp.client.responses.Contract.create.CreateContrac
 import com.backend.smartwalletapp.client.responses.Contract.create.V2CreateContractV4Response;
 import com.backend.smartwalletapp.client.responses.Contract.get.GetContractByNumberV2Response;
 import com.backend.smartwalletapp.client.responses.Contract.get.GetContractsByClientV2Response;
-import com.backend.smartwalletapp.dto.response.Card.GetCardByContractReponse;
-
-
 
 @Configuration
 public class SoapConfig {
@@ -35,40 +31,34 @@ public class SoapConfig {
         Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
         System.out.println("Creating marshaller____________________");
         // Gán danh sách các class JAXB cụ thể cần dùng
-        marshaller.setClassesToBeBound(
-            CreateContractV4_REQ.class,
-            CreateContractV4Response.class,
-
-            // chạy đồng thời chắc chắn lỗi ( chạy riêng 2 cặp thì không sao )
-            CreateClientV4Response.class,
-            CreateClientV4Body.class,
-
-            CreateContractV4_REQV2.class,
-            V2CreateContractV4Response.class,
-            
-            // CreateCardV3.class,
-            // CreateCardV3Result.class,
-
-            GetContractsByClientV2_REQ.class,
-            GetContractsByClientV2Response.class,
-
-            // EditClientV6.class,
-            // EditContractV4.class,
-
-            
-            GetContractByNumberV2_REQ.class,
-            GetContractByNumberV2Response.class
+        try {
+            System.out.println("Creating marshaller...");
+            marshaller.setClassesToBeBound(
+                CreateContractV4_REQ.class,
+                CreateContractV4Response.class,
+                CreateClientV4Response.class,
+                CreateClientV4Body.class,
+                CreateContractV4_REQV2.class,
+                V2CreateContractV4Response.class,
+                GetContractsByClientV2_REQ.class,
+                GetContractsByClientV2Response.class,
+                GetContractByNumberV2_REQ.class,
+                GetContractByNumberV2Response.class,
+                CreateCardV3Result.class,
+                CreateCardV3.class,
+                EditClientV6.class,
+                
+                EditContractV4.class
 
 
-            
-            
-        );
-        System.out.println("Created marshaller____________________");
-
+            );
+            System.out.println("Marshaller initialized successfully.");
+        } catch (Exception e) {
+            System.err.println("Error while initializing marshaller: " + e.getMessage());
+            e.printStackTrace();
+        }
         return marshaller;
     }
-
-
     @Bean
     WebServiceTemplate webServiceTemplate(Jaxb2Marshaller marshaller, SoapClientLoggingInterceptor loggingInterceptor) {
         WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
@@ -76,9 +66,7 @@ public class SoapConfig {
             webServiceTemplate.setMarshaller(marshaller);
             webServiceTemplate.setUnmarshaller(marshaller);
             webServiceTemplate.setInterceptors(new ClientInterceptor[]{loggingInterceptor});
-            
         } catch (Exception e) {
-            System.err.println("______________________________________________");
             e.printStackTrace();
         }
         // webServiceTemplate.setMarshaller(marshaller);

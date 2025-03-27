@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.springframework.stereotype.Service;
-
-import com.backend.smartwalletapp.Mapper.ContractMapper;
 import com.backend.smartwalletapp.client.requests.Contract.CreateContractLevel2.CreateContractV4_REQV2;
 import com.backend.smartwalletapp.client.requests.Contract.CreateContractV4.CreateContractV4_REQ;
 import com.backend.smartwalletapp.client.requests.Contract.Edit.EditContractV4;
@@ -36,7 +34,6 @@ import lombok.experimental.FieldDefaults;
 @RequiredArgsConstructor
 public class ContractService {
     ContractSoapService contractSoapService;
-    ContractMapper contractMapper;
     CardHolderService cardHolderService;
     public List<ContractListResponse> giveContractBySearchAndPage(String search, int page, int count ) {
     
@@ -126,24 +123,20 @@ public class ContractService {
         }
     }
 
-    public CreateContractReponse createContract(ContractCreatedRequest request){
+    public CreateContractV4Result createContract(CreateContractV4_REQ request){
         try {
-            CreateContractV4_REQ req = contractMapper.mapToSoapRequest(request);
-            CreateContractV4Result createContractV4Result = contractSoapService.createContract(req);
-            CreateContractReponse createContractReponse = contractMapper.toContractReponse(createContractV4Result);
-            return createContractReponse;
+            CreateContractV4Result createContractV4Result = contractSoapService.createContract(request);
+            return createContractV4Result;
         } catch (Exception e) {
             e.printStackTrace();
             throw new AppException(ErrorCode.CREATE_CONTRACT_FAILE);
         }
     }
 
-    public CreateContractReponse createContractV2(ContractCreatedRequestLevel2 request){
+    public CreateContractV4Result createContractV2(CreateContractV4_REQV2 request){
         try {
-            CreateContractV4_REQV2 req = contractMapper.mapToSoapRequestV2(request);
-            CreateContractV4Result createContractV4Result = contractSoapService.createContractLevel2(req);
-            CreateContractReponse createContractReponse = contractMapper.toContractReponse(createContractV4Result);
-            return createContractReponse;
+            CreateContractV4Result createContractV4Result = contractSoapService.createContractLevel2(request);
+            return createContractV4Result;
         } catch (Exception e) {
             System.err.println("___________________________");
             e.printStackTrace();

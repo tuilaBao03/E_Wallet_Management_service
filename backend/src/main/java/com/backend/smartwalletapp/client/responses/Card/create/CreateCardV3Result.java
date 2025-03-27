@@ -5,29 +5,29 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
-@RequiredArgsConstructor
-@Builder
+@Getter
+@Setter
+@NoArgsConstructor
 @AllArgsConstructor
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "CreateCardV3Result",namespace = "http://schemas.xmlsoap.org/soap/envelope/")
+@XmlRootElement(name = "CreateCardV3Result",namespace = "http://www.openwaygroup.com/wsint")
 public class CreateCardV3Result  {
-    @XmlElement(name = "CreatedCard")
+    @XmlElement(name = "CreatedCard", namespace = "http://www.openwaygroup.com/wsint")
     String createdCard;
-    @XmlElement(name = "CardNumber")
+    @XmlElement(name = "CardNumber", namespace = "http://www.openwaygroup.com/wsint")
     String cardNumber;
-    @XmlElement(name = "ExpiryDate")
+    @XmlElement(name = "ExpiryDate", namespace = "http://www.openwaygroup.com/wsint")
     String expiryDate; 
-    @XmlElement(name = "SequenceNumber")
+    @XmlElement(name = "SequenceNumber", namespace = "http://www.openwaygroup.com/wsint")
     String SequenceNumber;
-    @XmlElement(name = "RetCode")
+    @XmlElement(name = "RetCode", namespace = "http://www.openwaygroup.com/wsint")
     int retCode;
-    @XmlElement(name = "RetMsg")
+    @XmlElement(name = "RetMsg", namespace = "http://www.openwaygroup.com/wsint")
     String RetMsg;
-    @XmlElement(name = "ResultInfo")
+    @XmlElement(name = "ResultInfo", namespace = "http://www.openwaygroup.com/wsint")
     String ResultInfo; 
 }

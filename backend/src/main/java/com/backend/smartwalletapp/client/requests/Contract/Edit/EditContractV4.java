@@ -20,9 +20,8 @@ public class EditContractV4 {
     private String reason;
 
     @XmlElement(name = "EditContract_InObject", namespace = "http://www.openwaygroup.com/wsint")
-    private EditContract_InObject editContractInObject;
+    private EditContract_InObject_EditV4 editContractInObject;
 
-    @XmlElementWrapper(name = "SetCustomData_InObject", namespace = "http://www.openwaygroup.com/wsint")
-    @XmlElement(name = "CustomData", namespace = "http://www.openwaygroup.com/wsint")
-    private SetCustomData_InObject customData;
+    @XmlElement(name = "SetCustomData_InObject", namespace = "http://www.openwaygroup.com/wsint")
+    private SetCustomData_InObject_EditV4 customData;
 }

@@ -3,8 +3,10 @@ package com.backend.smartwalletapp.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.backend.smartwalletapp.client.requests.CardHolders.create.CreateClientV4Body;
 import com.backend.smartwalletapp.client.requests.CardHolders.edit.EditClientV6;
 import com.backend.smartwalletapp.client.requests.Contract.Edit.EditContractV4;
+import com.backend.smartwalletapp.client.responses.CardHolders.createRes.CreateClientV4Result;
 import com.backend.smartwalletapp.dto.request.CardHolder.CreateCardHolder.CardHolderCreatedRequest;
 import com.backend.smartwalletapp.dto.response.ApiResponse;
 import com.backend.smartwalletapp.dto.response.CardHolder.CreateCardHolderResponse;
@@ -36,11 +38,11 @@ public class CardHolderController {
     CardHolderService cardHolderService;
     @PostMapping()
     @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")
-    ApiResponse<CreateCardHolderResponse> createCardHolder(@RequestBody @Valid CardHolderCreatedRequest request){
-        CreateCardHolderResponse createCardHolderResponse = cardHolderService.createCardHolder(request);
+    ApiResponse<CreateClientV4Result > createCardHolder(@RequestBody @Valid CreateClientV4Body request){
+        CreateClientV4Result  createCardHolderResponse = cardHolderService.createCardHolder(request);
         String mess = createCardHolderResponse.getRetMsg();
         int code = createCardHolderResponse.getRetCode();
-        return ApiResponse.<CreateCardHolderResponse>builder()
+        return ApiResponse.<CreateClientV4Result>builder()
             .result(createCardHolderResponse)
             .code(code)
             .message(mess).build();
@@ -56,14 +58,14 @@ public class CardHolderController {
             .build();
     }
 
-    @PutMapping()
-    @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")
-    public ApiResponse edit_contract(@RequestBody @Valid EditClientV6 request){
-        return ApiResponse.builder()
-        .result(cardHolderService.editCardholder(request))
-        .code(200)
-        .build();
-    }
+    // @PutMapping()
+    // @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")
+    // public ApiResponse edit_contract(@RequestBody @Valid EditClientV6 request){
+    //     return ApiResponse.builder()
+    //     .result(cardHolderService.editCardholder(request))
+    //     .code(200)
+    //     .build();
+    // }
 
 
 

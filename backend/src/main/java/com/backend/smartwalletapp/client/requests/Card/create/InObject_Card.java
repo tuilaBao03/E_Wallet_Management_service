@@ -1,21 +1,19 @@
 package com.backend.smartwalletapp.client.requests.Card.create;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlAccessType;
 
+
 @XmlAccessorType(XmlAccessType.FIELD)
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
+// @AllArgsConstructor
+// @FieldDefaults(level = AccessLevel.PRIVATE)
 
-public class InObject {
+public class InObject_Card {
     @XmlElement(name = "CardName",namespace = "http://www.openwaygroup.com/wsint")
     String cardName;
     @XmlElement(name = "CBSNumber",namespace = "http://www.openwaygroup.com/wsint")

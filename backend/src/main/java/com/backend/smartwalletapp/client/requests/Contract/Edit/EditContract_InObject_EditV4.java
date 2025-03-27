@@ -15,7 +15,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-class EditContract_InObject {
+class EditContract_InObject_EditV4 {
 
     @XmlElement(name = "Branch", namespace = "http://www.openwaygroup.com/wsint")
     private String branch;

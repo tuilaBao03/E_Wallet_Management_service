@@ -20,7 +20,6 @@ import com.backend.smartwalletapp.client.responses.Contract.get.GetContractsByCl
 import com.backend.smartwalletapp.dto.response.ApiResponse;
 import com.backend.smartwalletapp.exception.AppException;
 import com.backend.smartwalletapp.exception.ErrorCode;
-import jakarta.xml.bind.JAXBElement;
 import lombok.RequiredArgsConstructor;
 
 import org.slf4j.Logger;
@@ -79,10 +78,7 @@ public class ContractSoapService {
 
     public CreateContractV4Result createContract(CreateContractV4_REQ request) {
         try {
-            System.err.println("\n ------------request CreateContractV4_REQ :---------------------\n " + request);
             CreateContractV4Response response = (CreateContractV4Response) webServiceTemplate.marshalSendAndReceive(soapUrl, request);
-            System.err.println("\n ------------response CreateContractV4Response :-----------------\n " + response);
-            System.err.println("\n response CreateContractV4Response :\n " + response.getCreateContractV4Result());
             CreateContractV4Result result = response.getCreateContractV4Result();
             System.err.println("\n -----------result CreateContractV4Result :----------------------\n " + result);
             return result;

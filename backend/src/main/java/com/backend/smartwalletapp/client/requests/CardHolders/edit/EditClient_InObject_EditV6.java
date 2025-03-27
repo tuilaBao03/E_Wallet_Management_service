@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @Data
 @AllArgsConstructor
-class EditClient_InObject {
+class EditClient_InObject_EditV6 {
 
     @XmlElement(name = "Branch", namespace = "http://www.openwaygroup.com/wsint")
     private String branch;

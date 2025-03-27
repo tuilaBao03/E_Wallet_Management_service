@@ -1,22 +1,20 @@
-package com.backend.smartwalletapp.client.requests.Contract.Edit;
+package com.backend.smartwalletapp.client.requests.CardHolders.edit;
 
 import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import jakarta.xml.bind.annotation.XmlAccessType;
-
 @XmlAccessorType(XmlAccessType.FIELD)
-@Getter
-@Setter
+@XmlRootElement(name = "SetCustomData_InObject", namespace = "http://www.openwaygroup.com/wsint")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-class SetCustomData_InObject {
-
+@Data
+public class SetCustomData_InObject_EditV6 {
     @XmlElement(name = "AddInfoType", namespace = "http://www.openwaygroup.com/wsint")
     private String addInfoType;
 

@@ -5,14 +5,16 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import jakarta.xml.bind.annotation.XmlAccessType;
 
 
-@XmlRootElement(name = "CreateCardV3", namespace = "http://schemas.xmlsoap.org/soap/envelope/")
+@XmlRootElement(name = "CreateCardV3", namespace = "http://www.openwaygroup.com/wsint")
 @XmlAccessorType(XmlAccessType.FIELD)
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -28,8 +30,5 @@ public class CreateCardV3 {
     @XmlElement(name = "ProductCode3",namespace = "http://www.openwaygroup.com/wsint")
     String productCode3;
     @XmlElement(name = "InObject", namespace = "http://www.openwaygroup.com/wsint")
-    InObject inObject;
-
-
-    
+    InObject_Card inObject;
 }
