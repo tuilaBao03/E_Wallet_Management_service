@@ -6,11 +6,15 @@ import 'package:smartwalletapp/apiResult.dart';
 import 'package:smartwalletapp/models/create_cardholder_request.dart';
 import 'package:http/http.dart' as http;
 import 'package:smartwalletapp/response/cardHolder/cardholderResponse.dart';
+import 'package:smartwalletapp/response/cardHolder/getCardHolderResponse.dart';
 
 class CardHolderRepository {
 
   Future<ApiResult> giveCardHolderBySearchAndPage(String search, int page, String token) async {
-  String apiUrl = "http://localhost:8080/smartwalletapp/cardHolders/{$page}/{$search}";
+
+  print("+++++++++++++++++1++++++++++++++++++");
+  String apiUrl = "http://localhost:8080/smartwalletapp/cardholder/$search/$page";
+  print("apiUrl: $apiUrl");
 
   try {
     final response = await http.get(
@@ -21,20 +25,22 @@ class CardHolderRepository {
       },
     );
     Map<String, dynamic> responseData = json.decode(response.body);
-    int code = responseData["code"];
+    int code = responseData["code"] ?? 404;
     String message = responseData["message"];
     if (response.statusCode == 200) {
-      List<CreateCardHolderRequest> cardHolders = responseData["result"]["list"];
-      int page = responseData["result"]["page"];
-      int pageAmount = responseData["result"]["amount"];
-      ApiResult result = ApiResult(code, message, cardHolders, page,pageAmount);
+      List<GetCardHolderResponse> cardHolders = (responseData["result"]["cardholders"] as List)
+      .map((e) => GetCardHolderResponse.fromJson(e))
+      .toList();
+      int page = responseData["result"]["page"] ?? 10;
+      int pageAmount = responseData["result"]["pageAmount"] ?? 10;
+      ApiResult result = ApiResult(code, message, cardHolders, page, pageAmount);
       return result;
     } else {
       Map<String, dynamic> errorData = json.decode(response.body);
       throw Exception("Lỗi API: ${errorData["message"]}");
     }
   } catch (e) {
-    throw Exception("Lỗi kết nối: $e");
+    throw Exception("Lỗi kết nối_________: $e");
   }
 }
 
@@ -51,21 +57,12 @@ class CardHolderRepository {
         body: jsonEncode(cardHolder.toJson()),
       );
       Map<String, dynamic> responseData = json.decode(response.body);
-      print(" RESPONSEDATA: $responseData");
-      print(" __________________________________________________");
       String message = responseData['message'];
-      print(message);
-      print(" __________________________________________________");
       int code = response.statusCode;
-      print(code);
-      print(" __________________________________________________");
+    
       if(code == 200 ){
         CardHolderResponse cardHolders = CardHolderResponse.fromJson(responseData["result"]);
-        print(cardHolders);
-        print(" __________________________________________________${cardHolders.retMsg}");
         ApiResult apiResult = ApiResult(code, cardHolders.retMsg,cardHolders, 0, 0);
-        print("________________${apiResult.message}");
-        print(" __________________________________________________");
         return(apiResult);
       }
       else{

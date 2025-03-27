@@ -1,5 +1,7 @@
 package com.backend.smartwalletapp.client.responses.Card.create;
 
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.AllArgsConstructor;
@@ -11,8 +13,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Builder
 @AllArgsConstructor
-@XmlRootElement(name = "CreateCardV3Result")
-public class CreateCardV3Result {
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement(name = "CreateCardV3Result",namespace = "http://schemas.xmlsoap.org/soap/envelope/")
+public class CreateCardV3Result  {
     @XmlElement(name = "CreatedCard")
     String createdCard;
     @XmlElement(name = "CardNumber")

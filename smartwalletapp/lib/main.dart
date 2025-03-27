@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import 'package:smartwalletapp/bloc/MainApp/MainAppBloc.dart';
+import 'package:smartwalletapp/bloc/CardHolder/card_holder_bloc.dart';
+import 'package:smartwalletapp/bloc/Contract/contract_bloc.dart';
+import 'package:smartwalletapp/bloc/MainApp/main_app_bloc.dart';
 import 'package:smartwalletapp/bloc/Register/RegistedBloc.dart';
 import 'package:smartwalletapp/models/user.dart';
 import 'package:smartwalletapp/screens/main/main_screen.dart';
@@ -29,6 +31,8 @@ void main() {
           BlocProvider(create: (context)=>AuthBloc()),
           BlocProvider(create: (context)=>RegisterBloc()),
           BlocProvider(create: (context)=>MainAppBloc()),
+          BlocProvider(create: (context)=>CardHolderBloc()),
+          BlocProvider(create: (context)=>ContractBloc())
             ]
           )
         ],
@@ -89,7 +93,7 @@ class _MyAppState extends State<MyApp> {
       home: 
       MainScreen(isAuth: true, user: u, onLanguageChange: (Locale newLocale) {
         Get.updateLocale(newLocale);
-      }, token: 'eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzbWFydHdhbGxldGFwcCIsInN1YiI6ImFkbWluMSIsImV4cCI6MTc0MTk1ODA5MSwiaWF0IjoxNzQxOTQ5MDkxLCJzY29wZSI6IkFETUlOIn0.RzW-2XzcrDIR60-vRwhUPs9cDBIkAw4lsPo2kvJg08Q',)
+      }, token: 'eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzbWFydHdhbGxldGFwcCIsInN1YiI6ImFkbWluMSIsImV4cCI6MTc0Mjk5NTAwMywiaWF0IjoxNzQyOTg2MDAzLCJzY29wZSI6IkFETUlOIn0.WJCA6l0QtLz08BbnfTZXChYE296C4W1mfqBcGlrKfW0',)
       // LoginScreen(isAuth: false, onLanguageChange: (Locale newLocale) {
       //   Get.updateLocale(newLocale);
       //  },)

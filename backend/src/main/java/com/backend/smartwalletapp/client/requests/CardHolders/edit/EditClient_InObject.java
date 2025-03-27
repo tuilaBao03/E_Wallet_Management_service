@@ -3,12 +3,11 @@ import jakarta.xml.bind.annotation.*;
 import lombok.*;
 
 
+
 @XmlAccessorType(XmlAccessType.FIELD)
-@Getter
-@Setter
-@AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@Data
+@AllArgsConstructor
 class EditClient_InObject {
 
     @XmlElement(name = "Branch", namespace = "http://www.openwaygroup.com/wsint")

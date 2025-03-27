@@ -7,8 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import lombok.AccessLevel;
 import jakarta.xml.bind.annotation.XmlAccessType;
 
 
@@ -17,7 +15,6 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 public class CreateCardV3 {
     @XmlElement(name = "ContractSearchMethod",namespace = "http://www.openwaygroup.com/wsint")
@@ -30,7 +27,6 @@ public class CreateCardV3 {
     String productCode2;
     @XmlElement(name = "ProductCode3",namespace = "http://www.openwaygroup.com/wsint")
     String productCode3;
-
     @XmlElement(name = "InObject", namespace = "http://www.openwaygroup.com/wsint")
     InObject inObject;
 

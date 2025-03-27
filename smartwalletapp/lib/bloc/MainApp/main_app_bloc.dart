@@ -1,18 +1,12 @@
 // ignore_for_file: avoid_print, file_names, non_constant_identifier_names
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:smartwalletapp/apiResult.dart';
-import 'package:smartwalletapp/bloc/MainApp/MainAppEvent.dart';
-import 'package:smartwalletapp/bloc/MainApp/MainAppState.dart';
+import 'package:smartwalletapp/bloc/MainApp/main_app_event.dart';
+import 'package:smartwalletapp/bloc/MainApp/main_app_state.dart';
 import 'package:smartwalletapp/models/create_cardholder_request.dart';
-import 'package:smartwalletapp/models/create_contract_request.dart';
 import 'package:smartwalletapp/models/user.dart';
-import 'package:smartwalletapp/repository/cardHolderRepository.dart';
-import 'package:smartwalletapp/repository/contractRepository.dart';
 import 'package:smartwalletapp/repository/userRepository.dart';
 import 'package:smartwalletapp/repository/authRepository.dart';
-import 'package:smartwalletapp/response/cardHolder/cardholderResponse.dart';
-import 'package:smartwalletapp/response/contract/create_contract_reponse.dart';
 
 
 class MainAppBloc extends Bloc<MainAppEvent, MainAppState> {
@@ -20,9 +14,9 @@ class MainAppBloc extends Bloc<MainAppEvent, MainAppState> {
     on<initializationEvent>(_giveCardHolderList);
     on<UpdateUserInforEvent>(_updatedUserInfor);
     on<LogoutEvent>(_logout);
-    // on<GiveCard_TimeListEvent>(giveCard_TimeList);
-    on<AddCardHolderEvent>(_createCardHolder);
-    on<AddContractEvent>(_createContract);
+    // // on<GiveCard_TimeListEvent>(giveCard_TimeList);
+    // on<AddCardHolderEvent>(_createCardHolder);
+    // on<AddContractEvent>(_createContract);
 
   }
 
@@ -52,46 +46,46 @@ class MainAppBloc extends Bloc<MainAppEvent, MainAppState> {
     }
   }
 
-  void _createCardHolder(AddCardHolderEvent event, Emitter<MainAppState> emit) async{
-    try{
-      print("____________________________________");
-      CreateCardHolderRequest cardHolder = event.cardHolder;
-      CardHolderRepository cardholderRepository = CardHolderRepository();
-      ApiResult apiResult = await cardholderRepository.createCardHolder(cardHolder, event.token);
-      CardHolderResponse cardHolderResponse = apiResult.result;
-      print("cardHolderResponse.retMsg:${cardHolderResponse.retMsg}");
-      print("cardHolderResponse.resultInfo:${cardHolderResponse.resultInfo}");
-      print("cardHolderResponse.retCode:${cardHolderResponse.retCode}");
-      print("____________________________________");
-      if(apiResult.code == 200 && cardHolderResponse.retCode == 0){
-        emit(CreateCardHolderSuccessState(cardHolderResponse.resultInfo));
-      }
-      else{
-        print("apiResult.message: ${apiResult.message}");
-        emit(MainAppErrorState(apiResult.message));
-      }
-      }
-    catch (e){
-      throw Exception("_createCardHolder: $e");
-    }
-  }
-  void _createContract(AddContractEvent event, Emitter<MainAppState> emit) async{
-    CreateContractRequest contract = event.contract;
-    ContractRepository contractRepository = ContractRepository();
+  // void _createCardHolder(AddCardHolderEvent event, Emitter<MainAppState> emit) async{
+  //   try{
+  //     print("____________________________________");
+  //     CreateCardHolderRequest cardHolder = event.cardHolder;
+  //     CardHolderRepository cardholderRepository = CardHolderRepository();
+  //     ApiResult apiResult = await cardholderRepository.createCardHolder(cardHolder, event.token);
+  //     CardHolderResponse cardHolderResponse = apiResult.result;
+  //     print("cardHolderResponse.retMsg:${cardHolderResponse.retMsg}");
+  //     print("cardHolderResponse.resultInfo:${cardHolderResponse.resultInfo}");
+  //     print("cardHolderResponse.retCode:${cardHolderResponse.retCode}");
+  //     print("____________________________________");
+  //     if(apiResult.code == 200 && cardHolderResponse.retCode == 0){
+  //       emit(CreateCardHolderSuccessState(cardHolderResponse.resultInfo));
+  //     }
+  //     else{
+  //       print("apiResult.message: ${apiResult.message}");
+  //       emit(MainAppErrorState(apiResult.message));
+  //     }
+  //     }
+  //   catch (e){
+  //     throw Exception("_createCardHolder: $e");
+  //   }
+  // }
+  // void _createContract(AddContractEvent event, Emitter<MainAppState> emit) async{
+  //   CreateContractRequest contract = event.contract;
+  //   ContractRepository contractRepository = ContractRepository();
 
-    ApiResult apiResult = await contractRepository.createdLibContract(contract, event.token);
-    String mess = apiResult.message;
+  //   ApiResult apiResult = await contractRepository.createdLibContract(contract, event.token);
+  //   String mess = apiResult.message;
 
-    if(apiResult.code == 0){
-      print("_________success_________");
-      CreateContractResponse contractResponse = apiResult.result;
-      emit(SuccessState(contractResponse.retMsg));
-    }
-    else{
-      print("_________false_________");
-      emit(MainAppErrorState(mess));
-    }
-  }
+  //   if(apiResult.code == 0){
+  //     print("_________success_________");
+  //     CreateContractResponse contractResponse = apiResult.result;
+  //     emit(SuccessState(contractResponse.retMsg));
+  //   }
+  //   else{
+  //     print("_________false_________");
+  //     emit(MainAppErrorState(mess));
+  //   }
+  // }
   void _logout(LogoutEvent event, Emitter<MainAppState> emit) async{
     final AuthenRepository authRepository = AuthenRepository();
     authRepository.logout();

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:smartwalletapp/models/card_holder_data.dart';
 import 'package:smartwalletapp/models/create_cardholder_request.dart';
-import 'package:smartwalletapp/bloc/MainApp/MainAppBloc.dart';
-import 'package:smartwalletapp/bloc/MainApp/MainAppEvent.dart';
+import 'package:smartwalletapp/bloc/MainApp/main_app_bloc.dart';
+import 'package:smartwalletapp/bloc/MainApp/main_app_event.dart';
 import 'package:smartwalletapp/constants.dart';
 import 'package:smartwalletapp/app/locallization/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -54,15 +54,9 @@ class _AddCustomerState extends State<AddCustomer> {
         color: Theme.of(context).colorScheme.secondary,
         borderRadius: BorderRadius.circular(10),
       ),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(AppLocalizations.of(context).translate(widget.title), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
-                Row(
+      child: Column(
+        children: [
+          Row(
                   children: [
                     IconButton(
                       icon: Icon(Icons.save, color: isChanged ? Colors.blue : Colors.grey),
@@ -71,18 +65,22 @@ class _AddCustomerState extends State<AddCustomer> {
                     if (widget.isDetail)
                       IconButton(icon: const Icon(Icons.delete), onPressed: () {}),
                   ],
-                )
+                ),
+          SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: defaultPadding),
+                ObjectDetailInfor(
+                  objectInfo: _objectInfo,
+                  token: widget.token,
+                  isDetail: widget.isDetail,
+                  onChanged: onChanged, // callback khi đổi dữ liệu
+                ),
               ],
             ),
-            SizedBox(height: defaultPadding),
-            ObjectDetailInfor(
-              objectInfo: _objectInfo,
-              token: widget.token,
-              isDetail: widget.isDetail,
-              onChanged: onChanged, // callback khi đổi dữ liệu
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

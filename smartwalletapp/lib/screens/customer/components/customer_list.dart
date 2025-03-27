@@ -36,35 +36,17 @@ class CustomerList extends StatefulWidget {
 class _CustomerListState extends State<CustomerList> {
 
   final TextEditingController _searchController = TextEditingController();
-  List<GetCardHolderResponse> _filteredCardHolder = [];
   final HashSet<String> objectColumnNameOfUser = HashSet.from([
     "FirstName",
     "LastName",
-    "Detail",
-    "ContractList"
+    "ClientNumber",
+    "SocialNumber",
+    "Action"
   ]);
-  
-
-
   @override
   void initState() {
     super.initState();
-    _filteredCardHolder = widget.cardholders;
-    print("${_filteredCardHolder.length}");
   }
-
-  // @override
-  // void didUpdateWidget(covariant CustomerList oldWidget) {
-  //   super.didUpdateWidget(oldWidget);
-
-  //   // Nếu user thay đổi, cập nhật danh sách thẻ
-  //   if (oldWidget.object.length != widget.object.length) {
-  //     setState(() {
-  //       _filteredCardHolder = widget.object;
-  //     });
-  //   }
-  // }
-
   @override
   void dispose() {
     _searchController.dispose();
@@ -72,13 +54,13 @@ class _CustomerListState extends State<CustomerList> {
   }
 
   void _searchUser() {
-    
+    context.read<CardHolderBloc>().add(CardHolderInitialEvent(widget.token,_searchController.text.trim(),widget.page,widget.showContractList,widget.cardholders[0]));
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: Get.height / 2,
+      height: Get.height,
       padding: EdgeInsets.all(defaultPadding),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.secondary,
@@ -127,7 +109,7 @@ class _CustomerListState extends State<CustomerList> {
               ],
             ),
             SizedBox(height: defaultPadding),
-            _filteredCardHolder.isEmpty
+            widget.cardholders.isEmpty
                 ? Center(
                     child: Text(
                       AppLocalizations.of(context).translate("There is no matching information"),
@@ -149,7 +131,7 @@ class _CustomerListState extends State<CustomerList> {
                             ),
                           )
                           .toList(),
-                      rows: _filteredCardHolder.map((cardHolder) {
+                      rows: widget.cardholders.map((cardHolder) {
                         return _buildDataRow(cardHolder, context);
                       }).toList(),
                     ),
@@ -165,20 +147,32 @@ class _CustomerListState extends State<CustomerList> {
       cells: [
         DataCell(Text(cardHolder.firstName)),
         DataCell(Text(cardHolder.lastName)),
+        DataCell(Text(cardHolder.clientNumber)),
+        DataCell(Text(cardHolder.socialNumber)),
         DataCell(
-          IconButton(
+          Row(children: [
+            IconButton(
             icon: const Icon(Icons.details, color: Colors.green),
             onPressed: () => _showDetailDialog(context, cardHolder),
           ),
-        ),
-        DataCell(
+          SizedBox(width: 10,),
           IconButton(
             icon: const Icon(Icons.content_paste_search_outlined, color: Colors.blueAccent),
             onPressed: (){
               context.read<CardHolderBloc>().add(CardHolderInitialEvent(widget.token, widget.search, widget.page, widget.showContractList == true ? false : true,cardHolder ));
             },
           ),
+          SizedBox(width: 10,),
+          IconButton(
+            icon: const Icon(Icons.add_card, color: Colors.blueAccent),
+            onPressed: (){
+              
+            },
+          ),
+          ],)
+          
         ),
+        
       ],
     );
   }

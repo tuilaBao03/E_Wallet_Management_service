@@ -4,8 +4,10 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.*;
 import lombok.*;
 
-@XmlAccessorType(XmlAccessType.FIELD)
+
 @XmlRootElement(name = "EditClientV6", namespace = "http://www.openwaygroup.com/wsint")
+@XmlAccessorType(XmlAccessType.FIELD)
+
 @Getter
 @Setter
 @AllArgsConstructor

@@ -7,6 +7,7 @@ import org.springframework.ws.client.core.WebServiceTemplate;
 
 import com.backend.smartwalletapp.client.requests.Contract.CreateContractLevel2.CreateContractV4_REQV2;
 import com.backend.smartwalletapp.client.requests.Contract.CreateContractV4.CreateContractV4_REQ;
+import com.backend.smartwalletapp.client.requests.Contract.Edit.EditContractV4;
 import com.backend.smartwalletapp.client.requests.Contract.Get.GetContractByNumberV2_REQ;
 import com.backend.smartwalletapp.client.requests.Contract.Get.GetContractsByClientV2_REQ;
 import com.backend.smartwalletapp.client.responses.Contract.create.CreateContractV4Response;
@@ -16,6 +17,7 @@ import com.backend.smartwalletapp.client.responses.Contract.get.GetContractByNum
 import com.backend.smartwalletapp.client.responses.Contract.get.GetContractByNumberV2Result;
 import com.backend.smartwalletapp.client.responses.Contract.get.GetContractsByClientV2Response;
 import com.backend.smartwalletapp.client.responses.Contract.get.GetContractsByClientV2Result;
+import com.backend.smartwalletapp.dto.response.ApiResponse;
 import com.backend.smartwalletapp.exception.AppException;
 import com.backend.smartwalletapp.exception.ErrorCode;
 import jakarta.xml.bind.JAXBElement;
@@ -27,9 +29,6 @@ import org.slf4j.LoggerFactory;
 @Service
 @RequiredArgsConstructor
 public class ContractSoapService {
-
-
-
     private static final Logger log = LoggerFactory.getLogger(ContractSoapService.class);
     private final WebServiceTemplate webServiceTemplate;
 
@@ -105,6 +104,21 @@ public class ContractSoapService {
         } catch (Exception e) {
             e.printStackTrace();
             throw new AppException(ErrorCode.GET_CONTRACT_FAILE);
+        }
+    }
+
+    public ApiResponse editContract(EditContractV4 request) {
+        try {
+            System.err.println("\n ------------request EditContractV4  :---------------------\n " + request);
+            ApiResponse response = (ApiResponse) webServiceTemplate.marshalSendAndReceive(soapUrl, request);
+            System.err.println("\n ------------response EditContractV4  :-----------------\n " + response);
+            // System.err.println("\n response CreateContractV4Response :\n " + response.getCreateContractV4Result());
+            // CreateContractV4Result result = response.getCreateContractV4Result();
+            // System.err.println("\n -----------result CreateContractV4Result :----------------------\n " + result);
+            return response;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new AppException(ErrorCode.UPDATE_CONTRACT_FAILE);
         }
     }
 

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.backend.smartwalletapp.client.requests.Contract.Edit.EditContractV4;
 import com.backend.smartwalletapp.client.responses.Contract.get.IssContractDetailsAPIOutputV2Record;
 import com.backend.smartwalletapp.dto.request.Contract.ContractCreatedRequest;
 import com.backend.smartwalletapp.dto.request.Contract.ContractCreatedRequestLevel2;
@@ -25,6 +26,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 
 
 @RestController
@@ -90,6 +92,18 @@ public class ContractController {
         .code(200)
         .build();
     }
+
+    @PutMapping()
+    @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")
+    public ApiResponse edit_contract(@RequestBody @Valid EditContractV4 request){
+        return ApiResponse.builder()
+        .result(contractService.editContract(request))
+        .code(200)
+        .build();
+    }
+
+    
+    
 
 
 

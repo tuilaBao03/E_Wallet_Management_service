@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smartwalletapp/models/create_contract_request.dart';
-import 'package:smartwalletapp/bloc/MainApp/MainAppBloc.dart';
-import 'package:smartwalletapp/bloc/MainApp/MainAppEvent.dart';
+import 'package:smartwalletapp/bloc/MainApp/main_app_bloc.dart';
+import 'package:smartwalletapp/bloc/MainApp/main_app_event.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smartwalletapp/constants.dart';
 import 'package:smartwalletapp/app/locallization/app_localizations.dart';

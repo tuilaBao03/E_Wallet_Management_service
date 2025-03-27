@@ -1,4 +1,4 @@
-import 'package:smartwalletapp/response/contract/get_contract_response.dart';
+// ignore_for_file: file_names
 
 class GetCardHolderResponse {
   final int id;
@@ -32,18 +32,18 @@ class GetCardHolderResponse {
   // Named constructor để parse từ JSON
   factory GetCardHolderResponse.fromJson(Map<String, dynamic> json) {
     return GetCardHolderResponse(
-      id: json['ID'] ?? 0,
-      branch: json['BRANCH'] ?? '',
-      shortName: json['SHORT_NAME'] ?? '',
-      firstName: json['FIRST_NAM'] ?? '',
-      lastName: json['LAST_NAM'] ?? '',
-      gender: json['GENDER'] ?? '',
-      clientNumber: json['CLIENT_NUMBER'] ?? '',
-      regNumber: json['REG_NUMBER'] ?? '',
-      itn: json['ITN'] ?? '',
-      socialNumber: json['SOCIAL_NUMBER'] ?? '',
-      phone: json['PHONE'] ?? '',
-      email: json['E_MAIL'] ?? '',
+      id: json['id'] ?? 0,
+      branch: json['branch'] ?? '',
+      shortName: json['shortName'] ?? '',
+      firstName: json['firstName'] ?? '',
+      lastName: json['lastName'] ?? '',
+      gender: json['gender'] ?? '',
+      clientNumber: json['clientNumber'] ?? '',
+      regNumber: json['regNumber'] ?? '',
+      itn: json['itn'] ?? '',
+      socialNumber: json['socialNumber'] ?? '',
+      phone: json['phone'] ?? '',
+      email: json['email'] ?? '',
     );
   }
 
@@ -64,10 +64,17 @@ class GetCardHolderResponse {
       'E_MAIL': email,
     };
   }
+  @override
+  String toString() {
+    return 'GetCardHolderResponse(id: $id, branch: $branch, shortName: $shortName, '
+           'firstName: $firstName, lastName: $lastName, gender: $gender, '
+           'clientNumber: $clientNumber, regNumber: $regNumber, itn: $itn, '
+           'socialNumber: $socialNumber, phone: $phone, email: $email)';
+  }
 
 
   }
 
-  GetCardHolderResponse emptyCardHolder_ReS = GetCardHolderResponse(id: 0, branch: "", shortName: "", firstName: "", lastName: "", gender: "", clientNumber: "", regNumber: "", itn: "", socialNumber: "", phone: "", email: "");
+  GetCardHolderResponse emptyCardHolder_ReS = GetCardHolderResponse(id: 0, branch: "", shortName: "", firstName: "", lastName: "", gender: "", clientNumber: "1235846656255", regNumber: "", itn: "", socialNumber: "", phone: "", email: "");
 
 

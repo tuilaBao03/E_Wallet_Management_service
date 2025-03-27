@@ -64,12 +64,12 @@ class ObjectDetailInfor extends StatelessWidget {
       padding: EdgeInsets.all(defaultPadding),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: fields.entries.map((entry) => _buildInfoRow(entry.key, entry.value)).toList(),
+        children: fields.entries.map((entry) => _buildInfoRow(context, entry.key, entry.value)).toList(),
       ),
     );
   }
 
-  Widget _buildInfoRow(String label, String value) {
+  Widget _buildInfoRow(BuildContext context, String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
@@ -83,7 +83,7 @@ class ObjectDetailInfor extends StatelessWidget {
           ),
           Expanded(
             flex: 3,
-            child: Text(value, style: const TextStyle(color: Colors.black87)),
+            child: Text(value, style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
           ),
         ],
       ),

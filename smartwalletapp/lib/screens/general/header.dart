@@ -4,8 +4,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smartwalletapp/app/locallization/app_localizations.dart';
-import 'package:smartwalletapp/bloc/MainApp/MainAppBloc.dart';
-import 'package:smartwalletapp/bloc/MainApp/MainAppEvent.dart';
+import 'package:smartwalletapp/bloc/MainApp/main_app_bloc.dart';
+import 'package:smartwalletapp/bloc/MainApp/main_app_event.dart';
 
 import '../../constants.dart';
 import '../../controllers/menu_app_controller.dart';

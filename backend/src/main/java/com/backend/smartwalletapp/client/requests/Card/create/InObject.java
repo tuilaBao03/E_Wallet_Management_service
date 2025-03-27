@@ -16,7 +16,6 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
 public class InObject {
-
     @XmlElement(name = "CardName",namespace = "http://www.openwaygroup.com/wsint")
     String cardName;
     @XmlElement(name = "CBSNumber",namespace = "http://www.openwaygroup.com/wsint")

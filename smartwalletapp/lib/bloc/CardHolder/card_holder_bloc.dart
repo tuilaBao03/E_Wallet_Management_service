@@ -19,9 +19,12 @@ class CardHolderBloc extends Bloc<CardHolderEvent,CardHolderState>{
         CardHolderRepository repository = CardHolderRepository();
         ContractRepository contractRepository = ContractRepository();
         List<GetCardHolderResponse> cardHolders = [];
-        ApiResult apiResult = await repository.giveCardHolderBySearchAndPage("", event.page, event.token);
-        ApiResult contractByCardHolder = await contractRepository.giveContractByCLient(event.cardHolder.clientNumber, event.token, event.page);
-        if(apiResult.code == 0 && contractByCardHolder.code ==0){
+        if(event.searchText == ''){
+          event.searchText = " ";
+        }
+        ApiResult apiResult = await repository.giveCardHolderBySearchAndPage(event.searchText, event.page, event.token);
+        ApiResult contractByCardHolder = await contractRepository.giveContractByCLient(event.cardHolder.clientNumber, event.token);
+        if(apiResult.code == 200 && contractByCardHolder.code == 0){
           cardHolders = apiResult.result;
           emit(CardHolderLoadedState(cardHolders, apiResult.page, apiResult.pageAmount,event.showContractList,event.cardHolder,contractByCardHolder.result));
         }

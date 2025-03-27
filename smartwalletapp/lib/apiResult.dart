@@ -9,4 +9,9 @@ class ApiResult {
 
   ApiResult(this.code,this.message,this.result, this.page, this.pageAmount); 
 
+  // Thêm phương thức toString() để debug dễ dàng
+  @override
+  String toString() {
+    return 'ApiResult(code: $code, message: $message, result: ${result.toString()}, page: $page, pageAmount: $pageAmount)';
+  }
 }

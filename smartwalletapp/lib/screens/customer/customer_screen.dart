@@ -12,6 +12,7 @@ import 'package:smartwalletapp/response/contract/get_contract_response.dart';
 import 'package:smartwalletapp/screens/contract/components/contract_list.dart';
 import 'package:smartwalletapp/screens/customer/components/customer_list.dart';
 import 'package:smartwalletapp/screens/general/dialogAlert.dart';
+import 'package:smartwalletapp/screens/general/page.dart';
 
 import '../../constants.dart';
 import '../../models/user.dart';
@@ -86,7 +87,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                                       Expanded(
                                         flex: 1,
                                         child: 
-                                        CustomerList(cardholders: cardHolders, title: "CashHolderDetail", token: widget.token, showContractList: showContractList, page: page, search: searchText)
+                                        CustomerList(cardholders: cardHolders, title: "CashHolderList", token: widget.token, showContractList: showContractList, page: page, search: searchText)
                                           ),
                                       if(Responsive.isDesktop(context) && showContractList)
                                         SizedBox(width: defaultPadding),
@@ -109,10 +110,34 @@ class _CustomerScreenState extends State<CustomerScreen> {
                       ),
                     ],
                   ),
+                  PageInfoWidget(
+                    page: page,
+                    pageAmount: pageAmount,
+                    onUpPress: () {
+                      if (page < pageAmount) {
+                        context.read<CardHolderBloc>().add(
+                          CardHolderInitialEvent(
+                            widget.token, searchText, page + 1, showContractList, selectedcardHolder
+                          )
+                        );
+                      }
+                    },
+                    onDownPress: () {
+                      if (page > 1) {
+                        context.read<CardHolderBloc>().add(
+                          CardHolderInitialEvent(
+                            widget.token, searchText, page - 1, showContractList, selectedcardHolder
+                          )
+                        );
+                      }
+                    },
+                  )
                 ]
               ),
             ) 
           );
+
+        
   
 
       }

@@ -1,30 +1,19 @@
-
-
 // ignore_for_file: avoid_types_as_parameter_names, non_constant_identifier_names
-
-import 'dart:collection';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smartwalletapp/app/locallization/app_localizations.dart';
-import 'package:smartwalletapp/bloc/Contract/ContractBloc.dart';
-import 'package:smartwalletapp/bloc/Contract/ContractEvent.dart';
-import 'package:smartwalletapp/bloc/Contract/ContractState.dart';
+import 'package:smartwalletapp/bloc/Contract/contract_bloc.dart';
+import 'package:smartwalletapp/bloc/Contract/contract_event.dart';
+import 'package:smartwalletapp/bloc/Contract/contract_state.dart';
 import 'package:smartwalletapp/models/create_contract_request.dart';
-import 'package:smartwalletapp/response/cardHolder/getCardHolderResponse.dart';
 import 'package:smartwalletapp/response/contract/get_contract_response.dart';
 import 'package:smartwalletapp/screens/contract/components/contract_list.dart';
 import 'package:smartwalletapp/screens/general/dialogAlert.dart';
 import 'package:smartwalletapp/screens/general/paginationWidget.dart';
 import 'package:smartwalletapp/screens/main/components/classInitial.dart';
-
-
 import '../../constants.dart';
 import '../../models/user.dart';
 import '../general/header.dart';
-
-
-
 
 class ContractScreen extends StatefulWidget {
   
@@ -43,6 +32,7 @@ class ContractScreen extends StatefulWidget {
 class _ContractScreenState extends State<ContractScreen> {
   @override
   void initState() {
+    super.initState();
     context.read<ContractBloc>().add(ContractInitialEvent(widget.token,1,""));
   }
 
@@ -71,7 +61,6 @@ class _ContractScreenState extends State<ContractScreen> {
                 children: [
                   Header(title: "Contract",user: widget.user, isAuth: widget.isAuth, onLanguageChange: widget.onLanguageChange,),
                   SizedBox(height: defaultPadding),
-                  
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

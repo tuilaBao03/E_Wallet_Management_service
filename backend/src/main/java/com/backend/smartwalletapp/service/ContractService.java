@@ -4,12 +4,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.backend.smartwalletapp.Mapper.ContractMapper;
 import com.backend.smartwalletapp.client.requests.Contract.CreateContractLevel2.CreateContractV4_REQV2;
 import com.backend.smartwalletapp.client.requests.Contract.CreateContractV4.CreateContractV4_REQ;
+import com.backend.smartwalletapp.client.requests.Contract.Edit.EditContractV4;
 import com.backend.smartwalletapp.client.responses.Contract.create.CreateContractV4Result;
 import com.backend.smartwalletapp.client.responses.Contract.get.GetContractByNumberV2Result;
 import com.backend.smartwalletapp.client.responses.Contract.get.GetContractsByClientV2Result;
@@ -36,7 +38,7 @@ public class ContractService {
     ContractSoapService contractSoapService;
     ContractMapper contractMapper;
     CardHolderService cardHolderService;
-    public List<ContractListResponse> giveContractBySearchAndPage(String search, int page) {
+    public List<ContractListResponse> giveContractBySearchAndPage(String search, int page, int count ) {
     
         String query = """
             SELECT CONTRACT_NUMBER, BRANCH, SERVICE_GROUP, CONTRACT_NAME, CONTRACT_LEVEL, 
@@ -97,7 +99,7 @@ public class ContractService {
                     .toList();
 
             // ✅ Áp dụng phân trang
-            int pageSize = 10;
+            int pageSize = count;
             int totalRecords = searchAndPages.size();
             int totalPages = (int) Math.ceil((double) totalRecords / pageSize);
             int fromIndex = (page - 1) * pageSize;
@@ -161,7 +163,6 @@ public class ContractService {
             .message(mess).build();
         }
         catch(Exception e){
-            System.err.println("___________________________");
             e.printStackTrace();
             throw new AppException(ErrorCode.GET_CONTRACT_FAILE);
         }
@@ -172,28 +173,36 @@ public class ContractService {
             GetContractsByClientV2Result response = contractSoapService.getContractByClientIdentifier(ClientIdentifier);
             int code = response.getRetCode();
             String mess = response.getResultInfo();
+            
+            if(response.getOutObject() == null || response.getOutObject().getContractRecords() == null){
+                return ApiResponse.<List<IssContractDetailsAPIOutputV2Record>>builder()
+                    .result(Collections.emptyList())
+                    .code(code)
+                    .message(mess)
+                    .build();
+            }
+            else{
             List<IssContractDetailsAPIOutputV2Record> allContracts = response.getOutObject().getContractRecords();
-    
-            // Phân loại hợp đồng
+                // Phân loại hợp đồng
             List<IssContractDetailsAPIOutputV2Record> libContracts = allContracts.stream()
-                    .filter(c -> ".".equals(c.getContractLevel()))
-                    .toList();
-    
+            .filter(c -> ".".equals(c.getContractLevel()))
+            .toList();
+
             List<IssContractDetailsAPIOutputV2Record> issueContracts = allContracts.stream()
                     .filter(c -> c.getContractLevel() != null && c.getContractLevel().matches("^\\.[0-9]+\\.$"))
                     .toList();
-    
+
             List<IssContractDetailsAPIOutputV2Record> cardContracts = allContracts.stream()
                     .filter(c -> c.getContractLevel() == null || !c.getContractLevel().matches("^\\.[0-9]+\\.$"))
                     .toList();
-    
+
             // Gán danh sách cardContracts cho issueContracts
             issueContracts.forEach(issue -> issue.setContract(
                     cardContracts.stream()
                             .filter(card -> card.getParentProduct() != null && card.getParentProduct().equals(issue.getProduct()))
                             .toList()
             ));
-    
+
             // Gán danh sách issueContracts cho libContracts
             libContracts.forEach(lib -> lib.setContract(
                     issueContracts.stream()
@@ -205,14 +214,19 @@ public class ContractService {
                     .code(code)
                     .message(mess)
                     .build();
-    
+
+            }
         } catch (Exception e) {
             e.printStackTrace();
             throw new AppException(ErrorCode.GET_CONTRACT_FAILE);
         }
     }
     
-
+    public ApiResponse editContract(EditContractV4 request){
+        ApiResponse apiResponse = contractSoapService.editContract(request);
+        return apiResponse;
+        
+    }
 }
 
 

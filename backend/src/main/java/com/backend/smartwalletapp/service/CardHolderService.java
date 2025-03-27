@@ -6,10 +6,12 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.stereotype.Service;
 import com.backend.smartwalletapp.Mapper.CardHolderMapper;
 import com.backend.smartwalletapp.client.requests.CardHolders.create.CreateClientV4Body;
+import com.backend.smartwalletapp.client.requests.CardHolders.edit.EditClientV6;
 import com.backend.smartwalletapp.client.responses.CardHolders.createRes.CreateClientV4Response;
 import com.backend.smartwalletapp.client.responses.CardHolders.createRes.CreateClientV4Result;
 import com.backend.smartwalletapp.client.service.CardHolderSoapService;
 import com.backend.smartwalletapp.dto.request.CardHolder.CreateCardHolder.CardHolderCreatedRequest;
+import com.backend.smartwalletapp.dto.response.ApiResponse;
 import com.backend.smartwalletapp.dto.response.CardHolder.CreateCardHolderResponse;
 import com.backend.smartwalletapp.dto.response.CardHolder.GetCardHolder.CardHolderByPageAndSearch;
 import com.backend.smartwalletapp.dto.response.CardHolder.GetCardHolder.GetCardHolderResponse;
@@ -140,6 +142,27 @@ public class CardHolderService {
             CreateClientV4Result result = createCardHolderSoapResponse.getCreateClientV4Result();
 
             CreateCardHolderResponse response = cardHolderMapper.toCreateCardHolderResponse(result);
+
+            System.err.println(response);
+    
+            // 5. Trả về kết quả cuối cùng
+            return response;
+    
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new AppException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public ApiResponse editCardholder(EditClientV6 request){
+        try {
+            System.err.println("==================================");
+            // 1. Map dữ liệu từ request sang Body SOAP
+
+    
+    
+            // 4. Gửi request qua soapClient
+            ApiResponse response = soapClient.editCardHolder(request);
 
             System.err.println(response);
     

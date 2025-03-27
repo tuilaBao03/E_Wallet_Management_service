@@ -1,8 +1,8 @@
 // ignore_for_file: unused_import, avoid_print, non_constant_identifier_names
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:smartwalletapp/bloc/MainApp/MainAppBloc.dart';
-import 'package:smartwalletapp/bloc/MainApp/MainAppEvent.dart';
-import 'package:smartwalletapp/bloc/MainApp/MainAppState.dart';
+import 'package:smartwalletapp/bloc/MainApp/main_app_bloc.dart';
+import 'package:smartwalletapp/bloc/MainApp/main_app_event.dart';
+import 'package:smartwalletapp/bloc/MainApp/main_app_state.dart';
 import 'package:smartwalletapp/models/create_cardholder_request.dart';
 import 'package:smartwalletapp/models/create_contract_request.dart';
 import 'package:smartwalletapp/repository/dashboardRepository.dart';
@@ -35,7 +35,6 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   late User selectedUsers; 
   int _currentTab = 1;
-  List<CreateCardHolderRequest> cardHolders = [];
   @override
   void initState() {
     super.initState();

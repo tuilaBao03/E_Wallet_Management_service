@@ -1,8 +1,8 @@
 // ignore_for_file: unused_element
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smartwalletapp/apiResult.dart';
-import 'package:smartwalletapp/bloc/Contract/ContractEvent.dart';
-import 'package:smartwalletapp/bloc/Contract/ContractState.dart';
+import 'package:smartwalletapp/bloc/Contract/contract_event.dart';
+import 'package:smartwalletapp/bloc/Contract/contract_state.dart';
 import 'package:smartwalletapp/repository/contractRepository.dart';
 import 'package:smartwalletapp/response/contract/get_contract_response.dart';
 
@@ -16,7 +16,10 @@ class ContractBloc extends Bloc<ContractEvent,ContractState> {
       ContractRepository contractRepository = ContractRepository();
       emit(ContractLoadingState());
       String search = event.searchText.toLowerCase().trim();
-      ApiResult apiResult = await contractRepository.giveAllByCLient(event.token, event.page, search);
+      if(search == ''){
+        search = " ";
+      }
+      ApiResult apiResult = await contractRepository.giveAllContract(event.token, event.page, search);
       if(apiResult.code == 0){
 
         List<GetContractResponse> contracts = apiResult.result;

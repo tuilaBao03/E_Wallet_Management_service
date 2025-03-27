@@ -120,10 +120,11 @@ class ContractRepository {
       throw Exception('Exception occurred: $e');
     }
   }
-  Future<ApiResult> giveContractByCLient(String identityClient ,String token, int page) async {
-    String apiUrl = "http://localhost:8080/smartwalletapp/contract/{$identityClient}";
+  Future<ApiResult> giveContractByCLient(String identityClient ,String token) async {
+    String apiUrl = "http://localhost:8080/smartwalletapp/contract/ByClient/$identityClient";
 
     try {
+      print(apiUrl);
       final response = await http.get(
         Uri.parse(apiUrl),
         headers: {
@@ -132,14 +133,14 @@ class ContractRepository {
         },
       );
       Map<String, dynamic> responseData = json.decode(response.body);
-      int code = responseData["code"];
+      int code = responseData["code"] ?? 0;
       String message = responseData["message"];
-      if (response.statusCode == 200) {
-        List<GetContractResponse> libContracts = responseData["result"]["libContract"];
-        int page = responseData["result"]["page"];
-        int pageAmount = responseData["result"]["pageAmount"];
+      if (response.statusCode == 200 ) {
+        List<GetContractResponse> libContracts = (responseData["result"] as List)
+      .map((e) => GetContractResponse.fromJson(e))
+      .toList();
         
-        ApiResult result = ApiResult(code, message, libContracts , page,pageAmount);
+        ApiResult result = ApiResult(code, message, libContracts,1,1);
         return result;
       } else {
         // Map<String, dynamic> errorData = json.decode(response.body);
@@ -151,7 +152,7 @@ class ContractRepository {
     }
   }
 
-    Future<ApiResult> giveAllByCLient(String token, int page,String search) async {
+    Future<ApiResult> giveAllContract(String token, int page,String search) async {
     String apiUrl = "http://localhost:8080/smartwalletapp/contract/$search/$page";
     try {
       final response = await http.get(
