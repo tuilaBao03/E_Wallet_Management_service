@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:smartwalletapp/app/locallization/app_localizations.dart';
 import 'package:smartwalletapp/bloc/Auth/AuthEvent.dart';
 import 'package:smartwalletapp/bloc/Auth/AuthState.dart';
-import 'package:smartwalletapp/models/user.dart';
+import 'package:smartwalletapp/request/user.dart';
 import 'package:smartwalletapp/screens/authentication/register_screen.dart';
 import 'package:smartwalletapp/screens/main/main_screen.dart';
 import '../../bloc/Auth/AuthBloc.dart';

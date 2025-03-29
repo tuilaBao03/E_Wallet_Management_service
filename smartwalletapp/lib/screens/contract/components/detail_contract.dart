@@ -1,15 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smartwalletapp/bloc/Contract/contract_bloc.dart';
+import 'package:smartwalletapp/bloc/Contract/contract_event.dart';
+import 'package:smartwalletapp/bloc/Contract/contract_state.dart';
 import 'package:smartwalletapp/constants.dart';
 import 'package:smartwalletapp/response/contract/get_contract_response.dart';
+import 'package:smartwalletapp/screens/general/dialogAlert.dart';
 
-class ContractDetailScreen extends StatelessWidget {
-  final GetContractResponse contractInfo;
+class ContractDetailScreen extends StatefulWidget {
+  final String contractNumber;
+  final String token;
 
   const ContractDetailScreen({
     super.key,
-    required this.contractInfo,
+     required this.contractNumber, required this.token,
   });
 
+  @override
+  State<ContractDetailScreen> createState() => _ContractDetailScreenState();
+}
+
+class _ContractDetailScreenState extends State<ContractDetailScreen> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<ContractBloc>().add(GetContractDetailEvent(widget.contractNumber, widget.token));
+  }
   Widget _buildInfoField(String label, String? value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
@@ -22,7 +38,7 @@ class ContractDetailScreen extends StatelessWidget {
           ),
           Expanded(
             flex: 3,
-            child: Text(value ?? "-", style: const TextStyle(color: Colors.black87)),
+            child: Text(value ?? "-", style: const TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -53,9 +69,15 @@ class ContractDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(defaultPadding),
-      child: SingleChildScrollView(
+    return BlocConsumer<ContractBloc,ContractState>(builder: (context,state){
+      if(state is ContractLoadingState){
+        return Center(child: CircularProgressIndicator(),);
+      }
+      else if(state is GetDetailContractState){
+        GetContractResponse contractInfo = state.contract;
+        return Padding(
+          padding: EdgeInsets.all(defaultPadding),
+          child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -137,6 +159,21 @@ class ContractDetailScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
+        );
+        
+  
+      }
+      return Center(child: CircularProgressIndicator(),);
+    }, listener: (context,state){
+      if(state is ContractErrorState){
+        InputDialog.showError(
+            context,
+            title: 'Error',
+            content: state.mess,
+          );
+      
+
+      }
+    });
+    }
 }

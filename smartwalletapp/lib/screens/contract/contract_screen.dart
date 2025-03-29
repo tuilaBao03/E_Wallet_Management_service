@@ -5,18 +5,18 @@ import 'package:smartwalletapp/app/locallization/app_localizations.dart';
 import 'package:smartwalletapp/bloc/Contract/contract_bloc.dart';
 import 'package:smartwalletapp/bloc/Contract/contract_event.dart';
 import 'package:smartwalletapp/bloc/Contract/contract_state.dart';
-import 'package:smartwalletapp/models/create_contract_request.dart';
-import 'package:smartwalletapp/response/contract/get_contract_response.dart';
+import 'package:smartwalletapp/request/create_contract_liab_request.dart';
+import 'package:smartwalletapp/response/contract/get_contract_custom_response.dart';
 import 'package:smartwalletapp/screens/contract/components/contract_list.dart';
 import 'package:smartwalletapp/screens/general/dialogAlert.dart';
-import 'package:smartwalletapp/screens/general/paginationWidget.dart';
+import 'package:smartwalletapp/screens/general/page.dart';
+import 'package:smartwalletapp/screens/general/size.dart';
 import 'package:smartwalletapp/screens/main/components/classInitial.dart';
 import '../../constants.dart';
-import '../../models/user.dart';
+import '../../request/user.dart';
 import '../general/header.dart';
 
 class ContractScreen extends StatefulWidget {
-  
   final bool isAuth;
   final String token;
   final User user;
@@ -33,14 +33,14 @@ class _ContractScreenState extends State<ContractScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<ContractBloc>().add(ContractInitialEvent(widget.token,1,""));
+    context.read<ContractBloc>().add(ContractInitialEvent(widget.token,1,"",10));
   }
 
-  CreateContractRequest selectedContract = selectedContractInittial;
+  CreateContractLiabRequest selectedContract = selectedContractInittial;
   final TextEditingController _searchController = TextEditingController();
-  List<GetContractResponse> libContract = [];
+  List<GetContractResponseCustom> libContract = [];
   int page = 1;
-  int pageAmount = 1;
+  int pageTotal = 1;
   String search = "";
   @override
   Widget build(BuildContext context) {
@@ -52,7 +52,8 @@ class _ContractScreenState extends State<ContractScreen> {
         else if(state is ContractLoadedState){
           libContract = state.libContracts;
           page = state.page;
-          pageAmount = state.pageAmount;
+          pageTotal = state.pageAmount;
+          int size = state.size;
           return SafeArea(
             child: SingleChildScrollView(
               primary: false,
@@ -76,20 +77,49 @@ class _ContractScreenState extends State<ContractScreen> {
                               borderRadius: BorderRadius.circular(8.0),
                             ),
                           ),
-                          onChanged: (value) {
+                          onSubmitted: (value) {
                             setState(() {
                               search = _searchController.text;
                             });
-                            context.read<ContractBloc>().add(ContractInitialEvent(widget.token,1,search));
+                            context.read<ContractBloc>().add(ContractInitialEvent(widget.token,1,search,size));
                           },
                         ),
+
+                        SizedBox(height: 10,),
                             ContractList(
                               title: 'ContractList',
                               contracts: libContract, isContractScreent: true, token: widget.token, page: 1,
                             ),
-                            PaginationWidget(page: page,amountPage: pageAmount, onPageChanged: (int page){
-                              context.read<ContractBloc>().add(ContractInitialEvent(widget.token,page,search));
-                            },),
+                        SizedBox(height: 10,),
+                      
+
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            PageInfoWidget(
+                            page: page,
+                            pageAmount: pageTotal,
+                            onUpPress: () {
+                              if (page < pageTotal) {
+                                context.read<ContractBloc>().add(ContractInitialEvent(widget.token,page,search,size));
+                              }
+                            },
+                            onDownPress: () {
+                              if (page > 1) {
+                                context.read<ContractBloc>().add(ContractInitialEvent(widget.token,page,search,size));
+                              }
+                            },
+                          ),
+                          SizeDropdown(
+                            onSizeSelected: (int? selectedValue) {
+                                  setState(() {
+                                    context.read<ContractBloc>().add(ContractInitialEvent(widget.token,page,search,selectedValue??10));
+                                  });
+                                },
+                              ),
+                              ],
+                            )
                           ],
                         ),
                       ),

@@ -6,7 +6,7 @@ import 'package:smartwalletapp/bloc/Auth/AuthState.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smartwalletapp/repository/userRepository.dart';
 import 'package:smartwalletapp/repository/authRepository.dart';
-import '../../models/user.dart';
+import '../../request/user.dart';
 
 class AuthBloc extends Bloc<AuthEvent,AuthState>{
   AuthBloc():super(AuthInitial()){

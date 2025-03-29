@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:smartwalletapp/app/locallization/app_localizations.dart';
 import 'package:smartwalletapp/bloc/Register/RegistedState.dart';
-import 'package:smartwalletapp/models/user.dart';
+import 'package:smartwalletapp/request/user.dart';
 import 'package:smartwalletapp/screens/authentication/login_screen.dart';
 import '../../bloc/Register/RegistedBloc.dart';
 import '../../bloc/Register/RegistedEvent.dart';

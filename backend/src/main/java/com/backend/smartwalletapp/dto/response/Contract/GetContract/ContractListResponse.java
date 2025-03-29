@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @Data
 public class ContractListResponse {
     int page;
-    int pageAmount;
+    int pageTotal;
     List<ContractBySearchAndPage> contracts;
 }

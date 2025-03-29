@@ -15,24 +15,34 @@ class PageInfoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: page > 1 ? onDownPress : null, // Chỉ kích hoạt nếu page > 1
-              child: Icon(Icons.turn_right, color: Colors.white,),
-            ),
-            SizedBox(width: 10),
-            Text(
-              "Page: $page / $pageAmount",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(width: 10),
-            ElevatedButton(
-              onPressed: page < pageAmount ? onUpPress : null, // Chỉ kích hoạt nếu page < pageAmount
-              child: Icon(Icons.turn_left, color: Colors.white,),
-            ),
-          ],
-        );
-  }
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      ElevatedButton(
+        style: ButtonStyle(
+          backgroundColor: WidgetStateProperty.resolveWith<Color>(
+            (states) => page > 1 ? Colors.blue : Colors.grey,
+          ),
+        ),
+        onPressed: page > 1 ? onDownPress : null, // Chỉ kích hoạt nếu page > 1
+        child: Icon(Icons.arrow_back, color: Colors.white),
+      ),
+      SizedBox(width: 10),
+      Text(
+        "Page: $page / $pageAmount",
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      ),
+      SizedBox(width: 10),
+      ElevatedButton(
+        style: ButtonStyle(
+          backgroundColor: WidgetStateProperty.resolveWith<Color>(
+            (states) => page < pageAmount ? Colors.blue : Colors.grey,
+          ),
+        ),
+        onPressed: page < pageAmount ? onUpPress : null, // Chỉ kích hoạt nếu page < pageAmount
+        child: Icon(Icons.arrow_forward, color: Colors.white),
+      ),
+    ],
+  );
+}
 }

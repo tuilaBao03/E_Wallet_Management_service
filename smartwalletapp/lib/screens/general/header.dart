@@ -9,7 +9,7 @@ import 'package:smartwalletapp/bloc/MainApp/main_app_event.dart';
 
 import '../../constants.dart';
 import '../../controllers/menu_app_controller.dart';
-import '../../models/user.dart';
+import '../../request/user.dart';
 import '../../responsive.dart';
 
 class Header extends StatefulWidget {

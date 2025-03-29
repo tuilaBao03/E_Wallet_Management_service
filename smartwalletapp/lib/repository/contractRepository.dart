@@ -4,8 +4,9 @@ import 'dart:convert';
 
 import 'package:smartwalletapp/apiResult.dart';
 import 'package:http/http.dart' as http;
-import 'package:smartwalletapp/models/create_contract_request.dart';
+import 'package:smartwalletapp/request/create_contract_liab_request.dart';
 import 'package:smartwalletapp/response/contract/create_contract_reponse.dart';
+import 'package:smartwalletapp/response/contract/get_contract_custom_response.dart';
 import 'package:smartwalletapp/response/contract/get_contract_response.dart';
 
 
@@ -21,7 +22,7 @@ class AllContractsList{
 class ContractRepository {
 
 
-  Future<ApiResult> createdLibContract(CreateContractRequest contract, String token) async{
+  Future<ApiResult> createdLibContract(CreateContractLiabRequest contract, String token) async{
     final String apiUrl = 'http://localhost:8080/smartwalletapp/Libcontract';
     try {
       print(contract.toString());
@@ -54,7 +55,7 @@ class ContractRepository {
       throw Exception('Exception occurred: $e');
     }
   }
-  Future<ApiResult> createdIssueContract(CreateContractRequest contract, String token) async{
+  Future<ApiResult> createdIssueContract(CreateContractLiabRequest contract, String token) async{
       final String apiUrl = 'http://localhost:8080/smartwalletapp/Issuecontract';
       try {
         print(contract.toString());
@@ -87,7 +88,7 @@ class ContractRepository {
         throw Exception('Exception occurred: $e');
       }
     }
-  Future<ApiResult> createdCardContract(CreateContractRequest contract, String token) async{
+  Future<ApiResult> createdCardContract(CreateContractLiabRequest contract, String token) async{
     final String apiUrl = 'http://localhost:8080/smartwalletapp/Cardcontract';
     try {
       print(contract.toString());
@@ -120,11 +121,12 @@ class ContractRepository {
       throw Exception('Exception occurred: $e');
     }
   }
-  Future<ApiResult> giveContractByCLient(String identityClient ,String token) async {
-    String apiUrl = "http://localhost:8080/smartwalletapp/contract/ByClient/$identityClient";
+  Future<ApiResult> giveContractByClient(String identityClient, String token) async {
+    String apiUrl = "http://localhost:8080/smartwalletapp/contracts?identifier=$identityClient&type=ByClientID";
 
     try {
-      print(apiUrl);
+      print("Calling API: $apiUrl");
+      
       final response = await http.get(
         Uri.parse(apiUrl),
         headers: {
@@ -132,29 +134,62 @@ class ContractRepository {
           'Authorization': 'Bearer $token',
         },
       );
-      Map<String, dynamic> responseData = json.decode(response.body);
-      int code = responseData["code"] ?? 0;
-      String message = responseData["message"];
-      if (response.statusCode == 200 ) {
-        List<GetContractResponse> libContracts = (responseData["result"] as List)
-      .map((e) => GetContractResponse.fromJson(e))
-      .toList();
-        
-        ApiResult result = ApiResult(code, message, libContracts,1,1);
-        return result;
+
+      // Kiểm tra mã status trước khi decode dữ liệu
+      if (response.statusCode == 200) {
+        Map<String, dynamic> responseData = json.decode(response.body);
+
+        int code = responseData["code"] ?? 0;
+        String message = responseData["message"] ?? "No message";
+        List<GetContractResponseCustom> libContracts = (responseData["result"] as List)
+            .map((e) => GetContractResponseCustom.fromJson(e))
+            .toList();
+        return ApiResult(code, message, libContracts, 1, 1);
       } else {
-        // Map<String, dynamic> errorData = json.decode(response.body);
-        // throw Exception("Lỗi API: ${errorData["message"]}");
-        throw Exception("Exception occurred:__$message");
+        throw Exception("Lỗi API: ContractRepositor giveContractByClient ${response.statusCode} - ${response.body}");
       }
     } catch (e) {
-      throw Exception("Lỗi kết nối: $e");
+      throw Exception("Lỗi kết nối ContractRepositor giveContractByClient: $e");
     }
   }
 
-    Future<ApiResult> giveAllContract(String token, int page,String search) async {
-    String apiUrl = "http://localhost:8080/smartwalletapp/contract/$search/$page";
+  Future<ApiResult> getContractByContractNumber(String cardNumber, String token) async {
+    String apiUrl = "http://localhost:8080/smartwalletapp/contracts?identifier=$cardNumber&type=ByCardNumber";
+    print(apiUrl);
+
+    try { 
+      final response = await http.get(
+        Uri.parse(apiUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      // Kiểm tra mã status trước khi decode dữ liệu
+      if (response.statusCode == 200) {
+        Map<String, dynamic> responseData = json.decode(response.body);
+
+        int code = responseData["code"] ?? 0;
+        String message = responseData["message"] ?? "No message";
+        GetContractResponse libContracts = GetContractResponse.fromJson(responseData["result"][0]);
+        print(libContracts.toString());
+
+        return ApiResult(code, message, libContracts, 1, 1);
+      } else {
+        throw Exception("Lỗi API: ${response.statusCode} - ${response.body}");
+      }
+    } catch (e) {
+      throw Exception("Lỗi kết nối hoặc dữ liệu không hợp lệ _ giveContractByContractNumber: $e");
+    }
+  }
+
+  Future<ApiResult> giveAllContract(String token, int page,String search, int count) async {
+    String apiUrl = "http://localhost:8080/smartwalletapp/contracts/search?query=$search&page=$page&count=$count";
+  
     try {
+      print("-------------------------1--------------------------");
+      print("giveAllContract : $apiUrl");
       final response = await http.get(
         Uri.parse(apiUrl),
         headers: {
@@ -164,21 +199,26 @@ class ContractRepository {
       );
       Map<String, dynamic> responseData = json.decode(response.body);
       int code = responseData["code"];
-      String message = responseData["message"];
+      String message = responseData["message"] ?? 'ok';
       if (response.statusCode == 200) {
-        List<GetContractResponse> libContracts = responseData["result"]["libContract"];
-        int page = responseData["result"]["page"];
-        int pageAmount = responseData["result"]["pageAmount"];
+        List<GetContractResponseCustom> libContracts = (responseData["result"][0]["contracts"] as List)
+            .map((e) => GetContractResponseCustom.fromJson(e))
+            .toList();
+        print("-------------------------5--------------------------");
+        int page = responseData["result"][0]["page"];
+        print(page);
+        int pageTotal = responseData["result"][0]["pageTotal"];
+        print(pageTotal);
         
-        ApiResult result = ApiResult(code, message, libContracts , page,pageAmount);
+        ApiResult result = ApiResult(code, message, libContracts , page,pageTotal);
         return result;
       } else {
         // Map<String, dynamic> errorData = json.decode(response.body);
         // throw Exception("Lỗi API: ${errorData["message"]}");
-        throw Exception("Exception occurred:__$message");
+        throw Exception("Exception occurred giveAllContract:__$message");
       }
     } catch (e) {
-      throw Exception("Lỗi kết nối: $e");
+      throw Exception("Lỗi kết nối: giveAllContract $e");
     }
   }
   

@@ -1,6 +1,7 @@
 package com.backend.smartwalletapp.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.smartwalletapp.client.requests.CardHolders.create.CreateClientV4Body;
@@ -47,16 +48,21 @@ public class CardHolderController {
             .code(code)
             .message(mess).build();
     }
-    @GetMapping("/{search}/{page}")
+    @GetMapping
     @PreAuthorize("hasRole(T(com.example.constants.Roles).USER.name()) or hasRole(T(com.example.constants.Roles).ADMIN.name())")
-    public ApiResponse<CardHolderByPageAndSearch> getAllCardHolder(@PathVariable String search, @PathVariable int page) {
-        CardHolderByPageAndSearch cardHolderResponse = cardHolderService.getCardHolders(page, search);
+    public ApiResponse<CardHolderByPageAndSearch> getAllCardHolder(
+            @RequestParam(required = false, defaultValue = "") String search,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) { // Default limit = 10 nếu không truyền
+        CardHolderByPageAndSearch cardHolderResponse = cardHolderService.getCardHolders(page, search, size);
+        
         return ApiResponse.<CardHolderByPageAndSearch>builder()
             .result(cardHolderResponse)
             .code(200)
             .message("ok")
             .build();
     }
+
 
     // @PutMapping()
     // @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")

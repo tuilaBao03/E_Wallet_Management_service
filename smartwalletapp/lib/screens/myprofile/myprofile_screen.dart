@@ -8,7 +8,7 @@ import 'package:smartwalletapp/screens/myprofile/components/customer_detail.dart
 
 
 import '../../constants.dart';
-import '../../models/user.dart';
+import '../../request/user.dart';
 import '../general/header.dart';
 
 

@@ -1,8 +1,8 @@
 // ignore_for_file: file_names
-import 'package:smartwalletapp/models/create_card_request.dart';
-import 'package:smartwalletapp/models/create_cardholder_request.dart';
-import 'package:smartwalletapp/models/create_contract_request.dart';
-import 'package:smartwalletapp/models/user.dart';
+import 'package:smartwalletapp/request/create_contract_card_request.dart';
+import 'package:smartwalletapp/request/create_cardholder_request.dart';
+import 'package:smartwalletapp/request/create_contract_liab_request.dart';
+import 'package:smartwalletapp/request/user.dart';
 
 User selectedUserInittial = User(
     username: "",
@@ -66,29 +66,19 @@ User selectedUserInittial = User(
   businessPhone: "",
   customData: [],
 );
-
-  CreateCardRequest selectedCardInittial = CreateCardRequest(
-    contractSearchMethod: 'CONTRACT_NUMBER',
-    contractIdentifier: '',
-    productCode: 'CARD_TRAINING01',
-    productCode2: '',
-    productCode3: '',
-    cardName: '',
-    cbsNumber: '',
-    embossedFirstName: 'Phan',
-    embossedLastName: 'Hong',
-    embossedCompanyName: 'OpenWay');
-  CreateContractRequest selectedContractInittial = CreateContractRequest(
+  CreateContractLiabRequest selectedContractInittial = CreateContractLiabRequest(
     reason: "to test",
-    branch: "9999",
-    institutionCode: "9999",
-    productCode: "",
-    productCode2: "",
-    productCode3: "",
-    cbsNumber: "",
-    customData: "",
-    contractName: "",
     clientIdentifier: "",
     clientSearchMethod: "CLIENT_NUMBER",
+    contractInfo: CreateContractInObject(
+      branch: "0101",
+      institutionCode: "0001",
+      productCode: "",
+      productCode2: "",
+      productCode3: "",
+      contractName: "",
+      cbsNumber: "",
+    ),
+    customData: "",
   );
   

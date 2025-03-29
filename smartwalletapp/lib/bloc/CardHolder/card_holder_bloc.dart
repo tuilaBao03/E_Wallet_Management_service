@@ -2,16 +2,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smartwalletapp/apiResult.dart';
 import 'package:smartwalletapp/bloc/CardHolder/card_holder_event.dart';
 import 'package:smartwalletapp/bloc/CardHolder/card_holder_state.dart';
-import 'package:smartwalletapp/models/create_cardholder_request.dart';
+import 'package:smartwalletapp/request/create_cardholder_request.dart';
 import 'package:smartwalletapp/repository/cardHolderRepository.dart';
 import 'package:smartwalletapp/repository/contractRepository.dart';
 import 'package:smartwalletapp/response/cardHolder/cardholderResponse.dart';
 import 'package:smartwalletapp/response/cardHolder/getCardHolderResponse.dart';
+import 'package:smartwalletapp/response/contract/get_contract_custom_response.dart';
 
 class CardHolderBloc extends Bloc<CardHolderEvent,CardHolderState>{
   CardHolderBloc():super(CardHolderInitial()){
     on<CardHolderInitialEvent>(_giveCardHolderList);
-    on<AddContractEvent>(_createCardHolder);
+    on<AddCardHolderEvent>(_createCardHolder);
   }
 
   void _giveCardHolderList(CardHolderInitialEvent event, Emitter<CardHolderState> emit) async {
@@ -19,18 +20,28 @@ class CardHolderBloc extends Bloc<CardHolderEvent,CardHolderState>{
         CardHolderRepository repository = CardHolderRepository();
         ContractRepository contractRepository = ContractRepository();
         List<GetCardHolderResponse> cardHolders = [];
+        List<GetContractResponseCustom> contracts = [];
         if(event.searchText == ''){
           event.searchText = " ";
         }
-        ApiResult apiResult = await repository.giveCardHolderBySearchAndPage(event.searchText, event.page, event.token);
-        ApiResult contractByCardHolder = await contractRepository.giveContractByCLient(event.cardHolder.clientNumber, event.token);
-        if(apiResult.code == 200 && contractByCardHolder.code == 0){
-          cardHolders = apiResult.result;
-          emit(CardHolderLoadedState(cardHolders, apiResult.page, apiResult.pageAmount,event.showContractList,event.cardHolder,contractByCardHolder.result));
+        ApiResult apiResult = await repository.giveCardHolderBySearchAndPage(event.searchText, event.page, event.token,event.size);
+        if(event.cardHolder.clientNumber != ''){
+          ApiResult contractByCardHolder = await contractRepository.giveContractByClient(event.cardHolder.clientNumber, event.token);
+          if(apiResult.code == 200 && contractByCardHolder.code == 0){
+            cardHolders = apiResult.result;
+            print(event.cardHolder.clientNumber);
+            contracts = contractByCardHolder.result;
+            print("number : ${contracts.length}");
+            emit(CardHolderLoadedState(cardHolders, apiResult.page, apiResult.pageTotal,event.showContractList,event.cardHolder,contractByCardHolder.result,event.size));
+          }
+          else{
+            emit(CardHolderError("${apiResult.message} ___ ${contractByCardHolder.message}"));
+          } 
         }
         else{
-          emit(CardHolderError("${apiResult.message} ___ ${contractByCardHolder.message}"));
-        } 
+          emit(CardHolderError("clientNumber null"));
+        }
+        
       } catch (e) {
         throw Exception("CardHolderBloc _ _giveCardHolderList : $e");
          // Ensure an exception is thrown
@@ -49,7 +60,7 @@ class CardHolderBloc extends Bloc<CardHolderEvent,CardHolderState>{
   //     print("_updatedUserInfor $e");
   //   }
   // }
-  void _createCardHolder(AddContractEvent  event, Emitter<CardHolderState> emit) async{
+  void _createCardHolder(AddCardHolderEvent  event, Emitter<CardHolderState> emit) async{
     try{
       print("____________________________________");
       CreateCardHolderRequest cardHolder = event.cardHolder;

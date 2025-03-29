@@ -4,7 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:smartwalletapp/ApiResult.dart';
 
-import '../models/user.dart';
+import '../request/user.dart';
 import 'package:http/http.dart' as http;
 
 class UserRepository{

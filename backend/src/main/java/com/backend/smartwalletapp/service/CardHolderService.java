@@ -59,13 +59,12 @@ public class CardHolderService {
     
         // Hàm test query
         @SuppressWarnings("null")
-        public CardHolderByPageAndSearch getCardHolders(int page, String search) {
+        public CardHolderByPageAndSearch getCardHolders(int page, String search, int limit) {
             List<GetCardHolderResponse> cardholders = new ArrayList<>();
             Connection connection = null;
             Statement statement = null;
             ResultSet countResultSet = null;
             ResultSet dataResultSet = null;
-            int limit = 10;
             int offset = limit * (page - 1);
             int totalRecords = 0;
             int totalPages = 0;
@@ -75,7 +74,7 @@ public class CardHolderService {
                 statement = connection.createStatement();
         
                 // Câu lệnh lấy tổng số bản ghi
-                String countQuery = "SELECT COUNT(*) AS total FROM CARDHOLDEROFHAGIABAO WHERE LOWER(Short_Name) LIKE '%" + search.toLowerCase() + "%'";
+                String countQuery = "SELECT COUNT(*) AS total FROM CARDHOLDEROFHAGIABAO WHERE LOWER(Short_Name) LIKE '%" + search.toLowerCase() + "%' ORDER BY id DESC";
                 System.out.println(countQuery); // Debug SQL
                 countResultSet = statement.executeQuery(countQuery);
         
@@ -122,7 +121,7 @@ public class CardHolderService {
             return CardHolderByPageAndSearch.builder()
                 .page(page)
                 .cardholders(cardholders)
-                .pageAmount(totalPages)
+                .pageTotal(totalPages)
                 .build();
         }
         

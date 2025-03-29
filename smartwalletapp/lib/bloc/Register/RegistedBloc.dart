@@ -5,7 +5,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smartwalletapp/repository/authRepository.dart';
 
-import '../../models/user.dart';
+import '../../request/user.dart';
 import '../../repository/userRepository.dart';
 import 'RegistedEvent.dart';
 import 'RegistedState.dart';

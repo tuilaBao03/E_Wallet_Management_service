@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:smartwalletapp/models/card_holder_data.dart';
-import 'package:smartwalletapp/models/create_cardholder_request.dart';
-import 'package:smartwalletapp/bloc/MainApp/main_app_bloc.dart';
-import 'package:smartwalletapp/bloc/MainApp/main_app_event.dart';
+import 'package:smartwalletapp/request/card_holder_data.dart';
+import 'package:smartwalletapp/request/create_cardholder_request.dart';
 import 'package:smartwalletapp/constants.dart';
 import 'package:smartwalletapp/app/locallization/app_localizations.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smartwalletapp/screens/main/components/classInitial.dart';
 
 class EditCustomer extends StatefulWidget {
@@ -66,7 +63,7 @@ class _EditCustomerState extends State<EditCustomer> {
                   children: [
                     IconButton(
                       icon: Icon(Icons.save, color: isChanged ? Colors.blue : Colors.grey),
-                      onPressed: isChanged ? () => context.read<MainAppBloc>().add(AddCardHolderEvent(_objectInfo, widget.token)) : null,
+                      onPressed: (){}
                     ),
                     if (widget.isDetail)
                       IconButton(icon: const Icon(Icons.delete), onPressed: () {}),

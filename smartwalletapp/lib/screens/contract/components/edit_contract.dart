@@ -1,179 +1,130 @@
+
+
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
-import 'package:smartwalletapp/models/create_contract_request.dart';
-import 'package:smartwalletapp/bloc/MainApp/main_app_bloc.dart';
-import 'package:smartwalletapp/bloc/MainApp/main_app_event.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:smartwalletapp/constants.dart';
 import 'package:smartwalletapp/app/locallization/app_localizations.dart';
-import 'package:smartwalletapp/screens/main/components/classInitial.dart';
 
-class ContractEditScreen extends StatefulWidget {
+class ContractCardFormScreen extends StatefulWidget {
   final String token;
-  final bool isAdd;
   final String title;
-  final CreateContractRequest? object;
+  final String clientIdentifier;
 
-  const ContractEditScreen({
-    super.key,
-    required this.token,
-    required this.isAdd,
-    required this.title,
-    this.object,
+  const ContractCardFormScreen({
+    super.key, required this.token, required this.title, required this.clientIdentifier,
   });
 
   @override
-  State<ContractEditScreen> createState() => _ContractEditScreenState();
+  State<ContractCardFormScreen> createState() => _ContractCardFormScreenState();
 }
 
-class _ContractEditScreenState extends State<ContractEditScreen> {
-  late CreateContractRequest _contractInfo;
-  bool isChanged = false;
+class _ContractCardFormScreenState extends State<ContractCardFormScreen> {
+  late TextEditingController reasonController;
+  late TextEditingController clientIdentifierController;
+  late TextEditingController clientSearchMethodController;
+  late TextEditingController branchController;
+  late TextEditingController institutionCodeController;
+  late TextEditingController productCodeController;
+  late TextEditingController productCode2Controller;
+  late TextEditingController productCode3Controller;
+  late TextEditingController contractNameController;
+  late TextEditingController cbsNumberController;
+  late TextEditingController customDataController;
 
   @override
   void initState() {
     super.initState();
-    _contractInfo = widget.object ?? selectedContractInittial;
-  }
 
-  void onChanged() {
-    setState(() => isChanged = true);
+    reasonController = TextEditingController(text: "to test");
+    clientIdentifierController = TextEditingController(text: widget.clientIdentifier);
+    clientSearchMethodController = TextEditingController(text: "CLIENT_NUMBER");
+    branchController = TextEditingController(text: "0101");
+    institutionCodeController = TextEditingController(text: "0001");
+    productCodeController = TextEditingController(text: "");
+    productCode2Controller = TextEditingController(text: "");
+    productCode3Controller = TextEditingController(text: "");
+    contractNameController = TextEditingController(text: "Liab");
+    cbsNumberController = TextEditingController(text:"");
+    customDataController = TextEditingController(text: "");
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(defaultPadding),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.secondary,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(AppLocalizations.of(context).translate(widget.title), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
-                IconButton(
-                  icon: Icon(Icons.save, color: isChanged ? Colors.blue : Colors.grey),
-                  onPressed: isChanged
-                      ? () => context.read<MainAppBloc>().add(AddContractEvent(_contractInfo, widget.token))
-                      : null,
-                ),
-              ],
-            ),
-            SizedBox(height: defaultPadding),
-            ContractDetailInfo(
-              contractInfo: _contractInfo,
-              isDetail: !widget.isAdd,
-              onChanged: onChanged,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class ContractDetailInfo extends StatefulWidget {
-  final CreateContractRequest contractInfo;
-  final bool isDetail;
-  final Function() onChanged;
-
-  const ContractDetailInfo({
-    super.key,
-    required this.contractInfo,
-    required this.isDetail,
-    required this.onChanged,
-  });
-
-  @override
-  State<ContractDetailInfo> createState() => _ContractDetailInfoState();
-}
-
-class _ContractDetailInfoState extends State<ContractDetailInfo> {
-  late Map<String, TextEditingController> controllers;
-
-  @override
-  void initState() {
-    super.initState();
-    _initializeControllers();
-  }
-
-  TextEditingController _buildController(String fieldName, String initialValue) {
-    final controller = TextEditingController(text: initialValue);
-    controller.addListener(() {
-      widget.contractInfo.setValueByField(fieldName, controller.text);
-      widget.onChanged();
-    });
-    return controller;
-  }
-
-  void _initializeControllers() {
-    controllers = {
-      for (var field in CreateContractRequest.getFieldNames())
-        field: _buildController(field, widget.contractInfo.getValueByField(field))
-    };
+  void dispose() {
+    reasonController.dispose();
+    clientIdentifierController.dispose();
+    clientSearchMethodController.dispose();
+    branchController.dispose();
+    institutionCodeController.dispose();
+    productCodeController.dispose();
+    productCode2Controller.dispose();
+    productCode3Controller.dispose();
+    contractNameController.dispose();
+    cbsNumberController.dispose();
+    customDataController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(defaultPadding),
+      padding: EdgeInsets.all(18),
       child: Column(
         children: [
-          ...controllers.entries.map((entry) => CustomTextField(
-                controller: entry.value,
-                title: entry.key,
-              )),
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  children: [
+                    CustomTextField(controller: reasonController, label: 'Reason'),
+                    CustomTextField(controller: clientIdentifierController, label: 'Client Identifier'),
+                    CustomTextField(controller: clientSearchMethodController, label: 'Client Search Method'),
+                    CustomTextField(controller: branchController, label: 'Branch'),
+                    CustomTextField(controller: institutionCodeController, label: 'Institution Code'),
+                  ],
+                ),
+              ),
+              SizedBox(width: 18),
+              Expanded(
+                child: Column(
+                  children: [
+                    CustomTextField(controller: productCodeController, label: 'Product Code'),
+                    CustomTextField(controller: productCode2Controller, label: 'Product Code 2'),
+                    CustomTextField(controller: productCode3Controller, label: 'Product Code 3'),
+                    CustomTextField(controller: contractNameController, label: 'Contract Name'),
+                    CustomTextField(controller: cbsNumberController, label: 'CBS Number'),
+                    CustomTextField(controller: customDataController, label: 'Custom Data'),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
   }
-
-  @override
-  void dispose() {
-    for (var controller in controllers.values) {
-      controller.dispose();
-    }
-    super.dispose();
-  }
 }
-
-class CustomTextField extends StatefulWidget {
+class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
-  final String title;
+  final String label;
 
   const CustomTextField({
     super.key,
     required this.controller,
-    required this.title,
+    required this.label,
   });
-
-  @override
-  State<CustomTextField> createState() => _CustomTextFieldState();
-}
-
-class _CustomTextFieldState extends State<CustomTextField> {
-  String? errorText;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: TextField(
-        controller: widget.controller,
+        controller: controller,
         decoration: InputDecoration(
-          labelText: AppLocalizations.of(context).translate(widget.title),
-          labelStyle: TextStyle(
-            color: Theme.of(context).colorScheme.onPrimary
-          ),
+          labelText: AppLocalizations.of(context).translate(label),
+          labelStyle: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
           border: const OutlineInputBorder(),
           focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue, width: 2)),
-          errorText: errorText,
         ),
       ),
     );
-  }
-}
+  }}

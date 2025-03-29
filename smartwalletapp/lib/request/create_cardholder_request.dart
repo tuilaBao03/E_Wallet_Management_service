@@ -3,7 +3,7 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:smartwalletapp/models/card_holder_data.dart';
+import 'package:smartwalletapp/request/card_holder_data.dart';
 
 class CreateCardHolderRequest {
   String reason;

@@ -5,13 +5,13 @@ class ApiResult {
   final String message;
   final dynamic result;
   final int page;
-  final int pageAmount;
+  final int pageTotal;
 
-  ApiResult(this.code,this.message,this.result, this.page, this.pageAmount); 
+  ApiResult(this.code,this.message,this.result, this.page, this.pageTotal); 
 
   // Thêm phương thức toString() để debug dễ dàng
   @override
   String toString() {
-    return 'ApiResult(code: $code, message: $message, result: ${result.toString()}, page: $page, pageAmount: $pageAmount)';
+    return 'ApiResult(code: $code, message: $message, result: ${result.toString()}, page: $page, pageAmount: $pageTotal)';
   }
 }

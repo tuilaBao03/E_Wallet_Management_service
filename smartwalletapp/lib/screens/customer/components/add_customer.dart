@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:smartwalletapp/models/card_holder_data.dart';
-import 'package:smartwalletapp/models/create_cardholder_request.dart';
-import 'package:smartwalletapp/bloc/MainApp/main_app_bloc.dart';
-import 'package:smartwalletapp/bloc/MainApp/main_app_event.dart';
+import 'package:smartwalletapp/bloc/CardHolder/card_holder_bloc.dart';
+import 'package:smartwalletapp/bloc/CardHolder/card_holder_event.dart';
+import 'package:smartwalletapp/request/card_holder_data.dart';
+import 'package:smartwalletapp/request/create_cardholder_request.dart';
 import 'package:smartwalletapp/constants.dart';
 import 'package:smartwalletapp/app/locallization/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,15 +11,11 @@ import 'package:smartwalletapp/screens/main/components/classInitial.dart';
 
 class AddCustomer extends StatefulWidget {
   final String token;
-  final bool isDetail;
-  final bool isAdd;
   final String title; // Có thể null nếu thêm mới
 
   const AddCustomer({
     super.key,
     required this.token,
-    required this.isDetail,
-    required this.isAdd,
     required this.title,// Để null khi add mới
   });
 
@@ -55,27 +51,26 @@ class _AddCustomerState extends State<AddCustomer> {
       child: Column(
         children: [
           Row(
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.save, color: isChanged ? Colors.blue : Colors.grey),
-                      onPressed: isChanged ? () => context.read<MainAppBloc>().add(AddCardHolderEvent(_objectInfo, widget.token)) : null,
-                    ),
-                    if (widget.isDetail)
-                      IconButton(icon: const Icon(Icons.delete), onPressed: () {}),
-                  ],
-                ),
-          SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: defaultPadding),
-                ObjectDetailInfor(
-                  objectInfo: _objectInfo,
-                  token: widget.token,
-                  isDetail: widget.isDetail,
-                  onChanged: onChanged, // callback khi đổi dữ liệu
+                IconButton(
+                  icon: Icon(Icons.save, color: isChanged ? Colors.blue : Colors.grey),
+                  onPressed: isChanged ? () => context.read<CardHolderBloc>().add(AddCardHolderEvent(_objectInfo, widget.token)) : null,
                 ),
               ],
+            ),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: defaultPadding),
+                  ObjectDetailInfor(
+                    objectInfo: _objectInfo,
+                    token: widget.token,
+                    onChanged: onChanged, // callback khi đổi dữ liệu
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -87,16 +82,16 @@ class _AddCustomerState extends State<AddCustomer> {
 class ObjectDetailInfor extends StatefulWidget {
   final CreateCardHolderRequest objectInfo;
   final String token;
-  final bool isDetail;
   final Function() onChanged;
 
-  const ObjectDetailInfor({super.key, required this.objectInfo, required this.token, required this.isDetail, required this.onChanged});
+  const ObjectDetailInfor({super.key, required this.objectInfo, required this.token, required this.onChanged});
 
   @override
   State<ObjectDetailInfor> createState() => _ObjectDetailInforState();
 }
 
 class _ObjectDetailInforState extends State<ObjectDetailInfor> {
+    
   late Map<String, TextEditingController> controllers;
   List<Map<String, TextEditingController>> dynamicFields = [];
 
@@ -112,6 +107,40 @@ class _ObjectDetailInforState extends State<ObjectDetailInfor> {
         field: _buildController(field, widget.objectInfo.getValueByField(field))
     };
   }
+
+ void _addNewInputField() {
+  setState(() {
+    // Tạo đối tượng mới cho customData
+    SetCustomDataInObjectJson newData = SetCustomDataInObjectJson(
+      tagName: '',
+      tagValue: '',
+      addInfoType: 'AddInfo01',
+    );
+
+    // Thêm vào danh sách dữ liệu chính
+    widget.objectInfo.customData.add(newData);
+
+    // Tạo TextEditingController và đảm bảo cập nhật đúng giá trị
+    final tagNameController = TextEditingController();
+    final tagValueController = TextEditingController();
+
+    tagNameController.addListener(() {
+      newData.tagName = tagNameController.text;
+      widget.onChanged();
+    });
+
+    tagValueController.addListener(() {
+      newData.tagValue = tagValueController.text;
+      widget.onChanged();
+    });
+
+    // Thêm vào danh sách dynamicFields sau khi đã khởi tạo hoàn chỉnh
+    dynamicFields.add({
+      'tagName': tagNameController,
+      'tagValue': tagValueController,
+    });
+  });
+}
 
   TextEditingController _buildController(String fieldName, String initialValue) {
     final controller = TextEditingController(text: initialValue);
@@ -151,7 +180,10 @@ class _ObjectDetailInforState extends State<ObjectDetailInfor> {
                 ],
               )),
           TextButton.icon(
-            onPressed: () {},
+            onPressed: () {
+              _addNewInputField();
+
+            },
             icon: const Icon(Icons.add, color: Colors.blue),
             label: const Text("Thêm thông tin bổ sung", style: TextStyle(color: Colors.blue)),
           ),
@@ -231,4 +263,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       ),
     );
   }
+  
 }
+
+

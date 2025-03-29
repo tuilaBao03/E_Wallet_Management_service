@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:smartwalletapp/app/locallization/app_localizations.dart';
 import 'package:smartwalletapp/bloc/MainApp/main_app_bloc.dart';
 import 'package:smartwalletapp/bloc/MainApp/main_app_event.dart';
-import 'package:smartwalletapp/models/user.dart';
+import 'package:smartwalletapp/request/user.dart';
 
 import '../../../../constants.dart';
 

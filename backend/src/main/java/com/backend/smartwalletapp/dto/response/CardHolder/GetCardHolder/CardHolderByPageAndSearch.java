@@ -14,6 +14,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CardHolderByPageAndSearch {
     int page;
-    int pageAmount;
+    int pageTotal;
     List<GetCardHolderResponse> cardholders;
 }

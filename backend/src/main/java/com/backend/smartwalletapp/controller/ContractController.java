@@ -64,7 +64,7 @@ public class ContractController {
 
     @PostMapping()
     @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")
-    public ApiResponse<CreateContractV4Result > CreateContractV4_parent(@RequestBody @Valid CreateContractV4_REQ request){
+    public ApiResponse<CreateContractV4Result> CreateContractV4_parent(@RequestBody @Valid CreateContractV4_REQ request){
         return ApiResponse.<CreateContractV4Result >builder()
         .result(contractService.createContract(request))
         .code(200)

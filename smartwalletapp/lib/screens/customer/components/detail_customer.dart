@@ -7,13 +7,11 @@ class DetailCustomer extends StatelessWidget {
   final String title;
   final GetCardHolderResponse object;
 
-  const DetailCustomer({
+  DetailCustomer({
     super.key,
     required this.title,
-    required this.object,
-  });
-
-  @override
+    required GetCardHolderResponse? object,
+  }) : object = object ?? emptyCardHolder_ReS; // Gán giá trị mặc định
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(defaultPadding),

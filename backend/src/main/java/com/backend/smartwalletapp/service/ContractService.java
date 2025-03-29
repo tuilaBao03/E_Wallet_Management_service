@@ -40,7 +40,7 @@ public class ContractService {
         String query = """
             SELECT CONTRACT_NUMBER, BRANCH, SERVICE_GROUP, CONTRACT_NAME, CONTRACT_LEVEL, 
                 BILLING_CONTRACT, PARENT_PRODUCT, PRODUCT, LIAB_CONTRACT 
-            FROM ACNT_CONTRACT
+            FROM ACNT_CONTRACT ORDER BY id DESC
         """;
 
         try (Connection connection = cardHolderService.openConnection();
@@ -51,48 +51,48 @@ public class ContractService {
 
             while (resultSet.next()) {
                 ContractBySearchAndPage contract = new ContractBySearchAndPage();
-                contract.setCONTRACT_NUMBER(resultSet.getString("CONTRACT_NUMBER"));
-                contract.setBRANCH(resultSet.getString("BRANCH"));
+                contract.setContractNumber(resultSet.getString("CONTRACT_NUMBER"));
+                contract.setBranch(resultSet.getString("BRANCH"));
                 contract.setSERVICE_GROUP(resultSet.getString("SERVICE_GROUP"));
-                contract.setCONTRACT_NAME(resultSet.getString("CONTRACT_NAME"));
-                contract.setCONTRACT_LEVEL(resultSet.getString("CONTRACT_LEVEL"));
-                contract.setBILLING_CONTRACT(resultSet.getString("BILLING_CONTRACT"));
-                contract.setPARENT_PRODUCT(resultSet.getString("PARENT_PRODUCT"));
-                contract.setPRODUCT(resultSet.getString("PRODUCT"));
-                contract.setLIAB_CONTRACT(resultSet.getString("LIAB_CONTRACT"));
+                contract.setContractName(resultSet.getString("CONTRACT_NAME"));
+                contract.setContractLevel(resultSet.getString("CONTRACT_LEVEL"));
+                contract.setBillingContract(resultSet.getString("BILLING_CONTRACT"));
+                contract.setParentProduct(resultSet.getString("PARENT_PRODUCT"));
+                contract.setProductCode(resultSet.getString("PRODUCT"));
+                contract.setLiabilityContract(resultSet.getString("LIAB_CONTRACT"));
                 allContracts.add(contract);
             }
 
             // Chia danh sách theo CONTRACT_LEVEL
             List<ContractBySearchAndPage> libContracts = allContracts.stream()
-                    .filter(c -> ".".equals(c.getCONTRACT_LEVEL()))
+                    .filter(c -> ".".equals(c.getContractLevel()))
                     .toList();
 
             List<ContractBySearchAndPage> issueContracts = allContracts.stream()
-                    .filter(c -> c.getCONTRACT_LEVEL() != null && c.getCONTRACT_LEVEL().matches("^\\.[0-9]+\\.$"))
+                    .filter(c -> c.getContractLevel() != null && c.getContractLevel().matches("^\\.[0-9]+\\.$"))
                     .toList();
 
             List<ContractBySearchAndPage> cardContracts = allContracts.stream()
-                    .filter(c -> c.getCONTRACT_LEVEL() == null || !c.getCONTRACT_LEVEL().matches("^\\.[0-9]+\\.$"))
+                    .filter(c -> c.getContractLevel() == null || !c.getContractLevel().matches("^\\.[0-9]+\\.$"))
                     .toList();
 
             // Gán danh sách cards cho issueContracts
-            issueContracts.forEach(issue -> issue.setContracts(
+            issueContracts.forEach(issue -> issue.setContract(
                     cardContracts.stream()
-                            .filter(card -> card.getPARENT_PRODUCT() != null && card.getPARENT_PRODUCT().equals(issue.getPRODUCT()))
+                            .filter(card -> card.getParentProduct() != null && card.getParentProduct().equals(issue.getProductCode()))
                             .toList()
             ));
 
             // Gán danh sách issueContracts cho libContracts
-            libContracts.forEach(lib -> lib.setContracts(
+            libContracts.forEach(lib -> lib.setContract(
                     issueContracts.stream()
-                            .filter(issue -> issue.getLIAB_CONTRACT() != null && issue.getLIAB_CONTRACT().equals(lib.getBILLING_CONTRACT()))
+                            .filter(issue -> issue.getLiabilityContract() != null && issue.getLiabilityContract().equals(lib.getBillingContract()))
                             .toList()
             ));
 
             // Lọc danh sách theo search
             List<ContractBySearchAndPage> searchAndPages = libContracts.stream()
-                    .filter(c -> c.getCONTRACT_NAME().toLowerCase().contains(search.toLowerCase()))
+                    .filter(c -> c.getContractName().toLowerCase().contains(search.toLowerCase()))
                     .toList();
 
             // ✅ Áp dụng phân trang
@@ -111,7 +111,7 @@ public class ContractService {
             List<ContractListResponse> responseList = new ArrayList<>();
             ContractListResponse response = new ContractListResponse();
             response.setPage(page);
-            response.setPageAmount(totalPages);
+            response.setPageTotal(totalPages);
             response.setContracts(paginatedContracts);
             responseList.add(response);
 

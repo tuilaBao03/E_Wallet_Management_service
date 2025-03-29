@@ -4,7 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:smartwalletapp/screens/main/components/classInitial.dart';
 import '../../constants.dart';
-import '../../models/user.dart';
+import '../../request/user.dart';
 import '../../responsive.dart';
 import '../general/header.dart';
 import '../dashboard/components/assets_details.dart';

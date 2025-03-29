@@ -1,4 +1,5 @@
 
+import 'package:smartwalletapp/response/contract/get_contract_custom_response.dart';
 import 'package:smartwalletapp/response/contract/get_contract_response.dart';
 
 abstract class ContractState {}
@@ -13,11 +14,17 @@ class ContractLoadingState extends ContractState{
 }
 
 class ContractLoadedState extends ContractState{
-  final List<GetContractResponse> libContracts;
+  final List<GetContractResponseCustom> libContracts;
   final int page;
   final int pageAmount;
+  final int size;
 
-  ContractLoadedState(this.libContracts,this.page,this.pageAmount);
+  ContractLoadedState(this.libContracts,this.page,this.pageAmount, this.size);
+}
+
+class GetDetailContractState extends ContractState{
+  final GetContractResponse contract;
+  GetDetailContractState(this.contract);
 }
 
 class ContractSuccessState extends ContractState{

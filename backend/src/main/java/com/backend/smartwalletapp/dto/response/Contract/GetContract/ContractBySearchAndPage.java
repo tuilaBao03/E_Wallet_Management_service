@@ -15,16 +15,16 @@ import lombok.Setter;
 @NoArgsConstructor
 
 public class ContractBySearchAndPage {
-    String CONTRACT_NUMBER;
-    String BRANCH;
+    String contractNumber;
+    String branch;
     String SERVICE_GROUP;
-    String CONTRACT_NAME;
-    String CONTRACT_LEVEL;
-    String BILLING_CONTRACT;
-    String PARENT_PRODUCT;
-    String PRODUCT;
-    String LIAB_CONTRACT;
-    List<ContractBySearchAndPage> contracts;
+    String contractName;
+    String contractLevel;
+    String billingContract;
+    String parentProduct;
+    String productCode;
+    String liabilityContract;
+    List<ContractBySearchAndPage> contract;
 
     
 }

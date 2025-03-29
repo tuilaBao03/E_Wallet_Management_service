@@ -1,7 +1,6 @@
 // ignore_for_file: file_names, camel_case_types, duplicate_ignore
-import 'package:smartwalletapp/models/create_card_request.dart';
-import 'package:smartwalletapp/models/create_cardholder_request.dart';
-import 'package:smartwalletapp/models/user.dart';
+import 'package:smartwalletapp/request/create_cardholder_request.dart';
+import 'package:smartwalletapp/request/user.dart';
 
 abstract class MainAppState{}
 
@@ -15,11 +14,7 @@ class SuccessState extends MainAppState{
   final String message;
   SuccessState(this.message);
 }
-// ignore: camel_case_types
-class giveCardListState extends MainAppState{
-    final List<CreateCardRequest> cardInfo;
-    giveCardListState(this.cardInfo);
-}
+
 
 class giveCardHolderListState extends MainAppState{
   final List<CreateCardHolderRequest> cardHolders;

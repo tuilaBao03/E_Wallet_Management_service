@@ -9,7 +9,7 @@ import 'package:smartwalletapp/bloc/CardHolder/card_holder_bloc.dart';
 import 'package:smartwalletapp/bloc/Contract/contract_bloc.dart';
 import 'package:smartwalletapp/bloc/MainApp/main_app_bloc.dart';
 import 'package:smartwalletapp/bloc/Register/RegistedBloc.dart';
-import 'package:smartwalletapp/models/user.dart';
+import 'package:smartwalletapp/request/user.dart';
 import 'package:smartwalletapp/screens/main/main_screen.dart';
 import 'app/locallization/app_localizations.dart';
 import 'app/theme/app_theme.dart';
@@ -93,7 +93,7 @@ class _MyAppState extends State<MyApp> {
       home: 
       MainScreen(isAuth: true, user: u, onLanguageChange: (Locale newLocale) {
         Get.updateLocale(newLocale);
-      }, token: 'eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzbWFydHdhbGxldGFwcCIsInN1YiI6ImFkbWluMSIsImV4cCI6MTc0Mjk5NTAwMywiaWF0IjoxNzQyOTg2MDAzLCJzY29wZSI6IkFETUlOIn0.WJCA6l0QtLz08BbnfTZXChYE296C4W1mfqBcGlrKfW0',)
+      }, token: 'eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzbWFydHdhbGxldGFwcCIsInN1YiI6ImFkbWluMSIsImV4cCI6MTc0MzE2NjQ0NCwiaWF0IjoxNzQzMTU3NDQ0LCJzY29wZSI6IkFETUlOIn0.rvhoJ4xoC25HYIKoHOf1M3TpeyEHu2OqkLxQtQUblIs',)
       // LoginScreen(isAuth: false, onLanguageChange: (Locale newLocale) {
       //   Get.updateLocale(newLocale);
       //  },)

@@ -1,5 +1,5 @@
 import 'package:smartwalletapp/response/cardHolder/getCardHolderResponse.dart';
-import 'package:smartwalletapp/response/contract/get_contract_response.dart';
+import 'package:smartwalletapp/response/contract/get_contract_custom_response.dart';
 
 abstract class CardHolderState {}
 
@@ -12,14 +12,15 @@ class CardHolderLoadingState extends CardHolderState{
 }
 
 class CardHolderLoadedState extends CardHolderState{
+    int size;
     List<GetCardHolderResponse> cardHolders;
     int page;
-    int pageAmount;
+    int pageTotal;
     bool showContractList;
     GetCardHolderResponse cardHolder;
-    List<GetContractResponse> contracts;
+    List<GetContractResponseCustom> contracts;
 
-    CardHolderLoadedState(this.cardHolders,this.page,this.pageAmount, this.showContractList,this.cardHolder,this.contracts);
+    CardHolderLoadedState(this.cardHolders,this.page,this.pageTotal, this.showContractList,this.cardHolder,this.contracts, this.size);
 }
 
 class CardHolderSuccess extends CardHolderState{

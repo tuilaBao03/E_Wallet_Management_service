@@ -1,48 +1,60 @@
-class GetCardHolderResponseCustom {
-  final int id;
-  final String branch;
-  final String shortName;
-  final String firstName;
-  final String lastName;
-  final String gender;
-  final String clientNumber;
-  final String regNumber;
-  final String itn;
-  final String socialNumber;
-  final String phone;
-  final String email;
+class GetContractResponseCustom {
+  final List<GetContractResponseCustom> contracts;
+  final String contractNumber;
+  final String? serviceGroup;
+  final String? branch;
+  final String contractLevel;
+  final String? parentProduct;
+  final String? liabContract;
+  final String contractName;
+  final String? product;
+  final String billingContract;
 
-  GetCardHolderResponseCustom({
-    required this.id,
-    required this.branch,
-    required this.shortName,
-    required this.firstName,
-    required this.lastName,
-    required this.gender,
-    required this.clientNumber,
-    required this.regNumber,
-    required this.itn,
-    required this.socialNumber,
-    required this.phone,
-    required this.email,
+  GetContractResponseCustom({
+    required this.contracts,
+    required this.contractNumber,
+    this.serviceGroup,
+    this.branch,
+    required this.contractLevel,
+    this.parentProduct,
+    this.liabContract,
+    required this.contractName,
+    this.product,
+    required this.billingContract,
   });
 
   /// Chuyển từ JSON sang Object
-  factory GetCardHolderResponseCustom.fromJson(Map<String, dynamic> json) {
-    return GetCardHolderResponseCustom(
-      id: json['id'] ?? 0,
+  factory GetContractResponseCustom.fromJson(Map<String, dynamic> json) {
+    return GetContractResponseCustom(
+      contracts: (json['contract'] as List<dynamic>?)
+              ?.map((e) => GetContractResponseCustom.fromJson(e))
+              .toList() ??
+          [],
+      contractNumber: json['contractNumber'] ?? '',
+      serviceGroup: json['SERVICE_GROUP'] ?? '',
       branch: json['branch'] ?? '',
-      shortName: json['shortName'] ?? '',
-      firstName: json['firstName'] ?? '',
-      lastName: json['lastName'] ?? '',
-      gender: json['gender'] ?? '',
-      clientNumber: json['clientNumber'] ?? '',
-      regNumber: json['regNumber'] ?? '',
-      itn: json['itn'] ?? '',
-      socialNumber: json['socialNumber'] ?? '',
-      phone: json['phone'] ?? '',
-      email: json['email'] ?? '',
+      contractLevel: json['contractLevel'] ?? '',
+      parentProduct: json['parentProduct']?? '',
+      liabContract: json['liabContract']?? '',
+      contractName: json['contractName'] ?? '',
+      product: json['productCode']?? '',
+      billingContract: json['billingContract'] ?? '',
     );
   }
 
+  /// Chuyển từ Object sang JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'contracts': contracts.map((e) => e.toJson()).toList(),
+      'contract_NUMBER': contractNumber,
+      'service_GROUP': serviceGroup,
+      'branch': branch,
+      'contract_LEVEL': contractLevel,
+      'parent_PRODUCT': parentProduct,
+      'liab_CONTRACT': liabContract,
+      'contract_NAME': contractName,
+      'product': product,
+      'billing_CONTRACT': billingContract,
+    };
+  }
 }

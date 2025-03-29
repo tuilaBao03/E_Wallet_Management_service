@@ -3,8 +3,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smartwalletapp/bloc/MainApp/main_app_event.dart';
 import 'package:smartwalletapp/bloc/MainApp/main_app_state.dart';
-import 'package:smartwalletapp/models/create_cardholder_request.dart';
-import 'package:smartwalletapp/models/user.dart';
+import 'package:smartwalletapp/request/create_cardholder_request.dart';
+import 'package:smartwalletapp/request/user.dart';
 import 'package:smartwalletapp/repository/userRepository.dart';
 import 'package:smartwalletapp/repository/authRepository.dart';
 

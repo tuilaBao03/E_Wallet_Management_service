@@ -4,10 +4,11 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
 import 'package:smartwalletapp/app/locallization/app_localizations.dart';
 import 'package:smartwalletapp/bloc/CardHolder/card_holder_bloc.dart';
 import 'package:smartwalletapp/bloc/CardHolder/card_holder_event.dart';
-import 'package:smartwalletapp/models/create_cardholder_request.dart';
+import 'package:smartwalletapp/request/create_cardholder_request.dart';
 import 'package:smartwalletapp/response/cardHolder/getCardHolderResponse.dart';
 import 'package:smartwalletapp/screens/customer/components/add_customer.dart';
 import 'package:smartwalletapp/screens/customer/components/detail_customer.dart';
@@ -21,12 +22,13 @@ class CustomerList extends StatefulWidget {
   final bool showContractList;
   final int page;
   final String search;
+  final int size;
 
   const CustomerList({
     super.key,
     required this.cardholders,
     required this.title,
-    required this.token, required this.showContractList, required this.page, required this.search,
+    required this.token, required this.showContractList, required this.page, required this.search, required this.size,
   });
 
   @override
@@ -35,27 +37,17 @@ class CustomerList extends StatefulWidget {
 
 class _CustomerListState extends State<CustomerList> {
 
-  final TextEditingController _searchController = TextEditingController();
   final HashSet<String> objectColumnNameOfUser = HashSet.from([
     "FirstName",
     "LastName",
     "ClientNumber",
-    "SocialNumber",
     "Action"
   ]);
   @override
   void initState() {
     super.initState();
   }
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
-
-  void _searchUser() {
-    context.read<CardHolderBloc>().add(CardHolderInitialEvent(widget.token,_searchController.text.trim(),widget.page,widget.showContractList,widget.cardholders[0]));
-  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -87,27 +79,6 @@ class _CustomerListState extends State<CustomerList> {
             ),
             
             SizedBox(height: defaultPadding),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _searchController,
-                    decoration: InputDecoration(
-                      hintText: AppLocalizations.of(context).translate("Finding..."),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                    onSubmitted: (_) => _searchUser(),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                IconButton(
-                  icon: const Icon(Icons.search, color: Colors.blue),
-                  onPressed: _searchUser,
-                ),
-              ],
-            ),
             SizedBox(height: defaultPadding),
             widget.cardholders.isEmpty
                 ? Center(
@@ -161,7 +132,7 @@ class _CustomerListState extends State<CustomerList> {
           IconButton(
             icon: const Icon(Icons.content_paste_search_outlined, color: Colors.blueAccent),
             onPressed: (){
-              context.read<CardHolderBloc>().add(CardHolderInitialEvent(widget.token, widget.search, widget.page, widget.showContractList == true ? false : true,cardHolder ));
+              context.read<CardHolderBloc>().add(CardHolderInitialEvent(widget.token, widget.search, widget.page, widget.showContractList == true ? false : true,cardHolder,widget.size));
             },
           ),
           SizedBox(width: 10,),
@@ -190,13 +161,18 @@ class _CustomerListState extends State<CustomerList> {
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () => {_loadLastState(cardHolder)},
               child: Icon(Icons.cancel, color: Colors.red,),
             ),
           ],
         );
       },
     );
+  }
+  void _loadLastState(GetCardHolderResponse cardHolder){
+    Navigator.of(context).pop();
+    context.read<CardHolderBloc>().add(CardHolderInitialEvent(widget.token, widget.search, widget.page, widget.showContractList == true ? false : true,cardHolder,widget.size));
+
   }
   void _showAddDialog(BuildContext context, CreateCardHolderRequest cardHolder) {
     showDialog(
@@ -207,16 +183,9 @@ class _CustomerListState extends State<CustomerList> {
             width: Get.width/1.2,
             child: AddCustomer(
               title: 'CustomerAdd',
-              isDetail: false,
-              isAdd: true, token: widget.token,
+              token: widget.token,
             ),
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Icon(Icons.cancel, color: Colors.red,),
-            ),
-          ],
         );
       },
     );
