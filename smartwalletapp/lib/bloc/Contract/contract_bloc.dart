@@ -11,6 +11,10 @@ class ContractBloc extends Bloc<ContractEvent,ContractState> {
   ContractBloc(): super(ContractInitialState()){
     on<ContractInitialEvent>(_contractInitial);
     on<GetContractDetailEvent>(_getContractByContractNumber);
+    on<AddLibContractEvent>(_createLiabContract);
+    on<AddIssueContractV2Event>(_createIssueContract);
+    on<AddCardContractEvent>(_createCardContract);
+    on<EditContractEvent>(_editContract);
 
   } 
   void _contractInitial(ContractInitialEvent event, Emitter<ContractState> emit) async {
@@ -26,7 +30,6 @@ class ContractBloc extends Bloc<ContractEvent,ContractState> {
         List<GetContractResponseCustom> contracts = apiResult.result;
         int page = apiResult.page;
         int pageAmount = apiResult.pageTotal;
-        print(event.size);
         emit(ContractLoadedState(contracts,page,pageAmount,event.size)); 
       }else{
         emit(ContractErrorState(apiResult.message));
@@ -56,6 +59,72 @@ class ContractBloc extends Bloc<ContractEvent,ContractState> {
       // Ensure an exception is thrown
     }
   }
+
+  void _createLiabContract(AddLibContractEvent event, Emitter<ContractState> emit)async{
+    try {
+      ContractRepository contractRepository = ContractRepository();
+      emit(ContractLoadingState());
+      ApiResult apiResult = await contractRepository.createdLibContract(event.contract, event.token);
+      if(apiResult.code == 0){
+        emit(ContractSuccessState(apiResult.message)); 
+      }else{
+        emit(ContractErrorState(apiResult.message));
+      }
+      // Ensure a value is returned
+    } catch (e) {
+      throw Exception("ContractBloc _getContractByContractNumber  $e");
+      // Ensure an exception is thrown
+    }
+    }
+  void _createIssueContract(AddIssueContractV2Event event, Emitter<ContractState> emit)async{
+    try {
+      ContractRepository contractRepository = ContractRepository();
+      emit(ContractLoadingState());
+      ApiResult apiResult = await contractRepository.createdIssueContract(event.contract, event.token);
+      if(apiResult.code == 0){
+        emit(ContractSuccessState(apiResult.message)); 
+      }else{
+        emit(ContractErrorState(apiResult.message));
+      }
+      // Ensure a value is returned
+    } catch (e) {
+      throw Exception("ContractBloc _getContractByContractNumber  $e");
+      // Ensure an exception is thrown
+    }
+  }
+  void _createCardContract(AddCardContractEvent event, Emitter<ContractState> emit)async{
+    try {
+      ContractRepository contractRepository = ContractRepository();
+      emit(ContractLoadingState());
+      ApiResult apiResult = await contractRepository.createdCardContract(event.contract, event.token);
+      if(apiResult.code == 0){
+        emit(ContractSuccessState(apiResult.message)); 
+      }else{
+        emit(ContractErrorState(apiResult.message));
+      }
+      // Ensure a value is returned
+    } catch (e) {
+      throw Exception("ContractBloc _getContractByContractNumber  $e");
+      // Ensure an exception is thrown
+    }
+  }    
+  void _editContract(EditContractEvent event, Emitter<ContractState> emit)async{
+    try {
+      ContractRepository contractRepository = ContractRepository();
+      emit(ContractLoadingState());
+      ApiResult apiResult = await contractRepository.editContract(event.request, event.token);
+      if(apiResult.code == 0){
+        emit(ContractSuccessState(apiResult.message)); 
+      }else{
+        emit(ContractErrorState(apiResult.message));
+      }
+      // Ensure a value is returned
+    } catch (e) {
+      throw Exception("ContractBloc _getContractByContractNumber  $e");
+      // Ensure an exception is thrown
+    }
+  }    
+
   }
 
 

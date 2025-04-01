@@ -93,7 +93,8 @@ class _MyAppState extends State<MyApp> {
       home: 
       MainScreen(isAuth: true, user: u, onLanguageChange: (Locale newLocale) {
         Get.updateLocale(newLocale);
-      }, token: 'eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzbWFydHdhbGxldGFwcCIsInN1YiI6ImFkbWluMSIsImV4cCI6MTc0MzE2NjQ0NCwiaWF0IjoxNzQzMTU3NDQ0LCJzY29wZSI6IkFETUlOIn0.rvhoJ4xoC25HYIKoHOf1M3TpeyEHu2OqkLxQtQUblIs',)
+      }, 
+      token: 'eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzbWFydHdhbGxldGFwcCIsInN1YiI6ImFkbWluMSIsImV4cCI6MTc0MzQ4Mjk4OSwiaWF0IjoxNzQzNDczOTg5LCJzY29wZSI6IkFETUlOIn0.xAIfT-YZYDXb1ZArnZLE1wQUMSI2TfUQD47_Sk78wYY',)
       // LoginScreen(isAuth: false, onLanguageChange: (Locale newLocale) {
       //   Get.updateLocale(newLocale);
       //  },)

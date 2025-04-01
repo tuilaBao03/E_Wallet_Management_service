@@ -2,6 +2,7 @@
 import 'package:smartwalletapp/request/create_contract_card_request.dart';
 import 'package:smartwalletapp/request/create_contract_liab_request.dart';
 import 'package:smartwalletapp/request/create_contract_issue_request.dart';
+import 'package:smartwalletapp/request/edit_contract_request.dart';
 
 abstract class ContractEvent{}
 
@@ -36,5 +37,12 @@ class AddCardContractEvent extends ContractEvent{
   String token;
   CreateCardV3 contract; 
   AddCardContractEvent(this.token,this.contract);
+
+}
+
+class EditContractEvent extends ContractEvent{
+  String token;
+  EditContractV4 request;
+  EditContractEvent(this.token, this.request);
 
 }

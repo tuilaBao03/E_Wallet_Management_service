@@ -1,130 +1,148 @@
-
-
-// ignore_for_file: must_be_immutable
-
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:smartwalletapp/app/locallization/app_localizations.dart';
+import 'package:smartwalletapp/bloc/Contract/contract_bloc.dart';
+import 'package:smartwalletapp/bloc/Contract/contract_event.dart';
+import 'package:smartwalletapp/request/edit_contract_request.dart';
 
-class ContractCardFormScreen extends StatefulWidget {
+class EditContractForm extends StatefulWidget {
+  final String contractIdentifier;
   final String token;
-  final String title;
-  final String clientIdentifier;
-
-  const ContractCardFormScreen({
-    super.key, required this.token, required this.title, required this.clientIdentifier,
-  });
+  const EditContractForm({super.key, required this.contractIdentifier, required this.token});
 
   @override
-  State<ContractCardFormScreen> createState() => _ContractCardFormScreenState();
+  _EditContractFormState createState() => _EditContractFormState();
 }
 
-class _ContractCardFormScreenState extends State<ContractCardFormScreen> {
-  late TextEditingController reasonController;
-  late TextEditingController clientIdentifierController;
-  late TextEditingController clientSearchMethodController;
-  late TextEditingController branchController;
-  late TextEditingController institutionCodeController;
-  late TextEditingController productCodeController;
-  late TextEditingController productCode2Controller;
-  late TextEditingController productCode3Controller;
-  late TextEditingController contractNameController;
-  late TextEditingController cbsNumberController;
-  late TextEditingController customDataController;
+class _EditContractFormState extends State<EditContractForm> {
+  final _formKey = GlobalKey<FormState>();
+
+  // Controllers
+  final TextEditingController contractSearchMethodController = TextEditingController(text: "CONTRACT_NUMBER");
+  final TextEditingController contractIdentifierController = TextEditingController();
+  final TextEditingController reasonController = TextEditingController(text: "to test");
+  final TextEditingController contractNumberController = TextEditingController();
+  final TextEditingController contractNameController = TextEditingController();
+  final TextEditingController serviceGroupController = TextEditingController();
+  final TextEditingController branchController = TextEditingController();
+  final TextEditingController cbsIdController = TextEditingController();
+  final TextEditingController cbsNumberController = TextEditingController();
+  final TextEditingController closeDateController = TextEditingController();
+  final TextEditingController addInfoTypeController = TextEditingController();
+  final TextEditingController removeTagController = TextEditingController();
+  final TextEditingController tagNameController = TextEditingController();
+  final TextEditingController tagValueController = TextEditingController();
 
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
-
-    reasonController = TextEditingController(text: "to test");
-    clientIdentifierController = TextEditingController(text: widget.clientIdentifier);
-    clientSearchMethodController = TextEditingController(text: "CLIENT_NUMBER");
-    branchController = TextEditingController(text: "0101");
-    institutionCodeController = TextEditingController(text: "0001");
-    productCodeController = TextEditingController(text: "");
-    productCode2Controller = TextEditingController(text: "");
-    productCode3Controller = TextEditingController(text: "");
-    contractNameController = TextEditingController(text: "Liab");
-    cbsNumberController = TextEditingController(text:"");
-    customDataController = TextEditingController(text: "");
+    contractIdentifierController.text = widget.contractIdentifier;
   }
 
-  @override
-  void dispose() {
-    reasonController.dispose();
-    clientIdentifierController.dispose();
-    clientSearchMethodController.dispose();
-    branchController.dispose();
-    institutionCodeController.dispose();
-    productCodeController.dispose();
-    productCode2Controller.dispose();
-    productCode3Controller.dispose();
-    contractNameController.dispose();
-    cbsNumberController.dispose();
-    customDataController.dispose();
-    super.dispose();
+  void _saveContract() {
+    if (_formKey.currentState!.validate()) {
+      EditContractV4 request = EditContractV4(
+        contractSearchMethod: contractSearchMethodController.text,
+        contractIdentifier: contractIdentifierController.text,
+        reason: reasonController.text,
+        editContractInObject: EditContractInObjectEditV4(
+          branch: branchController.text,
+          serviceGroup: serviceGroupController.text,
+          contractNumber: contractNumberController.text,
+          contractName: contractNameController.text,
+          cbsId: cbsIdController.text,
+          cbsNumber: cbsNumberController.text,
+          closeDate: closeDateController.text,
+        ),
+        customData: SetCustomDataInObjectEditV4(
+          addInfoType: addInfoTypeController.text,
+          removeTag: removeTagController.text,
+          tagName: tagNameController.text,
+          tagValue: tagValueController.text,
+        ),
+      );
+
+      context.read<ContractBloc>().add(EditContractEvent(widget.token, request));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Container(
+        width: Get.width / 1.1,
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            IconButton(
+              onPressed: _saveContract,
+              icon: Icon(Icons.save),
+            ),
+            SizedBox(height: 16),
+            buildTextField('Contract Search Method', contractSearchMethodController),
+            buildTextField('Contract Identifier', contractIdentifierController),
+            Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: Column(
+                    children: [
+                      Text('Contract Information', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      buildTextField('Contract Number', contractNumberController),
+                      buildTextField('Contract Name', contractNameController),
+                      buildTextField('Service Group', serviceGroupController),
+                      buildTextField('Branch', branchController),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Column(
+                    children: [
+                      Text('Custom Data', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      buildTextField('Additional Info Type', addInfoTypeController),
+                      buildTextField('Remove Tag', removeTagController),
+                      buildTextField('Tag Name', tagNameController),
+                      buildTextField('Tag Value', tagValueController),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 16),
+            Text('System Information', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            buildTextField('CBS ID', cbsIdController),
+            buildTextField('CBS Number', cbsNumberController),
+            buildTextField('Close Date', closeDateController),
+            SizedBox(height: 16),
+            Text('Reason', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            buildTextField('Reason', reasonController),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildTextField(String label, TextEditingController controller) {
     return Padding(
-      padding: EdgeInsets.all(18),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  children: [
-                    CustomTextField(controller: reasonController, label: 'Reason'),
-                    CustomTextField(controller: clientIdentifierController, label: 'Client Identifier'),
-                    CustomTextField(controller: clientSearchMethodController, label: 'Client Search Method'),
-                    CustomTextField(controller: branchController, label: 'Branch'),
-                    CustomTextField(controller: institutionCodeController, label: 'Institution Code'),
-                  ],
-                ),
-              ),
-              SizedBox(width: 18),
-              Expanded(
-                child: Column(
-                  children: [
-                    CustomTextField(controller: productCodeController, label: 'Product Code'),
-                    CustomTextField(controller: productCode2Controller, label: 'Product Code 2'),
-                    CustomTextField(controller: productCode3Controller, label: 'Product Code 3'),
-                    CustomTextField(controller: contractNameController, label: 'Contract Name'),
-                    CustomTextField(controller: cbsNumberController, label: 'CBS Number'),
-                    CustomTextField(controller: customDataController, label: 'Custom Data'),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
+      padding: EdgeInsets.only(bottom: 10.0),
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: AppLocalizations.of(context).translate(label),
+          border: OutlineInputBorder(),
+        ),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return '$label cannot be empty';
+          }
+          return null;
+        },
       ),
     );
   }
 }
-class CustomTextField extends StatelessWidget {
-  final TextEditingController controller;
-  final String label;
-
-  const CustomTextField({
-    super.key,
-    required this.controller,
-    required this.label,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: TextField(
-        controller: controller,
-        decoration: InputDecoration(
-          labelText: AppLocalizations.of(context).translate(label),
-          labelStyle: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-          border: const OutlineInputBorder(),
-          focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue, width: 2)),
-        ),
-      ),
-    );
-  }}

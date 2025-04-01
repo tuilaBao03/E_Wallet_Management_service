@@ -149,22 +149,22 @@ public class CardHolderService {
         }
     }
 
-    // public ApiResponse editCardholder(EditClientV6 request){
-    //     try {
-    //         System.err.println("==================================");
-    //         // 1. Map dữ liệu từ request sang Body SOAP
-    //         // 4. Gửi request qua soapClient
-    //         ApiResponse response = soapClient.editCardHolder(request);
+    public ApiResponse editCardholder(EditClientV6 request){
+        try {
+            System.err.println("==================================");
+            // 1. Map dữ liệu từ request sang Body SOAP
+            // 4. Gửi request qua soapClient
+            ApiResponse response = soapClient.editCardHolder(request);
 
-    //         System.err.println(response);
+            System.err.println(response);
     
-    //         // 5. Trả về kết quả cuối cùng
-    //         return response;
+            // 5. Trả về kết quả cuối cùng
+            return response;
     
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //         throw new AppException(ErrorCode.INTERNAL_SERVER_ERROR);
-    //     }
-    // }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new AppException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+    }
     
 }

@@ -92,7 +92,6 @@ class _ContractListState extends State<ContractList> {
 
   // Hiển thị mỗi hợp đồng
   Widget _buildContractTile(GetContractResponseCustom contract, int depth) {
-    bool hasSubContracts = contract.contracts.isNotEmpty;
 
     // Xác định màu viền theo cấp
     Color borderColor;
@@ -138,13 +137,15 @@ class _ContractListState extends State<ContractList> {
                 if (depth < 2) // Chỉ hiện nút Add cho cấp 1 và 2
                   IconButton(
                     icon: Icon(Icons.add, color: Colors.amber),
-                    onPressed: () => depth ==1 ? _showContractAddIssueDialog(context, widget.token,""):_showContractAddCardDialog(context, widget.token,""),
+                    onPressed: () => depth ==1 ? _showContractAddIssueDialog(context, widget.token,widget.clientIdentifier??"",contract.contractNumber):_showContractAddCardDialog(context, widget.token,contract.contractNumber),
                   ),
               ],
             ),
             children: contract.contracts.isNotEmpty 
               ? contract.contracts.map((subContract) => _buildContractTile(subContract, depth + 1)).toList()
-              : [],
+              : [
+
+              ],
           ),
         ),
       ),
@@ -194,14 +195,14 @@ class _ContractListState extends State<ContractList> {
       },
     );
   }
-  void _showContractAddIssueDialog(BuildContext context, String token,String clientIdentifier ) {
+  void _showContractAddIssueDialog(BuildContext context, String token,String clientIdentifier,String liabContractIdentifier ) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           content: SizedBox(
             width: Get.width/1.1,
-            child: CreateIssueContractFormScreen(token: token, title: "CreateIssue"), // Thay bằng form thêm hợp đồng thực tế
+            child: AddIsissueContractFormScreen(token: token, title: "CreateIssue", liabContractIdentifier: liabContractIdentifier, clientIdentifier: clientIdentifier,), // Thay bằng form thêm hợp đồng thực tế
           ),
           actions: [
             TextButton(
@@ -213,14 +214,14 @@ class _ContractListState extends State<ContractList> {
       },
     );
   }
-  void _showContractAddCardDialog(BuildContext context, String token, String clientIdentifier ) {
+  void _showContractAddCardDialog(BuildContext context, String token, String contractIdentifier ) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           content: SizedBox(
             width: Get.width/1.1,
-            child: CreateCardContractFormScreen(token: token, title: "CreateCard"), // Thay bằng form thêm hợp đồng thực tế
+            child: CreateCardContractFormScreen(token: token, title: "CreateCard", contractIdentifier: contractIdentifier,), // Thay bằng form thêm hợp đồng thực tế
           ),
           actions: [
             TextButton(

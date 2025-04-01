@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:smartwalletapp/apiResult.dart';
 import 'package:smartwalletapp/request/create_cardholder_request.dart';
 import 'package:http/http.dart' as http;
+import 'package:smartwalletapp/request/edit_cardholder_request.dart';
 import 'package:smartwalletapp/response/cardHolder/cardholderResponse.dart';
 import 'package:smartwalletapp/response/cardHolder/getCardHolderResponse.dart';
 
@@ -45,6 +46,36 @@ class CardHolderRepository {
 
   Future<ApiResult> createCardHolder(CreateCardHolderRequest cardHolder,  String token) async{
     final String apiUrl = 'http://localhost:8080/smartwalletapp/cardholder';
+
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(cardHolder.toJson()),
+      );
+      Map<String, dynamic> responseData = json.decode(response.body);
+      String message = responseData['message'];
+      int code = response.statusCode;
+    
+      if(code == 200 ){
+        CardHolderResponse cardHolders = CardHolderResponse.fromJson(responseData["result"]);
+        ApiResult apiResult = ApiResult(code, cardHolders.retMsg,cardHolders, 0, 0);
+        return(apiResult);
+      }
+      else{
+        throw Exception("Exception occurred:__$message");
+      }
+    } catch (e) {
+      throw Exception('Exception occurred: $e');
+    }
+  }
+
+
+ Future<ApiResult> editCardHolder(EditClientV6 cardHolder,  String token) async{
+    final String apiUrl = 'http://localhost:8080/smartwalletapp/cardholder/edit';
 
     try {
       final response = await http.post(

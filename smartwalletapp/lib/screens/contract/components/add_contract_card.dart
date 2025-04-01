@@ -8,11 +8,12 @@ import 'package:smartwalletapp/request/create_contract_card_request.dart';
 class CreateCardContractFormScreen extends StatefulWidget {
   final String token;
   final String title;
+  final String contractIdentifier;
 
   const CreateCardContractFormScreen({
     super.key,
     required this.token,
-    required this.title,
+    required this.title, required this.contractIdentifier,
   });
 
   @override
@@ -35,7 +36,7 @@ class _CreateCardContractFormScreenState extends State<CreateCardContractFormScr
   void initState() {
     super.initState();
     contractSearchMethodController.text = "CONTRACT_NUMBER";
-    contractIdentifierController.text = "";
+    contractIdentifierController.text = widget.contractIdentifier;
     productCodeController.text = "CARD_TRAINING01";
     productCode2Controller.text = "";
     productCode3Controller.text = "";

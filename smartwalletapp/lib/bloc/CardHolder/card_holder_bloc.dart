@@ -47,19 +47,28 @@ class CardHolderBloc extends Bloc<CardHolderEvent,CardHolderState>{
          // Ensure an exception is thrown
       }
   }
-  // void _updatedUserInfor(UpdateUserInforEvent event, Emitter<CardHolderState> emit) async{
-  //   try {
-  //     User user = event.user;
-  //     final UserRepository userRepository = UserRepository();
-  //     user = await userRepository.updatedUser(user,event.token);
-  //     emit(
-  //       UpdateUserSuccessState(user)
-  //     );
-  //   }
-  //   catch(e){
-  //     print("_updatedUserInfor $e");
-  //   }
-  // }
+  void _editdUserInfor(EditCardHolderEvent event, Emitter<CardHolderState> emit) async{
+    try{
+      print("____________________________________");
+      CardHolderRepository cardholderRepository = CardHolderRepository();
+      ApiResult apiResult = await cardholderRepository.editCardHolder(event.request, event.token);
+      CardHolderResponse cardHolderResponse = apiResult.result;
+      print("cardHolderResponse.retMsg:${cardHolderResponse.retMsg}");
+      print("cardHolderResponse.resultInfo:${cardHolderResponse.resultInfo}");
+      print("cardHolderResponse.retCode:${cardHolderResponse.retCode}");
+      print("____________________________________");
+      if(apiResult.code == 200 && cardHolderResponse.retCode == 0){
+        emit(CardHolderSuccess(cardHolderResponse.resultInfo));
+      }
+      else{
+        print("apiResult.message: ${apiResult.message}");
+        emit(CardHolderSuccess(apiResult.message));
+      }
+      }
+    catch(e){
+      print("_updatedUserInfor $e");
+    }
+  }
   void _createCardHolder(AddCardHolderEvent  event, Emitter<CardHolderState> emit) async{
     try{
       print("____________________________________");
@@ -83,8 +92,4 @@ class CardHolderBloc extends Bloc<CardHolderEvent,CardHolderState>{
       throw Exception("_createCardHolder: $e");
     }
   }
-  
-
-
-  
 } 

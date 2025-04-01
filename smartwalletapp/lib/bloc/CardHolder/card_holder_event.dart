@@ -1,4 +1,5 @@
 import 'package:smartwalletapp/request/create_cardholder_request.dart';
+import 'package:smartwalletapp/request/edit_cardholder_request.dart';
 import 'package:smartwalletapp/response/cardHolder/getCardHolderResponse.dart';
 
 abstract class CardHolderEvent{}
@@ -16,12 +17,14 @@ class CardHolderInitialEvent extends CardHolderEvent{
 class AddCardHolderEvent extends CardHolderEvent{
   CreateCardHolderRequest cardHolder;
   String token;
+  
   AddCardHolderEvent(this.cardHolder,this.token);
 }
 
-class EditContractEvent extends CardHolderEvent{
-  
+class EditCardHolderEvent extends CardHolderEvent{
+  final EditClientV6 request;
+  String token;
+  EditCardHolderEvent(this.request,this.token); 
 }
-
 class LoadContractListEvent extends CardHolderEvent{
 }

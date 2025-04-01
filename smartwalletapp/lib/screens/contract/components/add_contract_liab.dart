@@ -50,11 +50,11 @@ class _CreateLiabContractFormScreenState extends State<CreateLiabContractFormScr
     clientSearchMethodController = TextEditingController(text: "CLIENT_NUMBER");
     branchController = TextEditingController(text: "0101");
     institutionCodeController = TextEditingController(text: "0001");
-    productCodeController = TextEditingController(text: "");
+    productCodeController = TextEditingController(text: "LIAB_TRAINING01");
     productCode2Controller = TextEditingController(text: "");
     productCode3Controller = TextEditingController(text: "");
     contractNameController = TextEditingController(text: "Liab");
-    cbsNumberController = TextEditingController(text: "");
+    cbsNumberController = TextEditingController(text: "21324556600");
     customDataController = TextEditingController(text: "");
 
     controllers = [

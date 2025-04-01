@@ -25,3 +25,5 @@ public class EditContractV4 {
     @XmlElement(name = "SetCustomData_InObject", namespace = "http://www.openwaygroup.com/wsint")
     private SetCustomData_InObject_EditV4 customData;
 }
+
+

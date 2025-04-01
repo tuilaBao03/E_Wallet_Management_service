@@ -1,25 +1,25 @@
 class GetContractResponseCustom {
   final List<GetContractResponseCustom> contracts;
   final String contractNumber;
-  final String? serviceGroup;
-  final String? branch;
+  final String serviceGroup;
+  final String branch;
   final String contractLevel;
-  final String? parentProduct;
-  final String? liabContract;
+  final String parentProduct;
+  final String liabContract;
   final String contractName;
-  final String? product;
+  final String product;
   final String billingContract;
 
   GetContractResponseCustom({
     required this.contracts,
     required this.contractNumber,
-    this.serviceGroup,
-    this.branch,
+    required this.serviceGroup,
+    required this.branch,
     required this.contractLevel,
-    this.parentProduct,
-    this.liabContract,
+    required this.parentProduct,
+    required this.liabContract,
     required this.contractName,
-    this.product,
+    required this.product,
     required this.billingContract,
   });
 

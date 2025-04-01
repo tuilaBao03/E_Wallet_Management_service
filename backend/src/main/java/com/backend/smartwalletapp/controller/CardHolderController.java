@@ -64,14 +64,14 @@ public class CardHolderController {
     }
 
 
-    // @PutMapping()
-    // @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")
-    // public ApiResponse edit_contract(@RequestBody @Valid EditClientV6 request){
-    //     return ApiResponse.builder()
-    //     .result(cardHolderService.editCardholder(request))
-    //     .code(200)
-    //     .build();
-    // }
+    @PutMapping("/edit")
+    @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")
+    public ApiResponse edit_contract(@RequestBody @Valid EditClientV6 request){
+        return ApiResponse.builder()
+        .result(cardHolderService.editCardholder(request))
+        .code(200)
+        .build();
+    }
 
 
 

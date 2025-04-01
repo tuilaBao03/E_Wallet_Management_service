@@ -1,56 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-class CreateContractV4ReqV2 {
-  String liabCategory;
-  String liabContractSearchMethod;
-  String liabContractIdentifier;
-  String clientSearchMethod;
-  String clientIdentifier;
-  String productCode;
-  String productCode2;
-  String productCode3;
-  InObject inObject;
-
-  CreateContractV4ReqV2({
-    required this.liabCategory,
-    required this.liabContractSearchMethod,
-    required this.liabContractIdentifier,
-    required this.clientSearchMethod,
-    required this.clientIdentifier,
-    required this.productCode,
-    required this.productCode2,
-    required this.productCode3,
-    required this.inObject,
-  });
-}
-
-class InObject {
-  String branch;
-  String institutionCode;
-  String contractName;
-  String cbsNumber;
-  String addInfo01;
-  String addInfo02;
-
-  InObject({
-    required this.branch,
-    required this.institutionCode,
-    required this.contractName,
-    required this.cbsNumber,
-    required this.addInfo01,
-    required this.addInfo02,
-  });
-}
-
+import 'package:smartwalletapp/request/create_contract_issue_request.dart';
 class AddIsissueContractFormScreen extends StatefulWidget {
   final String token;
   final String title;
+  final String liabContractIdentifier;
+  final String clientIdentifier;
 
   const AddIsissueContractFormScreen({
     super.key,
     required this.token,
     required this.title,
+    required this.liabContractIdentifier,
+    required this.clientIdentifier,
   });
 
   @override
@@ -58,20 +20,20 @@ class AddIsissueContractFormScreen extends StatefulWidget {
 }
 
 class _AddIsissueContractFormScreenState extends State<AddIsissueContractFormScreen> {
-  late TextEditingController liabCategoryController = TextEditingController(text: "");
-  late TextEditingController liabContractSearchMethodController = TextEditingController(text: "");
-  late TextEditingController liabContractIdentifierController = TextEditingController(text: "");
-  late TextEditingController clientSearchMethodController = TextEditingController(text: "");
-  late TextEditingController clientIdentifierController = TextEditingController(text: "");
-  late TextEditingController productCodeController = TextEditingController(text: "");
+  late TextEditingController liabCategoryController = TextEditingController(text: "Y");
+  late TextEditingController liabContractSearchMethodController = TextEditingController(text: "CONTRACT_NUMBER");
+  late TextEditingController liabContractIdentifierController = TextEditingController(text: widget.liabContractIdentifier);
+  late TextEditingController clientSearchMethodController = TextEditingController(text: "CLIENT_NUMBER");
+  late TextEditingController clientIdentifierController = TextEditingController(text: widget.clientIdentifier);
+  late TextEditingController productCodeController = TextEditingController(text: "ISSUING_TRAINING01");
   late TextEditingController productCode2Controller = TextEditingController(text: "");
   late TextEditingController productCode3Controller = TextEditingController(text: "");
-  late TextEditingController branchController = TextEditingController(text: "");
-  late TextEditingController institutionCodeController = TextEditingController(text: "");
-  late TextEditingController contractNameController = TextEditingController(text: "");
-  late TextEditingController cbsNumberController = TextEditingController(text: "");
-  late TextEditingController addInfo01Controller = TextEditingController(text: "");
-  late TextEditingController addInfo02Controller = TextEditingController(text: "");
+  late TextEditingController branchController = TextEditingController(text: "0101");
+  late TextEditingController institutionCodeController = TextEditingController(text: "0001");
+  late TextEditingController contractNameController = TextEditingController(text: "Issuing Contract");
+  late TextEditingController cbsNumberController = TextEditingController(text: "213245566000");
+  late TextEditingController addInfo01Controller = TextEditingController(text: "PAYMENT_OPTION=MTP;START_DATE=0123;BANK=A1;ACCOUNT=A2;BANK_CODE=A3;ACC_NAME=A4;");
+  late TextEditingController addInfo02Controller = TextEditingController(text: "PAYMENT_OPTION=MTP;");
 
   @override
   void dispose() {

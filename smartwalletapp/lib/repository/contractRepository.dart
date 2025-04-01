@@ -4,7 +4,10 @@ import 'dart:convert';
 
 import 'package:smartwalletapp/apiResult.dart';
 import 'package:http/http.dart' as http;
+import 'package:smartwalletapp/request/create_contract_card_request.dart';
+import 'package:smartwalletapp/request/create_contract_issue_request.dart';
 import 'package:smartwalletapp/request/create_contract_liab_request.dart';
+import 'package:smartwalletapp/request/edit_contract_request.dart';
 import 'package:smartwalletapp/response/contract/create_contract_reponse.dart';
 import 'package:smartwalletapp/response/contract/get_contract_custom_response.dart';
 import 'package:smartwalletapp/response/contract/get_contract_response.dart';
@@ -55,7 +58,7 @@ class ContractRepository {
       throw Exception('Exception occurred: $e');
     }
   }
-  Future<ApiResult> createdIssueContract(CreateContractLiabRequest contract, String token) async{
+  Future<ApiResult> createdIssueContract(CreateContractV4ReqV2 contract, String token) async{
       final String apiUrl = 'http://localhost:8080/smartwalletapp/Issuecontract';
       try {
         print(contract.toString());
@@ -88,7 +91,7 @@ class ContractRepository {
         throw Exception('Exception occurred: $e');
       }
     }
-  Future<ApiResult> createdCardContract(CreateContractLiabRequest contract, String token) async{
+  Future<ApiResult> createdCardContract(CreateCardV3 contract, String token) async{
     final String apiUrl = 'http://localhost:8080/smartwalletapp/Cardcontract';
     try {
       print(contract.toString());
@@ -121,6 +124,7 @@ class ContractRepository {
       throw Exception('Exception occurred: $e');
     }
   }
+  
   Future<ApiResult> giveContractByClient(String identityClient, String token) async {
     String apiUrl = "http://localhost:8080/smartwalletapp/contracts?identifier=$identityClient&type=ByClientID";
 
@@ -219,6 +223,39 @@ class ContractRepository {
       }
     } catch (e) {
       throw Exception("Lỗi kết nối: giveAllContract $e");
+    }
+  }
+  Future<ApiResult> editContract(EditContractV4 contract, String token) async{
+    final String apiUrl = 'http://localhost:8080/smartwalletapp/contract/edit';
+    try {
+      print(contract.toString());
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(contract.toJson()),
+      );
+      Map<String, dynamic> responseData = json.decode(response.body);
+      print("_________________response_________$responseData");
+      String message = responseData['message'];
+      int code = response.statusCode;
+      if(code == 200){
+        CreateContractResponse contract = CreateContractResponse.fromJson(responseData["result"]);
+        print("_______contract_________${contract.toString()}");
+        int newCode = contract.retCode;
+        print("________new code________________$newCode");
+        String newMess  = contract.retMsg; 
+        print("________new mess__________$newMess");
+        ApiResult apiResult = ApiResult(newCode, newMess,contract, 0, 0);
+        return(apiResult);
+      }
+      else{
+        throw Exception("Exception occurred:__$message");
+      }
+    } catch (e) {
+      throw Exception('Exception occurred: $e');
     }
   }
   
