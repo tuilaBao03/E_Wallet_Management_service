@@ -21,12 +21,10 @@ import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.List;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -39,14 +37,12 @@ public class CardHolderController {
     CardHolderService cardHolderService;
     @PostMapping()
     @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")
-    ApiResponse<CreateClientV4Result > createCardHolder(@RequestBody @Valid CreateClientV4Body request){
+    CreateClientV4Result createCardHolder(@RequestBody @Valid CreateClientV4Body request){
+        System.err.println("\n _______________________ \n");
+        System.err.println("\n"+request+"\n");
+        System.err.println("\n__________________________\n");
         CreateClientV4Result  createCardHolderResponse = cardHolderService.createCardHolder(request);
-        String mess = createCardHolderResponse.getRetMsg();
-        int code = createCardHolderResponse.getRetCode();
-        return ApiResponse.<CreateClientV4Result>builder()
-            .result(createCardHolderResponse)
-            .code(code)
-            .message(mess).build();
+        return createCardHolderResponse;
     }
     @GetMapping
     @PreAuthorize("hasRole(T(com.example.constants.Roles).USER.name()) or hasRole(T(com.example.constants.Roles).ADMIN.name())")

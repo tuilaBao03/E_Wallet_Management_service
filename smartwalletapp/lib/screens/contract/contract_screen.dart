@@ -52,7 +52,7 @@ class _ContractScreenState extends State<ContractScreen> {
         else if(state is ContractLoadedState){
           libContract = state.libContracts;
           page = state.page;
-          pageTotal = state.pageAmount;
+          pageTotal = state.pageTotal;
           int size = state.size;
           return SafeArea(
             child: SingleChildScrollView(
@@ -88,7 +88,7 @@ class _ContractScreenState extends State<ContractScreen> {
                         SizedBox(height: 10,),
                             ContractList(
                               title: 'ContractList',
-                              contracts: libContract, isContractScreent: true, token: widget.token, page: 1,
+                              contracts: libContract, isContractScreent: true, token: widget.token, page: page, search: search,
                             ),
                         SizedBox(height: 10,),
                       
@@ -102,12 +102,12 @@ class _ContractScreenState extends State<ContractScreen> {
                             pageAmount: pageTotal,
                             onUpPress: () {
                               if (page < pageTotal) {
-                                context.read<ContractBloc>().add(ContractInitialEvent(widget.token,page,search,size));
+                                context.read<ContractBloc>().add(ContractInitialEvent(widget.token,page+1,search,size));
                               }
                             },
                             onDownPress: () {
                               if (page > 1) {
-                                context.read<ContractBloc>().add(ContractInitialEvent(widget.token,page,search,size));
+                                context.read<ContractBloc>().add(ContractInitialEvent(widget.token,page-1,search,size));
                               }
                             },
                           ),

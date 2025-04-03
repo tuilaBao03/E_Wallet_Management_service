@@ -3,7 +3,9 @@ package com.backend.smartwalletapp.client.requests.CardHolders.create;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlElement;
@@ -16,6 +18,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Getter
+@Setter
 public class CreateClientV4Body {
     
     @XmlElement(name = "Reason")

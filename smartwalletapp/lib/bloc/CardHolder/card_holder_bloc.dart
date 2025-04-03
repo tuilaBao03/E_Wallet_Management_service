@@ -71,21 +71,15 @@ class CardHolderBloc extends Bloc<CardHolderEvent,CardHolderState>{
   }
   void _createCardHolder(AddCardHolderEvent  event, Emitter<CardHolderState> emit) async{
     try{
-      print("____________________________________");
-      CreateCardHolderRequest cardHolder = event.cardHolder;
+      CreateClientV4Body cardHolder = event.cardHolder;
       CardHolderRepository cardholderRepository = CardHolderRepository();
-      ApiResult apiResult = await cardholderRepository.createCardHolder(cardHolder, event.token);
-      CardHolderResponse cardHolderResponse = apiResult.result;
-      print("cardHolderResponse.retMsg:${cardHolderResponse.retMsg}");
-      print("cardHolderResponse.resultInfo:${cardHolderResponse.resultInfo}");
-      print("cardHolderResponse.retCode:${cardHolderResponse.retCode}");
-      print("____________________________________");
-      if(apiResult.code == 200 && cardHolderResponse.retCode == 0){
-        emit(CardHolderSuccess(cardHolderResponse.resultInfo));
+      CardHolderResponse cardHolderResponse = await cardholderRepository.createCardHolder(cardHolder, event.token);
+      if(cardHolderResponse.retCode == 0){
+        emit(CardHolderSuccess(cardHolderResponse.retMsg));
       }
       else{
-        print("apiResult.message: ${apiResult.message}");
-        emit(CardHolderSuccess(apiResult.message));
+        print("apiResult.message: ${cardHolderResponse.retMsg}");
+        emit(CardHolderError(cardHolderResponse.retMsg));
       }
       }
     catch (e){

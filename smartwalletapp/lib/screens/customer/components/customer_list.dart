@@ -4,15 +4,12 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
 import 'package:smartwalletapp/app/locallization/app_localizations.dart';
 import 'package:smartwalletapp/bloc/CardHolder/card_holder_bloc.dart';
 import 'package:smartwalletapp/bloc/CardHolder/card_holder_event.dart';
-import 'package:smartwalletapp/request/create_cardholder_request.dart';
 import 'package:smartwalletapp/response/cardHolder/getCardHolderResponse.dart';
 import 'package:smartwalletapp/screens/customer/components/add_customer.dart';
 import 'package:smartwalletapp/screens/customer/components/detail_customer.dart';
-import 'package:smartwalletapp/screens/main/components/classInitial.dart';
 import '../../../constants.dart';
 
 class CustomerList extends StatefulWidget {
@@ -72,7 +69,7 @@ class _CustomerListState extends State<CustomerList> {
             IconButton(
               icon: Icon(Icons.add),
               onPressed: () {
-                _showAddDialog(context, emptyCardHolder_ADD);
+                _showAddDialog(context);
               },
             ),
             ],
@@ -132,16 +129,10 @@ class _CustomerListState extends State<CustomerList> {
           IconButton(
             icon: const Icon(Icons.content_paste_search_outlined, color: Colors.blueAccent),
             onPressed: (){
-              context.read<CardHolderBloc>().add(CardHolderInitialEvent(widget.token, widget.search, widget.page, widget.showContractList == true ? false : true,cardHolder,widget.size));
+              context.read<CardHolderBloc>().add(CardHolderInitialEvent(widget.token, widget.search, widget.page, true,cardHolder,widget.size));
             },
           ),
           SizedBox(width: 10,),
-          IconButton(
-            icon: const Icon(Icons.add_card, color: Colors.blueAccent),
-            onPressed: (){
-              
-            },
-          ),
           ],)
           
         ),
@@ -174,15 +165,14 @@ class _CustomerListState extends State<CustomerList> {
     context.read<CardHolderBloc>().add(CardHolderInitialEvent(widget.token, widget.search, widget.page, widget.showContractList == true ? false : true,cardHolder,widget.size));
 
   }
-  void _showAddDialog(BuildContext context, CreateCardHolderRequest cardHolder) {
+  void _showAddDialog(BuildContext context,) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           content: Container(
             width: Get.width/1.2,
-            child: AddCustomer(
-              title: 'CustomerAdd',
+            child: CreateClientForm (
               token: widget.token,
             ),
           ),

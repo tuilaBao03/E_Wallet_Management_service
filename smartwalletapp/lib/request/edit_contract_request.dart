@@ -14,11 +14,11 @@ class EditContractV4 {
   });
 
   Map<String, dynamic> toJson() => {
-        'ContractSearchMethod': contractSearchMethod,
-        'ContractIdentifier': contractIdentifier,
-        'Reason': reason,
-        'EditContract_InObject': editContractInObject.toJson(),
-        'SetCustomData_InObject': customData.toJson(),
+        'contractSearchMethod': contractSearchMethod,
+        'contractIdentifier': contractIdentifier,
+        'reason': reason,
+        'editContractInObject': editContractInObject.toJson(),
+        'customData': customData.toJson(),
       };
 }
 
@@ -42,13 +42,13 @@ class EditContractInObjectEditV4 {
   });
 
   Map<String, dynamic> toJson() => {
-        'Branch': branch,
-        'ServiceGroup': serviceGroup,
-        'ContractNumber': contractNumber,
-        'ContractName': contractName,
-        'CBSID': cbsId,
-        'CBSNumber': cbsNumber,
-        'CloseDate': closeDate,
+        'branch': branch,
+        'serviceGroup': serviceGroup,
+        'contractNumber': contractNumber,
+        'contractName': contractName,
+        'cbsID': cbsId,
+        'cbsNumber': cbsNumber,
+        'closeDate': closeDate,
       };
 }
 
@@ -66,9 +66,9 @@ class SetCustomDataInObjectEditV4 {
   });
 
   Map<String, dynamic> toJson() => {
-        'AddInfoType': addInfoType,
-        'RemoveTag': removeTag,
-        'TagName': tagName,
-        'TagValue': tagValue,
+        'addInfoType': addInfoType,
+        'removeTag': removeTag,
+        'tagName': tagName,
+        'tagValue': tagValue,
       };
 }

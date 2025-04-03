@@ -14,7 +14,10 @@ import com.backend.smartwalletapp.client.requests.Contract.CreateContractLevel2.
 import com.backend.smartwalletapp.client.requests.Contract.CreateContractV4.CreateContractV4_REQ;
 import com.backend.smartwalletapp.client.requests.Contract.Edit.EditContractV4;
 import com.backend.smartwalletapp.client.responses.Contract.create.CreateContractV4Result;
+import com.backend.smartwalletapp.client.responses.Contract.edit.EditContractV4Response;
+import com.backend.smartwalletapp.client.responses.Contract.edit.EditContractV4Result;
 import com.backend.smartwalletapp.client.responses.Contract.get.IssContractDetailsAPIOutputV2Record;
+import com.backend.smartwalletapp.client.service.ContractSoapService;
 import com.backend.smartwalletapp.dto.response.ApiResponse;
 import com.backend.smartwalletapp.dto.response.Contract.CreateContractReponse;
 import com.backend.smartwalletapp.dto.response.Contract.GetContract.ContractListResponse;
@@ -34,6 +37,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 @RequiredArgsConstructor
 public class ContractController {
     ContractService contractService;
+    ContractSoapService contractSoapService;
     @GetMapping("/search")
     @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")
     public ApiResponse<List<ContractListResponse>> getAllContracts(
@@ -64,30 +68,20 @@ public class ContractController {
 
     @PostMapping()
     @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")
-    public ApiResponse<CreateContractV4Result> CreateContractV4_parent(@RequestBody @Valid CreateContractV4_REQ request){
-        return ApiResponse.<CreateContractV4Result >builder()
-        .result(contractService.createContract(request))
-        .code(200)
-        .message("null")
-        .build();
+    public CreateContractV4Result CreateContractV4_parent(@RequestBody @Valid CreateContractV4_REQ request){
+        return contractService.createContract(request);
     }
 
     @PostMapping("/children")
     @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")
-    public ApiResponse<CreateContractV4Result > CreateContractV4_children(@RequestBody @Valid CreateContractV4_REQV2 request){
-        return ApiResponse.<CreateContractV4Result>builder()
-        .result(contractService.createContractV2(request))
-        .code(200)
-        .build();
+    public CreateContractV4Result CreateContractV4_children(@RequestBody @Valid CreateContractV4_REQV2 request){
+        return contractService.createContractV2(request);
     }
 
     @PutMapping()
     @PreAuthorize("hasRole(Roles.USER.name()) or hasRole(Roles.ADMIN.name())")
-    public ApiResponse edit_contract(@RequestBody @Valid EditContractV4 request){
-        return ApiResponse.builder()
-        .result(contractService.editContract(request))
-        .code(200)
-        .build();
+    public EditContractV4Result edit_contract(@RequestBody @Valid EditContractV4 request){
+        return contractSoapService.editContract(request);
     }
 
     

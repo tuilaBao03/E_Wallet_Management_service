@@ -1,6 +1,4 @@
 // ignore_for_file: camel_case_types, file_names
-import 'package:smartwalletapp/request/create_contract_card_request.dart';
-import 'package:smartwalletapp/request/create_cardholder_request.dart';
 import 'package:smartwalletapp/request/create_contract_liab_request.dart';
 import 'package:smartwalletapp/request/user.dart';
 import 'package:smartwalletapp/response/cardHolder/getCardHolderResponse.dart';

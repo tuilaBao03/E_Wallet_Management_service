@@ -1,7 +1,6 @@
 // ignore_for_file: file_names
 
 import 'dart:convert';
-
 import 'package:smartwalletapp/apiResult.dart';
 import 'package:smartwalletapp/request/create_cardholder_request.dart';
 import 'package:http/http.dart' as http;
@@ -44,10 +43,14 @@ class CardHolderRepository {
   }
 
 
-  Future<ApiResult> createCardHolder(CreateCardHolderRequest cardHolder,  String token) async{
+  Future<CardHolderResponse> createCardHolder(CreateClientV4Body cardHolder,  String token) async{
     final String apiUrl = 'http://localhost:8080/smartwalletapp/cardholder';
 
     try {
+
+      print("\n__________________request________________________\n");
+      print(cardHolder.toJson());
+      print("\n__________________request________________________\n");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -57,19 +60,17 @@ class CardHolderRepository {
         body: jsonEncode(cardHolder.toJson()),
       );
       Map<String, dynamic> responseData = json.decode(response.body);
-      String message = responseData['message'];
-      int code = response.statusCode;
-    
-      if(code == 200 ){
-        CardHolderResponse cardHolders = CardHolderResponse.fromJson(responseData["result"]);
-        ApiResult apiResult = ApiResult(code, cardHolders.retMsg,cardHolders, 0, 0);
-        return(apiResult);
+      print(responseData);
+  
+      if(response.statusCode == 200 ){
+        CardHolderResponse cardHolders = CardHolderResponse.fromJson(responseData);
+        return(cardHolders);
       }
       else{
-        throw Exception("Exception occurred:__$message");
+        throw Exception("Exception occurred:__createCardHolder");
       }
     } catch (e) {
-      throw Exception('Exception occurred: $e');
+      throw Exception('Exception occurred $e');
     }
   }
 
@@ -87,19 +88,17 @@ class CardHolderRepository {
         body: jsonEncode(cardHolder.toJson()),
       );
       Map<String, dynamic> responseData = json.decode(response.body);
-      String message = responseData['message'];
-      int code = response.statusCode;
     
-      if(code == 200 ){
-        CardHolderResponse cardHolders = CardHolderResponse.fromJson(responseData["result"]);
-        ApiResult apiResult = ApiResult(code, cardHolders.retMsg,cardHolders, 0, 0);
+      if(response.statusCode == 200 ){
+        CardHolderResponse cardHolders = CardHolderResponse.fromJson(responseData);
+        ApiResult apiResult = ApiResult(cardHolders.retCode, cardHolders.retMsg,cardHolders, 0, 0);
         return(apiResult);
       }
       else{
-        throw Exception("Exception occurred:__$message");
+        throw Exception("Exception occurred:");
       }
     } catch (e) {
-      throw Exception('Exception occurred: $e');
+      throw Exception('Exception occurred: createCardHolder $e');
     }
   }
 

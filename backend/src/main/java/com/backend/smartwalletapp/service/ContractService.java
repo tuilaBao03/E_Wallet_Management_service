@@ -214,12 +214,6 @@ public class ContractService {
             throw new AppException(ErrorCode.GET_CONTRACT_FAILE);
         }
     }
-    
-    public ApiResponse editContract(EditContractV4 request){
-        ApiResponse apiResponse = contractSoapService.editContract(request);
-        return apiResponse;
-        
-    }
 }
 
 

@@ -13,6 +13,8 @@ import com.backend.smartwalletapp.client.requests.Contract.Get.GetContractsByCli
 import com.backend.smartwalletapp.client.responses.Contract.create.CreateContractV4Response;
 import com.backend.smartwalletapp.client.responses.Contract.create.CreateContractV4Result;
 import com.backend.smartwalletapp.client.responses.Contract.create.V2CreateContractV4Response;
+import com.backend.smartwalletapp.client.responses.Contract.edit.EditContractV4Response;
+import com.backend.smartwalletapp.client.responses.Contract.edit.EditContractV4Result;
 import com.backend.smartwalletapp.client.responses.Contract.get.GetContractByNumberV2Response;
 import com.backend.smartwalletapp.client.responses.Contract.get.GetContractByNumberV2Result;
 import com.backend.smartwalletapp.client.responses.Contract.get.GetContractsByClientV2Response;
@@ -36,11 +38,7 @@ public class ContractSoapService {
 
 
     public GetContractsByClientV2Result getContractByClientIdentifier(String clientIdentifier) {
-        String fullString = soapUrl;
         GetContractsByClientV2_REQ request = new GetContractsByClientV2_REQ("CLIENT_NUMBER", clientIdentifier);
-        System.err.println("\n__________________________________________________________________________________________\n");
-        log.info("\nSending SOAP request to: {}\n", fullString);
-        log.info("\nRequest payload: {}\n", request);
     
         try {
             System.err.println("\n_______________________start________________\n");
@@ -48,10 +46,7 @@ public class ContractSoapService {
 
             GetContractsByClientV2Response response = (GetContractsByClientV2Response) webServiceTemplate.marshalSendAndReceive(soapUrl, request);
             
-                System.err.println("\n_________________"+response.getResult()+"-----------------------\n");
-            
-            System.err.println("\n_______________________response________________\n");
-            log.info("Response type: {}", response.getClass().getName());
+
             return response.getResult();
         } 
         catch (Exception e) {
@@ -71,7 +66,6 @@ public class ContractSoapService {
             GetContractByNumberV2Response response = (GetContractByNumberV2Response) webServiceTemplate.marshalSendAndReceive(fullString, request);
             return response.getResult();
         } catch (Exception e) {
-            System.err.println(e);
             throw new AppException(ErrorCode.GET_CONTRACT_FAILE);
         }
     }
@@ -80,7 +74,6 @@ public class ContractSoapService {
         try {
             CreateContractV4Response response = (CreateContractV4Response) webServiceTemplate.marshalSendAndReceive(soapUrl, request);
             CreateContractV4Result result = response.getCreateContractV4Result();
-            System.err.println("\n -----------result CreateContractV4Result :----------------------\n " + result);
             return result;
         } catch (Exception e) {
             e.printStackTrace();
@@ -90,12 +83,9 @@ public class ContractSoapService {
 
     public CreateContractV4Result createContractLevel2(CreateContractV4_REQV2 request) {
         try {
-            System.err.println("\n ------------request CreateContractV4_REQ :---------------------\n " + request);
             V2CreateContractV4Response response = (V2CreateContractV4Response) webServiceTemplate.marshalSendAndReceive(soapUrl, request);
-            System.err.println("\n ------------response CreateContractV4Response :-----------------\n " + response);
             System.err.println("\n response CreateContractV4Response :\n " + response.getCreateContractV4Result());
             CreateContractV4Result result = response.getCreateContractV4Result();
-            System.err.println("\n -----------result CreateContractV4Result :----------------------\n " + result);
             return result;
         } catch (Exception e) {
             e.printStackTrace();
@@ -103,15 +93,15 @@ public class ContractSoapService {
         }
     }
 
-    public ApiResponse editContract(EditContractV4 request) {
+    public EditContractV4Result editContract(EditContractV4 request) {
         try {
             System.err.println("\n ------------request EditContractV4  :---------------------\n " + request);
-            ApiResponse response = (ApiResponse) webServiceTemplate.marshalSendAndReceive(soapUrl, request);
+            EditContractV4Response response = (EditContractV4Response) webServiceTemplate.marshalSendAndReceive(soapUrl, request);
             System.err.println("\n ------------response EditContractV4  :-----------------\n " + response);
             // System.err.println("\n response CreateContractV4Response :\n " + response.getCreateContractV4Result());
             // CreateContractV4Result result = response.getCreateContractV4Result();
             // System.err.println("\n -----------result CreateContractV4Result :----------------------\n " + result);
-            return response;
+            return response.getResult();
         } catch (Exception e) {
             e.printStackTrace();
             throw new AppException(ErrorCode.UPDATE_CONTRACT_FAILE);

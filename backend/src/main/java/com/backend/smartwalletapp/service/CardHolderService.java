@@ -75,7 +75,6 @@ public class CardHolderService {
         
                 // Câu lệnh lấy tổng số bản ghi
                 String countQuery = "SELECT COUNT(*) AS total FROM CARDHOLDEROFHAGIABAO WHERE LOWER(Short_Name) LIKE '%" + search.toLowerCase() + "%' ORDER BY id DESC";
-                System.out.println(countQuery); // Debug SQL
                 countResultSet = statement.executeQuery(countQuery);
         
                 if (countResultSet.next()) {
@@ -86,7 +85,6 @@ public class CardHolderService {
                 // Câu lệnh lấy dữ liệu phân trang
                 String dataQuery = "SELECT * FROM CARDHOLDEROFHAGIABAO WHERE LOWER(SHORT_NAME) LIKE '%" + search.toLowerCase() + "%' " +
                                    "ORDER BY ID OFFSET " + offset + " ROWS FETCH NEXT " + limit + " ROWS ONLY";
-                System.out.println(dataQuery);
                 try {
                     dataResultSet = statement.executeQuery(dataQuery);
                 } catch (SQLException e) {

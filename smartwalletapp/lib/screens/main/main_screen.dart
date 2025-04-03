@@ -39,7 +39,6 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     selectedUsers = widget.user;
-    context.read<MainAppBloc>().add(initializationEvent(_currentTab-1));
   }
   
   @override
@@ -53,7 +52,6 @@ class _MainScreenState extends State<MainScreen> {
       }, isAuth: widget.isAuth,),
       body: BlocConsumer<MainAppBloc,MainAppState>(
         builder: (context,state){
-        
           if(state is UpdateUserSuccessState){
             selectedUsers = state.user;
           }

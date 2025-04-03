@@ -1,32 +1,33 @@
+// ignore: file_names
 class CreateCardReponse {
   String? createdCard;
   String? cardNumber;
   String? expiryDate;
   String? sequenceNumber;
-  int? retCode;
-  String? retMsg;
-  String? resultInfo;
+  int retCode;
+  String retMsg;
+  String resultInfo;
 
   CreateCardReponse({
     this.createdCard,
     this.cardNumber,
     this.expiryDate,
     this.sequenceNumber,
-    this.retCode,
-    this.retMsg,
-    this.resultInfo,
+    required this.retCode,
+    required this.retMsg,
+    required this.resultInfo,
   });
 
   // fromJson
   factory CreateCardReponse.fromJson(Map<String, dynamic> json) {
     return CreateCardReponse(
-      createdCard: json['createdCard'],
-      cardNumber: json['cardNumber'],
-      expiryDate: json['expiryDate'],
-      sequenceNumber: json['SequenceNumber'], // lưu ý tên key
-      retCode: json['retCode'],
-      retMsg: json['retMsg'],
-      resultInfo: json['resultInfo'],
+      createdCard: json['createdCard'] ?? '',
+      cardNumber: json['cardNumber'] ?? '',
+      expiryDate: json['expiryDate'] ?? '',
+      sequenceNumber: json['SequenceNumber'] ??"", // lưu ý tên key
+      retCode: json['retCode'] ?? 404,
+      retMsg: json['retMsg'] ?? "",
+      resultInfo: json['resultInfo'] ?? "",
     );
   }
 

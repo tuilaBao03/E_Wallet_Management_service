@@ -83,40 +83,102 @@ class _CreateCardContractFormScreenState extends State<CreateCardContractFormScr
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Scaffold(
+      appBar: AppBar(
+        title: Title(color: Colors.white, child: Text(AppLocalizations.of(context).translate("Add Card Contract"))), 
+        actions: [
+          IconButton(onPressed: validateAndSave, icon: Icon(Icons.save, color: Colors.white,))
+          ],
+          automaticallyImplyLeading: false,  
+      ),
+      body: Container(
+        color: Theme.of(context).colorScheme.primary,
       padding: EdgeInsets.all(18),
       child: Column(
         children: [
-          ElevatedButton(onPressed: validateAndSave, child: Text('Save')),
           Row(
             children: [
-              Column(
-                children: [
-
-                  Center(child: Text(AppLocalizations.of(context).translate("General Info")),),
-                  TextField(controller: contractSearchMethodController, decoration: InputDecoration(labelText: 'Contract Search Method')),
-                  TextField(controller: contractIdentifierController, decoration: InputDecoration(labelText: 'Contract Identifier')),
-                  TextField(controller: productCodeController, decoration: InputDecoration(labelText: 'Product Code')),
-                  TextField(controller: productCode2Controller, decoration: InputDecoration(labelText: 'Product Code 2')),
-                  TextField(controller: productCode3Controller, decoration: InputDecoration(labelText: 'Product Code 3')),
-                ],
-              ),
+              Expanded(
+                flex: 1,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(height: 10,),
+                    Center(child: Text(AppLocalizations.of(context).translate("General Info"), style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),)),
+                    SizedBox(height: 10,),
+                    _buildCustomTextField(contractSearchMethodController,  'Contract Search Method'),
+                    SizedBox(height: 10,),
+                    _buildCustomTextField(contractIdentifierController, 'Contract Identifier'),
+                    SizedBox(height: 10,),
+                    _buildCustomTextField(productCodeController,'Product Code'),
+                    SizedBox(height: 10,),
+                    _buildCustomTextField( productCode2Controller, 'Product Code 2'),
+                    SizedBox(height: 10,),
+                    _buildCustomTextField(productCode3Controller, 'Product Code 3'),
+                    SizedBox(height: 10,),
+                  ],
+                ),),
               SizedBox(width: 10,),
+              Expanded(
+                flex: 1,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(height: 10,),
+                    Center(
+                      child: Text(
+                        AppLocalizations.of(context).translate("Issue Info"),
+                        style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold), // Đổi màu text
+                      ),
+                    ),
+                    _buildCustomTextField(cardNameController, "Card Name"),
+                    SizedBox(height: 10,),
+                    _buildCustomTextField(cbsNumberController, "CBS Number"),
+                    SizedBox(height: 10,),
+                    _buildCustomTextField(embossedFirstNameController, "Embossed First Name"),
+                    SizedBox(height: 10,),
+                    _buildCustomTextField(embossedLastNameController, "Embossed Last Name"),
+                    SizedBox(height: 10,),
+                    _buildCustomTextField(embossedCompanyNameController, "Embossed Company Name"),
+                  ],
+                ),),
 
-              Column(
-                children: [
-                  Center(child: Text(AppLocalizations.of(context).translate("Issue Info")),),
-                  TextField(controller: cardNameController, decoration: InputDecoration(labelText: 'Card Name')),
-                  TextField(controller: cbsNumberController, decoration: InputDecoration(labelText: 'CBS Number')),
-                  TextField(controller: embossedFirstNameController, decoration: InputDecoration(labelText: 'Embossed First Name')),
-                  TextField(controller: embossedLastNameController, decoration: InputDecoration(labelText: 'Embossed Last Name')),
-                  TextField(controller: embossedCompanyNameController, decoration: InputDecoration(labelText: 'Embossed Company Name')),
-                ],
-              ),
+              
             ],
           ),
         ],
       ),
+    )
+  ,
+    );
+    }
+    Widget _buildCustomTextField(TextEditingController controller, String label) {
+    return TextFormField(
+      controller: controller,
+      style: TextStyle(color: Colors.white), // Màu chữ trắng
+      cursorColor: Colors.white, // Màu con trỏ trắng
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: TextStyle(color: Colors.white), // Màu label trắng
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white), // Viền trắng khi chưa chọn
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white, width: 2.0), // Viền trắng khi focus
+        ),
+        errorBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.red, width: 2.0), // Viền đỏ khi lỗi
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.red, width: 2.5), // Viền đỏ khi focus lỗi
+        ),
+      ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'This field is required';
+        }
+        return null;
+      },
     );
   }
 }

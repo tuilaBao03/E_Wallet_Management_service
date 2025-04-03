@@ -16,12 +16,12 @@ class SuccessState extends MainAppState{
 }
 
 
-class giveCardHolderListState extends MainAppState{
-  final List<CreateCardHolderRequest> cardHolders;
-  final int page;
-  final int pageAmount;
-  giveCardHolderListState(this.cardHolders, this.page, this.pageAmount);
-}
+// class giveCardHolderListState extends MainAppState{
+//   final List<CreateCardHolderRequest> cardHolders;
+//   final int page;
+//   final int pageAmount;
+//   giveCardHolderListState(this.cardHolders, this.page, this.pageAmount);
+// }
 
 class UpdateUserSuccessState extends MainAppState{
   final User user;
@@ -31,10 +31,10 @@ class CreateCardHolderSuccessState extends MainAppState{
   String message;
   CreateCardHolderSuccessState(this.message);
 }
-class UpdateCardHolderSuccessState extends MainAppState{
-  final CreateCardHolderRequest cardHolder;
-  UpdateCardHolderSuccessState(this.cardHolder);
-}
+// class UpdateCardHolderSuccessState extends MainAppState{
+//   final CreateCardHolderRequest cardHolder;
+//   UpdateCardHolderSuccessState(this.cardHolder);
+// }
 
 class UpdateStatusContractSuccessState extends MainAppState{
   final bool newState;

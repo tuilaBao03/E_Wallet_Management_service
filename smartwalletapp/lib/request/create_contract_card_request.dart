@@ -19,23 +19,23 @@ class CreateCardV3 {
 
   factory CreateCardV3.fromJson(Map<String, dynamic> json) {
     return CreateCardV3(
-      contractSearchMethod: json['ContractSearchMethod'],
-      contractIdentifier: json['ContractIdentifier'],
-      productCode: json['ProductCode'],
-      productCode2: json['ProductCode2'],
-      productCode3: json['ProductCode3'],
-      inObject: InObjectCard.fromJson(json['InObject']),
+      contractSearchMethod: json['contractSearchMethod'],
+      contractIdentifier: json['contractIdentifier'],
+      productCode: json['productCode'],
+      productCode2: json['productCode2'],
+      productCode3: json['productCode3'],
+      inObject: InObjectCard.fromJson(json['inObject']),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'ContractSearchMethod': contractSearchMethod,
-      'ContractIdentifier': contractIdentifier,
-      'ProductCode': productCode,
-      'ProductCode2': productCode2,
-      'ProductCode3': productCode3,
-      'InObject': inObject.toJson(),
+      'contractSearchMethod': contractSearchMethod,
+      'contractIdentifier': contractIdentifier,
+      'productCode': productCode,
+      'productCode2': productCode2,
+      'productCode3': productCode3,
+      'inObject': inObject.toJson(),
     };
   }
 }
@@ -67,11 +67,11 @@ class InObjectCard {
 
   Map<String, dynamic> toJson() {
     return {
-      'CardName': cardName,
-      'CBSNumber': cbsNumber,
-      'EmbossedFirstName': embossedFirstName,
-      'EmbossedLastName': embossedLastName,
-      'EmbossedCompanyName': embossedCompanyName,
+      'cardName': cardName,
+      'cbdNumber': cbsNumber,
+      'embossedFirstName': embossedFirstName,
+      'embossedLastName': embossedLastName,
+      'embossedCompanyName': embossedCompanyName,
     };
   }
 }

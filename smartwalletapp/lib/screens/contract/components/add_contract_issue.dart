@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart' as context;
+import 'package:smartwalletapp/bloc/Contract/contract_bloc.dart';
+import 'package:smartwalletapp/bloc/Contract/contract_event.dart';
 import 'package:smartwalletapp/request/create_contract_issue_request.dart';
-class AddIsissueContractFormScreen extends StatefulWidget {
+class AddIssueContractFormScreen extends StatefulWidget {
   final String token;
   final String title;
   final String liabContractIdentifier;
   final String clientIdentifier;
 
-  const AddIsissueContractFormScreen({
+  const AddIssueContractFormScreen({
     super.key,
     required this.token,
     required this.title,
@@ -16,10 +19,10 @@ class AddIsissueContractFormScreen extends StatefulWidget {
   });
 
   @override
-  State<AddIsissueContractFormScreen> createState() => _AddIsissueContractFormScreenState();
+  State<AddIssueContractFormScreen> createState() => _AddIssueContractFormScreenState();
 }
 
-class _AddIsissueContractFormScreenState extends State<AddIsissueContractFormScreen> {
+class _AddIssueContractFormScreenState extends State<AddIssueContractFormScreen> {
   late TextEditingController liabCategoryController = TextEditingController(text: "Y");
   late TextEditingController liabContractSearchMethodController = TextEditingController(text: "CONTRACT_NUMBER");
   late TextEditingController liabContractIdentifierController = TextEditingController(text: widget.liabContractIdentifier);
@@ -54,7 +57,11 @@ class _AddIsissueContractFormScreenState extends State<AddIsissueContractFormScr
     super.dispose();
   }
 
-  void validateAndSave() {
+
+
+  @override
+  Widget build(BuildContext context) {
+      void validateAndSave() {
     CreateContractV4ReqV2 contract = CreateContractV4ReqV2(
       liabCategory: liabCategoryController.text,
       liabContractSearchMethod: liabContractSearchMethodController.text,
@@ -73,49 +80,131 @@ class _AddIsissueContractFormScreenState extends State<AddIsissueContractFormScr
         addInfo02: addInfo02Controller.text,
       ),
     );
+    context.read<ContractBloc>().add(AddIssueContractV2Event(widget.token, contract));
   }
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(18),
-      child: Column(
-        children: [
-          ElevatedButton(onPressed: validateAndSave, child: Text('Save')),
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  children: [
-                    Center(child: Text("General Info")),
-                    TextField(controller: liabCategoryController, decoration: InputDecoration(labelText: 'Liability Category')),
-                    TextField(controller: liabContractSearchMethodController, decoration: InputDecoration(labelText: 'Liability Contract Search Method')),
-                    TextField(controller: liabContractIdentifierController, decoration: InputDecoration(labelText: 'Liability Contract Identifier')),
-                    TextField(controller: clientSearchMethodController, decoration: InputDecoration(labelText: 'Client Search Method')),
-                    TextField(controller: clientIdentifierController, decoration: InputDecoration(labelText: 'Client Identifier')),
-                    TextField(controller: productCodeController, decoration: InputDecoration(labelText: 'Product Code')),
-                    TextField(controller: productCode2Controller, decoration: InputDecoration(labelText: 'Product Code 2')),
-                    TextField(controller: productCode3Controller, decoration: InputDecoration(labelText: 'Product Code 3')),
-                  ],
-                ),
-              ),
-              SizedBox(width: 10),
-              Expanded(
-                child: Column(
-                  children: [
-                    Center(child: Text("Issue Info")),
-                    TextField(controller: branchController, decoration: InputDecoration(labelText: 'Branch')),
-                    TextField(controller: institutionCodeController, decoration: InputDecoration(labelText: 'Institution Code')),
-                    TextField(controller: contractNameController, decoration: InputDecoration(labelText: 'Contract Name')),
-                    TextField(controller: cbsNumberController, decoration: InputDecoration(labelText: 'CBS Number')),
-                    TextField(controller: addInfo01Controller, decoration: InputDecoration(labelText: 'Additional Info 01')),
-                    TextField(controller: addInfo02Controller, decoration: InputDecoration(labelText: 'Additional Info 02')),
-                  ],
-                ),
-              ),
-            ],
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Title(color: Colors.white, child: Text("Add Issue Contract")),
+        actions: [
+          IconButton(onPressed: validateAndSave, icon: Icon(Icons.save, color: Colors.blue,))
         ],
+        automaticallyImplyLeading: false,  
+      ),
+      body: Container(
+        color: Theme.of(context).colorScheme.primary,
+        child: Padding(
+        padding: EdgeInsets.all(18),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: _buildCustomTextField(liabCategoryController,  'Liability Category'),),
+                SizedBox(width: 10,),
+                Expanded(
+                  flex: 1,
+                  child: _buildCustomTextField(liabContractSearchMethodController,'Liability Contract Search Method'),),
+                  SizedBox(width: 10,),
+                Expanded(
+                  flex: 1,
+                  child: _buildCustomTextField(liabContractIdentifierController,  'Liability Contract Identifier'), ),
+                  SizedBox(width: 10,),
+                Expanded(
+                  flex: 1,
+                  child:_buildCustomTextField(clientSearchMethodController, 'Client Search Method'),),
+                  SizedBox(width: 10,),
+
+              ],
+            ),
+            Row(
+          
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: _buildCustomTextField(branchController,  'Branch'),
+                ),
+                SizedBox(width: 10,),
+                Expanded(
+                  flex: 1,
+                  child: _buildCustomTextField(institutionCodeController,  'Institution Code'),),
+              
+              ],
+            ),
+          
+            
+            Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      
+                      Center(child: Text("General Info")),
+
+
+                      
+                      _buildCustomTextField(clientIdentifierController, 'Client Identifier'),
+                      _buildCustomTextField(productCodeController,  'Product Code'),
+                      _buildCustomTextField(productCode2Controller,  'Product Code 2'),
+                      _buildCustomTextField( productCode3Controller,  'Product Code 3'),
+                    ],
+                  ),
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  flex: 1,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Center(child: Text("Issue Info")),
+                      
+                      _buildCustomTextField(contractNameController,  'Contract Name'),
+                      _buildCustomTextField(cbsNumberController,  'CBS Number'),
+                      _buildCustomTextField(addInfo01Controller,  'Additional Info 01'),
+                      _buildCustomTextField(addInfo02Controller,  'Additional Info 02'),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+            ),
+      )
+  ,
+    );}
+  Widget _buildCustomTextField(TextEditingController controller, String label) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: TextFormField(
+        controller: controller,
+        style: TextStyle(color: Colors.white), // Màu chữ trắng
+        cursorColor: Colors.white, // Màu con trỏ trắng
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: TextStyle(color: Colors.white), // Màu label trắng
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.white), // Viền trắng khi chưa chọn
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.white, width: 2.0), // Viền trắng khi focus
+          ),
+          errorBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.red, width: 2.0), // Viền đỏ khi lỗi
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.red, width: 2.5), // Viền đỏ khi focus lỗi
+          ),
+        ),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'This field is required';
+          }
+          return null;
+        },
       ),
     );
   }

@@ -25,7 +25,7 @@ public class CreateContractV4Result {
     String applicationNumber;
 
     @XmlElement(name = "RetCode", namespace = "http://www.openwaygroup.com/wsint")
-    String retCode;
+    int retCode;
 
     @XmlElement(name = "RetMsg", namespace = "http://www.openwaygroup.com/wsint")
     String retMsg;

@@ -14,11 +14,11 @@ class EditClientV6 {
   });
 
   Map<String, dynamic> toJson() => {
-        'ClientSearchMethod': clientSearchMethod,
-        'ClientIdentifier': clientIdentifier,
-        'Reason': reason,
-        'EditClient_InObject': editClientInObject.toJson(),
-        'SetCustomData_InObject': setCustomDataInObject.toJson(),
+        'clientSearchMethod': clientSearchMethod,
+        'clientIdentifier': clientIdentifier,
+        'reason': reason,
+        'editClient_InObject': editClientInObject.toJson(),
+        'setCustomData_InObject': setCustomDataInObject.toJson(),
       };
 }
 
@@ -94,39 +94,39 @@ class EditClientInObjectEditV6 {
   });
 
   Map<String, dynamic> toJson() => {
-        'Branch': branch,
-        'ClientCategory': clientCategory,
-        'ServiceGroup': serviceGroup,
-        'ProductCategory': productCategory,
-        'ClientTypeCode': clientTypeCode,
-        'ShortName': shortName,
-        'SalutationCode': salutationCode,
-        'SalutationSuffix': salutationSuffix,
-        'Gender': gender,
-        'FirstName': firstName,
-        'MiddleName': middleName,
-        'LastName': lastName,
-        'BirthDate': birthDate,
-        'BirthPlace': birthPlace,
-        'BirthName': birthName,
-        'LanguageCode': languageCode,
-        'Citizenship': citizenship,
-        'MaritalStatusCode': maritalStatusCode,
-        'TaxBracket': taxBracket,
-        'IndividualTaxpayerNumber': individualTaxpayerNumber,
-        'DateExpire': dateExpire,
-        'HomePhone': homePhone,
-        'MobilePhone': mobilePhone,
-        'BusinessPhone': businessPhone,
-        'EMail': email,
-        'Country': country,
-        'State': state,
-        'City': city,
-        'AddressZIP': addressZip,
-        'AddressLine1': addressLine1,
-        'Profession': profession,
-        'EmbossedLastName': embossedLastName,
-        'EmbossedFirstName': embossedFirstName,
+        'branch': branch,
+        'clientCategory': clientCategory,
+        'serviceGroup': serviceGroup,
+        'productCategory': productCategory,
+        'clientTypeCode': clientTypeCode,
+        'shortName': shortName,
+        'salutationCode': salutationCode,
+        'salutationSuffix': salutationSuffix,
+        'gender': gender,
+        'firstName': firstName,
+        'middleName': middleName,
+        'lastName': lastName,
+        'birthDate': birthDate,
+        'birthPlace': birthPlace,
+        'birthName': birthName,
+        'languageCode': languageCode,
+        'citizenship': citizenship,
+        'maritalStatusCode': maritalStatusCode,
+        'taxBracket': taxBracket,
+        'individualTaxpayerNumber': individualTaxpayerNumber,
+        'dateExpire': dateExpire,
+        'homePhone': homePhone,
+        'mobilePhone': mobilePhone,
+        'businessPhone': businessPhone,
+        'eMail': email,
+        'country': country,
+        'state': state,
+        'city': city,
+        'addressZIP': addressZip,
+        'addressLine1': addressLine1,
+        'profession': profession,
+        'embossedLastName': embossedLastName,
+        'embossedFirstName': embossedFirstName,
       };
 }
 
@@ -144,9 +144,9 @@ class SetCustomDataInObjectEditV6 {
   });
 
   Map<String, dynamic> toJson() => {
-        'AddInfoType': addInfoType,
-        'RemoveTag': removeTag,
-        'TagName': tagName,
-        'TagValue': tagValue,
+        'addInfoType': addInfoType,
+        'removeTag': removeTag,
+        'tagName': tagName,
+        'tagValue': tagValue,
       };
 }

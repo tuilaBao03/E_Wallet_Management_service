@@ -28,11 +28,11 @@ class CreateContractLiabRequest {
   // Chuyển về JSON
   Map<String, dynamic> toJson() {
     return {
-      'Reason': reason,
-      'ClientIdentifier': clientIdentifier,
-      'ClientSearchMethod': clientSearchMethod,
-      'CreateContract_InObject': contractInfo.toJson(),
-      'CustomData': customData,
+      'reason': reason,
+      'clientIdentifier': clientIdentifier,
+      'clientSearchMethod': clientSearchMethod,
+      'createContractInObject': contractInfo.toJson(),
+      'setCustomDataInObject': customData,
     };
   }
   String toString() {
@@ -62,12 +62,12 @@ class CreateContractInObject {
   // Parse từ JSON
   factory CreateContractInObject.fromJson(Map<String, dynamic> json) {
     return CreateContractInObject(
-      branch: json['Branch'] ?? '',
-      institutionCode: json['InstitutionCode'] ?? '',
-      productCode: json['ProductCode'] ?? '',
-      productCode2: json['ProductCode2'] ?? '',
-      productCode3: json['ProductCode3'] ?? '',
-      contractName: json['ContractName'] ?? '',
+      branch: json['branch'] ?? '',
+      institutionCode: json['institutionCode'] ?? '',
+      productCode: json['productCode'] ?? '',
+      productCode2: json['productCode2'] ?? '',
+      productCode3: json['productCode3'] ?? '',
+      contractName: json['contractName'] ?? '',
       cbsNumber: json['CBSNumber'] ?? '',
     );
   }
@@ -75,13 +75,13 @@ class CreateContractInObject {
   // Chuyển về JSON
   Map<String, dynamic> toJson() {
     return {
-      'Branch': branch,
-      'InstitutionCode': institutionCode,
-      'ProductCode': productCode,
-      'ProductCode2': productCode2,
-      'ProductCode3': productCode3,
-      'ContractName': contractName,
-      'CBSNumber': cbsNumber,
+      'branch': branch,
+      'institutionCode': institutionCode,
+      'productCode': productCode,
+      'productCode2': productCode2,
+      'productCode3': productCode3,
+      'contractName': contractName,
+      'cbsNumber': cbsNumber,
     };
   }
 

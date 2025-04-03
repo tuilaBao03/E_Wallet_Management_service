@@ -10,13 +10,11 @@ import 'package:smartwalletapp/screens/general/dialogAlert.dart';
 
 class CreateLiabContractFormScreen extends StatefulWidget {
   final String token;
-  final String title;
   final String clientIdentifier;
 
   const CreateLiabContractFormScreen({
     super.key,
     required this.token,
-    required this.title,
     required this.clientIdentifier,
   });
 
@@ -134,20 +132,21 @@ class _CreateLiabContractFormScreenState extends State<CreateLiabContractFormScr
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(18),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(AppLocalizations.of(context).translate(widget.title)),
-              IconButton(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Add liab contract", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
+        automaticallyImplyLeading: false,  
+        actions: [
+          IconButton(
                 onPressed: validateAndSave,
                 icon: Icon(Icons.save),
               )
-            ],
-          ),
+        ],
+      ),
+      body: Padding(
+      padding: EdgeInsets.all(18),
+      child: Column(
+        children: [
           Row(
             children: [
               Expanded(
@@ -182,6 +181,9 @@ class _CreateLiabContractFormScreenState extends State<CreateLiabContractFormScr
           CustomTextField(controller: customDataController, label: 'Custom Data', focusNode: focusNodes[10], errorNotifier: errorNotifiers[10]),
         ],
       ),
+    )
+  
+
     );
   }
 }
@@ -212,9 +214,9 @@ class CustomTextField extends StatelessWidget {
             focusNode: focusNode,
             decoration: InputDecoration(
               labelText: AppLocalizations.of(context).translate(label),
-              labelStyle: TextStyle(color: hasError ? Colors.red : Theme.of(context).colorScheme.onPrimary),
-              border: OutlineInputBorder(borderSide: BorderSide(color: hasError ? Colors.red : Colors.grey)),
-              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: hasError ? Colors.red : Colors.blue, width: 2)),
+              labelStyle: TextStyle(color: hasError ? Colors.red : Colors.white),
+              border: OutlineInputBorder(borderSide: BorderSide(color: hasError ? Colors.red : Colors.white)),
+              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: hasError ? Colors.red : Colors.white, width: 2)),
             ),
           );
         },

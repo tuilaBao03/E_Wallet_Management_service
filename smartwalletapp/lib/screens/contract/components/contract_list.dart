@@ -20,6 +20,7 @@ class ContractList extends StatefulWidget {
 
   final String token;
   final int page;
+  final String search;
 
   const ContractList({
     super.key,
@@ -27,7 +28,7 @@ class ContractList extends StatefulWidget {
     required this.contracts,
     required this.isContractScreent,
     required this.token,
-    required this.page, this.clientIdentifier,
+    required this.page, this.clientIdentifier, required this.search,
   });
 
   @override
@@ -76,6 +77,9 @@ class _ContractListState extends State<ContractList> {
         ),
       ),
     );
+  
+  
+  
   }
 
   // Hiển thị danh sách hợp đồng dạng cây
@@ -130,7 +134,7 @@ class _ContractListState extends State<ContractList> {
                 ),
                 IconButton(
                   onPressed: () {
-                    // Thêm logic chỉnh sửa hợp đồng
+                    
                   },
                   icon: Icon(Icons.edit,color: Colors.white,),
                 ),
@@ -163,7 +167,7 @@ class _ContractListState extends State<ContractList> {
             child: ContractDetailScreen(contractNumber: cardNumber, token: token)),
           actions: [
             TextButton(
-              onPressed: () => {context.read<ContractBloc>().add(ContractInitialEvent(widget.token,widget.page,"",5)),
+              onPressed: () => {context.read<ContractBloc>().add(ContractInitialEvent(widget.token,widget.page,"",10)),
               Navigator.of(context).pop(),
               
               },
@@ -174,7 +178,6 @@ class _ContractListState extends State<ContractList> {
       },
     );
   }
-
   // Dialog thêm hợp đồng
   void _showContractAddLiabDialog(BuildContext context, String token,String clientIdentifier ) {
     showDialog(
@@ -183,11 +186,14 @@ class _ContractListState extends State<ContractList> {
         return AlertDialog(
           content: SizedBox(
             width: Get.width/1.1,
-            child: CreateLiabContractFormScreen(token: token, title: "CreateLiab", clientIdentifier: clientIdentifier), // Thay bằng form thêm hợp đồng thực tế
+            child: CreateLiabContractFormScreen(token: token, clientIdentifier: clientIdentifier), // Thay bằng form thêm hợp đồng thực tế
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () => {context.read<ContractBloc>().add(ContractInitialEvent(widget.token,widget.page,"",10)),
+              Navigator.of(context).pop(),
+              
+              },
               child: const Icon(Icons.cancel, color: Colors.red),
             ),
           ],
@@ -202,11 +208,14 @@ class _ContractListState extends State<ContractList> {
         return AlertDialog(
           content: SizedBox(
             width: Get.width/1.1,
-            child: AddIsissueContractFormScreen(token: token, title: "CreateIssue", liabContractIdentifier: liabContractIdentifier, clientIdentifier: clientIdentifier,), // Thay bằng form thêm hợp đồng thực tế
+            child: AddIssueContractFormScreen(token: token, title: "CreateIssue", liabContractIdentifier: liabContractIdentifier, clientIdentifier: clientIdentifier,), // Thay bằng form thêm hợp đồng thực tế
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () => {context.read<ContractBloc>().add(ContractInitialEvent(widget.token,widget.page,"",10)),
+              Navigator.of(context).pop(),
+              
+              },
               child: const Icon(Icons.cancel, color: Colors.red),
             ),
           ],
@@ -225,7 +234,10 @@ class _ContractListState extends State<ContractList> {
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () => {context.read<ContractBloc>().add(ContractInitialEvent(widget.token,widget.page,"",10)),
+              Navigator.of(context).pop(),
+              
+              },
               child: const Icon(Icons.cancel, color: Colors.red),
             ),
           ],

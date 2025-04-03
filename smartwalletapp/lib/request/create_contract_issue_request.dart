@@ -25,15 +25,15 @@ class CreateContractV4ReqV2 {
 
   Map<String, dynamic> toJson() {
     return {
-      'LiabCategory': liabCategory,
-      'LiabContractSearchMethod': liabContractSearchMethod,
-      'LiabContractIdentifier': liabContractIdentifier,
-      'ClientSearchMethod': clientSearchMethod,
-      'ClientIdentifier': clientIdentifier,
-      'ProductCode': productCode,
-      'ProductCode2': productCode2,
-      'ProductCode3': productCode3,
-      'InObject': inObject.toJson(),
+      'liabCategory': liabCategory,
+      'liabContractSearchMethod': liabContractSearchMethod,
+      'liabContractIdentifier': liabContractIdentifier,
+      'clientSearchMethod': clientSearchMethod,
+      'clientIdentifier': clientIdentifier,
+      'productCode': productCode,
+      'productCode2': productCode2,
+      'productCode3': productCode3,
+      'inObject': inObject.toJson(),
     };
   }
 }
@@ -57,12 +57,12 @@ class InObject {
 
   Map<String, dynamic> toJson() {
     return {
-      'Branch': branch,
-      'InstitutionCode': institutionCode,
-      'ContractName': contractName,
-      'CBSNumber': cbsNumber,
-      'AddInfo01': addInfo01,
-      'AddInfo02': addInfo02,
+      'branch': branch,
+      'institutionCode': institutionCode,
+      'contractName': contractName,
+      'cbsNumber': cbsNumber,
+      'addInfo01': addInfo01,
+      'addInfo02': addInfo02,
     };
   }
 }

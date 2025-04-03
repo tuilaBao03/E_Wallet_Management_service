@@ -15,7 +15,7 @@ class CardHolderInitialEvent extends CardHolderEvent{
 }
 
 class AddCardHolderEvent extends CardHolderEvent{
-  CreateCardHolderRequest cardHolder;
+  CreateClientV4Body cardHolder;
   String token;
   
   AddCardHolderEvent(this.cardHolder,this.token);

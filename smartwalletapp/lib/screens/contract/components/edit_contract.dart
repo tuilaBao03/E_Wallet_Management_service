@@ -5,11 +5,12 @@ import 'package:smartwalletapp/app/locallization/app_localizations.dart';
 import 'package:smartwalletapp/bloc/Contract/contract_bloc.dart';
 import 'package:smartwalletapp/bloc/Contract/contract_event.dart';
 import 'package:smartwalletapp/request/edit_contract_request.dart';
+import 'package:smartwalletapp/response/contract/get_contract_custom_response.dart';
 
 class EditContractForm extends StatefulWidget {
-  final String contractIdentifier;
+  final GetContractResponseCustom contract;
   final String token;
-  const EditContractForm({super.key, required this.contractIdentifier, required this.token});
+  const EditContractForm({super.key, required this.token, required this.contract});
 
   @override
   _EditContractFormState createState() => _EditContractFormState();
@@ -38,7 +39,12 @@ class _EditContractFormState extends State<EditContractForm> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    contractIdentifierController.text = widget.contractIdentifier;
+    contractIdentifierController.text = widget.contract.contractNumber;
+    contractNameController.text = widget.contract.contractName;
+    branchController.text = widget.contract.branch;
+    serviceGroupController.text = widget.contract.serviceGroup;
+
+
   }
 
   void _saveContract() {
@@ -83,44 +89,97 @@ class _EditContractFormState extends State<EditContractForm> {
               icon: Icon(Icons.save),
             ),
             SizedBox(height: 16),
-            buildTextField('Contract Search Method', contractSearchMethodController),
-            buildTextField('Contract Identifier', contractIdentifierController),
+            Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: buildTextField('Contract Search Method', contractSearchMethodController),
+                ),
+                SizedBox(width: 10,),
+                Expanded(
+                  flex: 1,
+                  child: buildTextField('Contract Identifier', contractIdentifierController),
+                ),
+                SizedBox(width: 10,),
+                Expanded(
+                  flex: 1,
+                  child: buildTextField('Reason', reasonController),
+                ),
+              ],
+            ),
+            SizedBox(height: 16),
+
+            Text('Contract Information', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            SizedBox(height: 16),
             Row(
               children: [
                 Expanded(
                   flex: 1,
                   child: Column(
                     children: [
-                      Text('Contract Information', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      
                       buildTextField('Contract Number', contractNumberController),
                       buildTextField('Contract Name', contractNameController),
+                      
+                    ],
+                  ),
+                ),
+                SizedBox(width: 10,),
+                Expanded(
+                  flex: 1,
+                  child: Column(
+                    children: [
+
                       buildTextField('Service Group', serviceGroupController),
                       buildTextField('Branch', branchController),
                     ],
                   ),
                 ),
+              ],
+            ),
+            Text('Custom Data', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Row(
+              children: [
                 Expanded(
                   flex: 1,
-                  child: Column(
-                    children: [
-                      Text('Custom Data', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                      buildTextField('Additional Info Type', addInfoTypeController),
-                      buildTextField('Remove Tag', removeTagController),
-                      buildTextField('Tag Name', tagNameController),
-                      buildTextField('Tag Value', tagValueController),
-                    ],
-                  ),
+                  child: buildTextField('Additional Info Type', addInfoTypeController),
+                ),
+                SizedBox(width: 10,),
+                Expanded(
+                  flex: 1,
+                  child: buildTextField('Remove Tag', removeTagController),),
+                SizedBox(width: 10,),
+                Expanded(
+                  flex: 1,
+                  child: buildTextField('Tag Name', tagNameController),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: buildTextField('Tag Value', tagValueController),
                 ),
               ],
             ),
             SizedBox(height: 16),
             Text('System Information', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            buildTextField('CBS ID', cbsIdController),
-            buildTextField('CBS Number', cbsNumberController),
-            buildTextField('Close Date', closeDateController),
-            SizedBox(height: 16),
-            Text('Reason', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            buildTextField('Reason', reasonController),
+             Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: buildTextField('CBS ID', cbsIdController),
+                ),
+                SizedBox(width: 10,),
+                Expanded(
+                  flex: 1,
+                  child: buildTextField('CBS Number', cbsNumberController),),
+                SizedBox(width: 10,),
+                Expanded(
+                  flex: 1,
+                  child: buildTextField('Close Date', closeDateController),
+                ),
+              ],
+            ),
+            
+
           ],
         ),
       ),
@@ -129,19 +188,13 @@ class _EditContractFormState extends State<EditContractForm> {
 
   Widget buildTextField(String label, TextEditingController controller) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 10.0),
+      padding: EdgeInsets.symmetric(vertical: 10),
       child: TextFormField(
         controller: controller,
         decoration: InputDecoration(
           labelText: AppLocalizations.of(context).translate(label),
           border: OutlineInputBorder(),
         ),
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return '$label cannot be empty';
-          }
-          return null;
-        },
       ),
     );
   }

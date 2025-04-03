@@ -9,7 +9,7 @@ import 'package:smartwalletapp/bloc/CardHolder/card_holder_event.dart';
 import 'package:smartwalletapp/bloc/CardHolder/card_holder_state.dart';
 import 'package:smartwalletapp/response/cardHolder/getCardHolderResponse.dart';
 import 'package:smartwalletapp/response/contract/get_contract_custom_response.dart';
-import 'package:smartwalletapp/screens/contract/components/contract_list.dart';
+import 'package:smartwalletapp/screens/customer/components/contract_list_customer.dart';
 import 'package:smartwalletapp/screens/customer/components/customer_list.dart';
 import 'package:smartwalletapp/screens/general/dialogAlert.dart';
 import 'package:smartwalletapp/screens/general/page.dart';
@@ -122,16 +122,20 @@ class _CustomerScreenState extends State<CustomerScreen> {
                                       Expanded(
                                         flex: 1,
                                         child: 
-                                        ContractList(
-                                          title: "Contract",
-                                          isContractScreent: false, token: widget.token, page: 1, contracts: contracts,clientIdentifier: selectedcardHolder.clientNumber,),)
+                                        ContractListByCustomer(
+                                          token: widget.token, clientIdentifier: selectedcardHolder.clientNumber, onpress: () {
+                                            context.read<CardHolderBloc>().add(CardHolderInitialEvent(widget.token,searchText,1,false,selectedcardHolder,size));
+                                            },))
                                     ],
                                   ),
                                 SizedBox(height: defaultPadding),
                                 if(!Responsive.isDesktop(context) && showContractList)
-                                  ContractList(
-                                          title: "Contract",
-                                           isContractScreent: false, token: widget.token, page: 1, contracts: contracts,),
+                                  ContractListByCustomer(
+                                          token: widget.token, clientIdentifier: selectedcardHolder.clientNumber, onpress: () { 
+                                            setState(() {
+                                              context.read<CardHolderBloc>().add(CardHolderInitialEvent(widget.token,searchText,1,false,selectedcardHolder,size));
+                                            });
+                                           },)
                           ],
                         ),
                       ),
@@ -165,7 +169,6 @@ class _CustomerScreenState extends State<CustomerScreen> {
                       SizeDropdown(
                             onSizeSelected: (int? selectedValue) {
                               setState(() {
-                                print(selectedValue);
                                 context.read<CardHolderBloc>().add(
                               CardHolderInitialEvent(
                                 widget.token, searchText, page, showContractList, selectedcardHolder,selectedValue ??10

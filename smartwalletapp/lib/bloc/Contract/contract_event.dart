@@ -21,6 +21,12 @@ class GetContractDetailEvent extends ContractEvent{
   GetContractDetailEvent(this.contractNumber,this.token);
 }
 
+class GetContractDetailByClientNumberEvent extends ContractEvent{
+  String idCardholder;
+  String token;
+  GetContractDetailByClientNumberEvent(this.idCardholder,this.token);
+}
+
 class AddLibContractEvent extends ContractEvent{
   String token;
   CreateContractLiabRequest contract;
@@ -45,4 +51,17 @@ class EditContractEvent extends ContractEvent{
   EditContractV4 request;
   EditContractEvent(this.token, this.request);
 
+}
+
+
+class SetStatusEvent extends ContractEvent{
+  String token;
+  String contractIdentity;
+  SetStatusEvent(this.token, this.contractIdentity);
+}
+
+class ActivateEvent extends ContractEvent{
+  String token;
+  String contractIdentity;
+  ActivateEvent(this.token,this.contractIdentity);
 }
