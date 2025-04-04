@@ -65,7 +65,7 @@ class _ContractListByCustomerState extends State<ContractListByCustomer> {
         else if (state is ContractLoadedState){
           contracts_fill = state.libContracts;
           return Container(
-            height: MediaQuery.of(context).size.height/1.2,
+            height: MediaQuery.of(context).size.height,
             padding: const EdgeInsets.all(16.0),
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.secondary,
@@ -182,6 +182,10 @@ class _ContractListByCustomerState extends State<ContractListByCustomer> {
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
+                Icon(
+                  Icons.child_care,
+                  color: contract.contracts.isNotEmpty ? Colors.green : Colors.white10,
+                ),
                 IconButton(
                   onPressed: () => _showContractDetailDialog(context, contract.contractNumber, widget.token),
                   icon: Icon(Icons.info_outline, color: Colors.white,),

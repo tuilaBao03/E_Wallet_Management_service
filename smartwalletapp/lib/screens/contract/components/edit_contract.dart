@@ -76,18 +76,28 @@ class _EditContractFormState extends State<EditContractForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context).translate("Edit contract"), style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
+        automaticallyImplyLeading: false,  
+        actions: [
+          IconButton(
+                onPressed: ()=>{
+                  _saveContract()
+                } ,
+                icon: Icon(Icons.save,color: Colors.lightGreenAccent,),
+              )
+        ],
+      ),
+      body: Form(
       key: _formKey,
       child: Container(
+        color: Theme.of(context).colorScheme.primary,
         width: Get.width / 1.1,
         padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            IconButton(
-              onPressed: _saveContract,
-              icon: Icon(Icons.save),
-            ),
             SizedBox(height: 16),
             Row(
               children: [
@@ -183,6 +193,7 @@ class _EditContractFormState extends State<EditContractForm> {
           ],
         ),
       ),
+    ),
     );
   }
 

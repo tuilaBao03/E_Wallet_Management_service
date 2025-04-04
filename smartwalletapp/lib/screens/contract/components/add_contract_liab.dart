@@ -134,12 +134,12 @@ class _CreateLiabContractFormScreenState extends State<CreateLiabContractFormScr
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Add liab contract", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
+        title: Text(AppLocalizations.of(context).translate("Add liab contract"), style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
         automaticallyImplyLeading: false,  
         actions: [
           IconButton(
                 onPressed: validateAndSave,
-                icon: Icon(Icons.save),
+                icon: Icon(Icons.save,color: Colors.lightGreenAccent,),
               )
         ],
       ),

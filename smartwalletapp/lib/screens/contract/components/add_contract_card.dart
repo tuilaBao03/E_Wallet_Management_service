@@ -87,7 +87,7 @@ class _CreateCardContractFormScreenState extends State<CreateCardContractFormScr
       appBar: AppBar(
         title: Title(color: Colors.white, child: Text(AppLocalizations.of(context).translate("Add Card Contract"))), 
         actions: [
-          IconButton(onPressed: validateAndSave, icon: Icon(Icons.save, color: Colors.white,))
+          IconButton(onPressed: validateAndSave, icon: Icon(Icons.save,color: Colors.lightGreenAccent,))
           ],
           automaticallyImplyLeading: false,  
       ),

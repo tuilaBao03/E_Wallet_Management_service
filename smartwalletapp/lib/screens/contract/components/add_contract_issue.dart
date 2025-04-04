@@ -86,7 +86,7 @@ class _AddIssueContractFormScreenState extends State<AddIssueContractFormScreen>
       appBar: AppBar(
         title: Title(color: Colors.white, child: Text("Add Issue Contract")),
         actions: [
-          IconButton(onPressed: validateAndSave, icon: Icon(Icons.save, color: Colors.blue,))
+          IconButton(onPressed: validateAndSave, icon: Icon(Icons.save, color: Colors.lightGreenAccent,))
         ],
         automaticallyImplyLeading: false,  
       ),
